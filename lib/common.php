@@ -22,7 +22,7 @@ function print_login_form() {
 <table>
 <tr>
 <td span=2>
-<h1>Milky Wars</h1>
+<h1>Heart of Rana</h1>
 Version 0.1
 </td>
 
