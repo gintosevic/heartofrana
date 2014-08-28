@@ -3,6 +3,9 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL | E_STRICT);
 
+if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+	require_once "password_compat.php";
+}
 require_once "constants.php";
 require_once "database.php";
 define('__ROOT__', dirname(dirname(__FILE__))); 
@@ -22,7 +25,7 @@ function print_login_form() {
 <table>
 <tr>
 <td span=2>
-<h1>Milky Wars</h1>
+<h1>Heart of Rana</h1>
 Version 0.1
 </td>
 
