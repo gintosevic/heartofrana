@@ -11,6 +11,9 @@ class Galaxy {
   var $science_start;
   var $production_start;
   
+  static $DENSITY = GALAXY_DENSITY;
+  static $BLOCK_SIZE = GALAXY_BLOCK_SIZE;
+  
   /**
    * Default constructor (only one existing galaxy is supposed)
    */
@@ -65,23 +68,23 @@ class Galaxy {
       // SID = 1 sys + 3 sys + 6 sys + 9 sys... = 1 + sum_i 3*i = 1 + 3 (n*(n+1)/2)
       // => 2/3 (SID-1) = n*(n+1)
       // => n can be approximated as sqrt(2/3 (SID-1))
-      $circle = sqrt(($this->spiral-1)*2/GALAXY_DENSITY);
+      $circle = sqrt(($this->spiral-1)*2/Galaxy::$DENSITY);
       $rho = round($circle);
       $theta = 2*pi()*($circle - $rho);
       //Jitter on theta
-      $random = (1-(1/GALAXY_DENSITY)*(rand(0,100)/100));
+      $random = (1-(1/Galaxy::$DENSITY)*(rand(0,100)/100));
       $theta *= $random;
       $new_x = $rho*cos($theta);
       $new_y = $rho*sin($theta);
-      $new_x = round($new_x*GALAXY_BLOCK_SIZE);
-      $new_y = round($new_y*GALAXY_BLOCK_SIZE);
+      $new_x = round($new_x*Galaxy::$BLOCK_SIZE);
+      $new_y = round($new_y*Galaxy::$BLOCK_SIZE);
       //Jitter on x and y
       $random = rand(0,100);
-      if ($random <= 5) { $new_x -= intval((GALAXY_BLOCK_SIZE+1)/3); }
-      elseif ($random >= 67) { $new_x += intval(GALAXY_BLOCK_SIZE/3); }
+      if ($random <= 33) { $new_x -= intval((Galaxy::$BLOCK_SIZE+1)/3); }
+      elseif ($random >= 67) { $new_x += intval(Galaxy::$BLOCK_SIZE/3); }
       $random = rand(0,100);
-      if ($random <= 33) { $new_y -= intval((GALAXY_BLOCK_SIZE+1)/3); }
-      elseif ($random >= 67) { $new_y += intval(GALAXY_BLOCK_SIZE/3); }
+      if ($random <= 33) { $new_y -= intval((Galaxy::$BLOCK_SIZE+1)/3); }
+      elseif ($random >= 67) { $new_y += intval(Galaxy::$BLOCK_SIZE/3); }
       $new_name = build_system_name();
       echo "Spiral moves<br>\n";
       try {
@@ -129,6 +132,7 @@ class Galaxy {
     sem_acquire($sem);
     $sid = $this->get_home_system();
     $system = System::get_cache_or_load($sid);
+    $system->load_planets();
 
     // Eventually add a bonus planet between 2 players
     if (count($system->get_planets()) > 0 && decide_bonus_planet($sid)) {

@@ -78,7 +78,7 @@ class Player {
     }
     // Existing player
     else {
-      $result = db_query("UPDATE Player SET race_id = ".$this->race_id.", points = ".$this->points.", rank = ".$this->rank.", experience = ".$this->experience_points.", culture = ".$this->culture_points.", current_science = '".$this->current_science."', tag = ".($this->tag == null?"NULL":$this->tag));
+      $result = db_query("UPDATE Player SET race_id = ".$this->race_id.", points = ".$this->points.", rank = ".$this->rank.", experience = ".$this->experience_points.", culture = ".$this->culture_points.", current_science = '".$this->current_science."', tag = ".($this->tag == null?"NULL":$this->tag)." WHERE player_id = ".$this->get_player_id());
     }
     
     $this->save_science();

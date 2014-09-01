@@ -47,12 +47,12 @@ function give_random_planets($player) {
     if ($home < 80 && $n_homes > 0) {
       $planet = $home_free_planets[$random % $n_homes];
       $planet->set_owner($player);
-      echo "Set owner = ".$player->get_name()." for planet ".$planet->get_sid()." #".$planet->get_position()."<br>\n";
+      echo "Set owner = ".$player->get_name()." in home system for planet ".$planet->get_sid()." #".$planet->get_position()."<br>\n";
     }
     else {
       $planet = $vis_free_planets[$random % $n_vis];
       $planet->set_owner($player);
-      echo "Set owner = ".$player->get_name()." for planet ".$planet->get_sid()." #".$planet->get_position()."<br>\n";
+      echo "Set owner = ".$player->get_name()." in visible system for planet ".$planet->get_sid()." #".$planet->get_position()."<br>\n";
     }
     $home_free_planets = list_home_free_planets($player);
     $n_homes = count($home_free_planets);
@@ -71,7 +71,7 @@ function set_random_planet_stats($planet) {
   
 }
 
-function populate($num_players) {
+function flush_database() {
   echo "<h2>Prepare empty database</h2>\n";
   $c = Database::get_connection();
   $all_commands = "SET FOREIGN_KEY_CHECKS = 0;";
@@ -92,13 +92,23 @@ function populate($num_players) {
   if (!db_query($all_commands)) {
     die("Failed in creating tables: (" . Database::get_connection()->errno . ") " . db_error());
   }
+}
 
+function populate($num_players) {
   $galaxy = new Galaxy();
 
   $players = array();
+  
+  $last_player_id = 0;
+  if (!isset($_GET['flush_database'])) {
+    $result = db_query("SELECT player_id FROM Player ORDER BY player_id DESC LIMIT 1");
+    $row = db_fetch_assoc($result);
+    $last_player_id = $row['player_id'];
+  }
+  echo "Last player ID = $last_player_id<br>\n";
 
   echo "<h2>Create players</h2>\n";
-  for ($i = 1; $i <= $num_players; $i++) {
+  for ($i = $last_player_id+1; $i <= $last_player_id+$num_players; $i++) {
     echo "<h3>Create player $i</h3>\n";
     $pl = $galaxy->add_player("Player$i", "toto", "tata");
     if (isset($_GET['random_races'])) {
@@ -118,9 +128,9 @@ function populate($num_players) {
     // Give planets to num_players
     for ($i = 0; $i < $num_players; $i++) {
       $pl = $players[$i];
-      echo "<h3>Give planets to player $i</h3>\n";
+      echo "<h3>Give planets to player ".$pl->get_player_id()."</h3>\n";
       give_random_planets($pl);
-      echo "<h3>Set buildings in planets of player $i</h3>\n";
+      echo "<h3>Set buildings in planets of player ".$pl->get_player_id()."</h3>\n";
       foreach ($pl->get_planets() as $p) {
 	set_random_planet_stats($p);
       }
@@ -140,12 +150,9 @@ function populate($num_players) {
 
 build_header('basic/basic.css');
 if (isset($_GET['n_players'])) {
-  if (isset($_GET['galaxy_density'])) {
-    define(GALAXY_DENSITY, $_GET['galaxy_density']);
-  }
-  if (isset($_GET['galaxy_blocks'])) {
-    define(GALAXY_BLOCK_SIZE, $_GET['galaxy_blocks']);
-  }
+  if (isset($_GET['flush_database'])) { flush_database(); }
+  if (isset($_GET['galaxy_density'])) { Galaxy::$DENSITY = $_GET['galaxy_density']; }
+  if (isset($_GET['galaxy_blocks'])) { Galaxy::$BLOCK_SIZE = $_GET['galaxy_blocks']; }
   populate($_GET['n_players']);
 }
 else {
@@ -153,6 +160,8 @@ else {
   $blocks = GALAXY_BLOCK_SIZE;
   echo <<<EOHTML
 <form action='./populate.php' method='GET'>
+<h2>Database</h2>
+<li>Flush database? <input type='checkbox' name='flush_database'></li>
 <h2>Galaxy</h2>
 <ul>
 <li>Galaxy density: <input type='text' name='galaxy_density' size='1' value='$density'></li>
@@ -162,9 +171,9 @@ else {
 <h2>Players</h2>
 <ul>
 <li>Number of players: <input type='text' name='n_players' size='5' value='10'></li>
-<li>Random races: <input type='checkbox' name='random_races' checked></li>
-<li>Random points: <input type='checkbox' name='random_points' checked></li>
-<li>Random colonization: <input type='checkbox' name='random_colonization' checked></li>
+<li>Random races? <input type='checkbox' name='random_races' checked></li>
+<li>Random points? <input type='checkbox' name='random_points' checked></li>
+<li>Random colonization? <input type='checkbox' name='random_colonization' checked></li>
 </ul>
 <input type='submit' value='Populate!'>
 </form>

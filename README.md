@@ -3,9 +3,12 @@ heartofrana
 
 Installation
 ------------
-- Install a PHP server
+- Install a PHP5 server
 - Install a MySQL server
+- Run the script init.sh in the root directory
 - Edit lib/credentials.php
+- Run the web page populate.php
+- Run the web page index.php and play
 
 Main pages
 ----------

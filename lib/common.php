@@ -119,6 +119,16 @@ function build_menu() {
 <li> <a href="fleet.php">Fleet</a> </li>
 <li> <a href="?logout" id='logout'>Logout</a> </li>
 </ul>
+<br>
+<ul>
+<li> <a href="inbox.php">Inbox</a> </li>
+<li> <a href="chat.php">Chat</a> </li>
+<li> <a href="profile.php">Profile</a> </li>
+<li> <a href="settings.php">Settings</a> </li>
+<li> <a href="rankings.php">Rankings</a> </li>
+<li> <a href="polls.php">Polls</a> </li>
+<li> <a href="http://starfactionsdevelopers.freeforums.org/index.php" target="_blank">Forum</a> </li>
+</ul>
 </div>
 <br>
 EOL;
