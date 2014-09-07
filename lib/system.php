@@ -91,7 +91,6 @@ class System {
     $this->name = $row['name'];
     $this->n_homes = $row['n_homes'];
     $this->planets = array();
-//     $this->load_planets();
   }
   
   /**
@@ -100,6 +99,7 @@ class System {
   function load_planets() {
     $results = db_query("SELECT position FROM Planet WHERE sid = ".$this->sid." ORDER BY position ASC;\n");
     $n = db_num_rows($results);
+    $this->planets = array();
     for ($i = 0; $i < $n; $i++) {
       $row = db_fetch_assoc($results, $i);
       $planet = new Planet($this->sid, $row['position']);

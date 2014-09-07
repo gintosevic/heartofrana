@@ -16,6 +16,7 @@ class Player {
   private $culture_points;
   private $tag;
   private $planets;
+  private $fleets;
   
   /**
    * Constructor to load a given player based on his name
@@ -41,6 +42,7 @@ class Player {
     
     $this->tag = null;
     $this->planets = array();
+    $this->fleets = array();
   }
   
   function save_race() {
@@ -104,7 +106,6 @@ class Player {
     $result = db_query("SELECT * FROM Science WHERE player_id = ".$this->player_id);
     $this->science_points = db_fetch_assoc($result);
     
-    $this->planets = $this->list_planets();
   }
   
   function get_player_id() { return $this->player_id; }
@@ -201,7 +202,7 @@ class Player {
     array_push($this->planets, $planet);
   }
   
-  function list_planets() {
+  function load_planets() {
     $results = db_query("SELECT sid, position FROM Planet WHERE owner = '".$this->player_id."'");
     $list = array();
     $n = db_num_rows($results);
@@ -211,7 +212,7 @@ class Player {
       $p->load();
       array_push($list, $p);
     }
-    return $list;
+    $this->planets = $list;
   }
   
   function list_home_systems() {
@@ -235,6 +236,36 @@ class Player {
       $list[$row['sid']] = $s;
     }
     return $list;
+  }
+  
+  function is_enabled($type) {
+    switch($type) {
+      case "cruisers":
+	return ($this->get_science_level(CRUISER_TRIGGER_SCIENCE) >= CRUISER_TRIGGER_LEVEL);
+	break;
+      case "battleships":
+	return ($this->get_science_level(BATTLESHIP_TRIGGER_SCIENCE) >= BATTLESHIP_TRIGGER_LEVEL);
+	break;
+      default:
+	return true;
+	break;
+    }
+  }
+  
+  function get_fleets() {
+    return $this->fleets;
+  }
+  
+  function load_fleets() {
+    $results = db_query("SELECT fleet_id FROM Fleet WHERE owner = ".$this->get_player_id());
+    $n = db_num_rows($results);
+    $this->fleets = array();
+    for ($i = 0; $i < $n; $i++) {
+      $row = db_fetch_assoc($results, $i);
+      $fleet = new Fleet($row['fleet_id']);
+      $fleet->load();
+      array_push($this->fleets, $fleet);
+    }
   }
 
 }

@@ -88,7 +88,7 @@ CREATE TABLE Nap (
 
 
 CREATE TABLE Fleet (
-                fleet_id INT NOT NULL,
+                fleet_id INT AUTO_INCREMENT NOT NULL,
                 owner INT NOT NULL,
                 colonyships INT NOT NULL,
                 transports INT NOT NULL,

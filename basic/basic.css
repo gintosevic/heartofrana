@@ -90,9 +90,13 @@ a#logout {
 * News
 *****************************************/
 
+div#news_tab {
+  background: black url("./img/backgrounds/news.jpg") no-repeat center center;
+}
+
 ul.news_list {
     border: 1px solid white;
-    background-color: #404040;
+    background-color: rgba(64, 64, 64, 0.9);
     padding: 0;
     margin: 0;
     list-style: none;
@@ -118,7 +122,7 @@ div.news_time {
   display: table-cell;
   height: 100%;
   vertical-align: top;
-  background-color: #222;
+  background-color: rgba(32,32,32,0.9);
 }
 
 div.news_time:before {
@@ -145,7 +149,7 @@ li.news_new_planet div.news_title {
 }
 
 li.news_new_planet div.news_time {
-  background-color: green;
+  background-color: rgba(0,100,0,0.9);
 }
 
 
@@ -154,10 +158,14 @@ li.news_new_planet div.news_time {
 * Map
 *****************************************/
 
+div#map_tab {
+  background: black url("./img/backgrounds/map2.jpg") no-repeat center top;
+}
+
 #map {
   border: 1px solid white;
-  background-color: black;
-  background-image: url("img/startile.gif");
+  background-color: rgba(0, 0, 0, 0.9);
+/*   background-image: url("img/startile.gif"); */
 }
 
 .system {
@@ -171,6 +179,10 @@ li.news_new_planet div.news_time {
 /*****************************************
 * System view
 *****************************************/
+
+div#science_tab {
+  background: black url("./img/backgrounds/sciences.jpg") no-repeat center center;
+}
 
 .system_view {
   background-color: #202020;
@@ -203,6 +215,10 @@ text-align: right;
 /*****************************************
 * List of planets
 *****************************************/
+
+div#planets_tab {
+  background: black url("./img/backgrounds/planets.jpg") no-repeat center top;
+}
 
 .planets {
   background-color: #202020;
@@ -253,4 +269,12 @@ text-decoration: underline;
 #current_science.science {
 font-weight: bold;
 color: green;
+}
+
+/*****************************************
+* System view
+*****************************************/
+
+div#fleet_tab {
+  background: black url("./img/backgrounds/fleet.jpg") no-repeat center top;
 }

@@ -58,6 +58,12 @@ function check_login() {
 	$_SESSION['account'] = new Account($_POST['login'], $_POST['password']);
 	$pl = new Player($_POST['login']);
 	$pl->load();
+	$pl->load_planets();
+	$pl->load_fleets();
+	foreach ($pl->get_planets() as $planet) {
+	  $planet->load_owner_fleet();
+	  $planet->load_sieging_fleet();
+	}
 	$_SESSION['player'] = $pl;
 	$_SESSION['galaxy'] = new Galaxy();
 	//       print_r($_SESSION);
@@ -70,7 +76,7 @@ function check_login() {
     elseif (isset($_SESSION['account'])) {
       //     print_r($_SESSION['account']);
       //     echo "\n<br>\n";
-      //     print_r($_SESSION['player']);
+//           print_r($_SESSION['player']);
       //     echo "<br>\n";
       return true;
     }
@@ -121,7 +127,7 @@ function build_menu() {
 </ul>
 <br>
 <ul>
-<li> <a href="inbox.php">Inbox</a> </li>
+<li> <a href="mailbox.php">Mailbox</a> </li>
 <li> <a href="chat.php">Chat</a> </li>
 <li> <a href="profile.php">Profile</a> </li>
 <li> <a href="settings.php">Settings</a> </li>

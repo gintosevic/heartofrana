@@ -147,7 +147,7 @@
   <table id="TAB41" populated="true" UUID="b61e696a-6c50-47d3-b14e-1d07c5b7f5eb" name="Fleet" objectType="TABLE" physicalName="Fleet" >
    <remarks></remarks>
    <folder id="FOLTAB411" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL42" populated="true" UUID="cac9a0e3-df1e-46c4-b628-14133f6c9b9d" autoIncrement="false" autoIncrementSequenceName="Fleet_fleet_id_seq" defaultValue="" name="fleet_id" nullable="0" physicalName="fleet_id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL42" populated="true" UUID="cac9a0e3-df1e-46c4-b628-14133f6c9b9d" autoIncrement="true" autoIncrementSequenceName="Fleet_fleet_id_seq" defaultValue="" name="fleet_id" nullable="0" physicalName="fleet_id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL43" populated="true" UUID="4ea12aa7-8c4c-4424-99eb-bd8a2a655043" autoIncrement="false" autoIncrementSequenceName="Fleet_owner_seq" defaultValue="" name="owner" nullable="0" physicalName="owner" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
@@ -485,7 +485,7 @@
    </relationship>
   </relationships>
  </target-database>
- <ddl-generator type="ca.sqlpower.architect.ddl.MySqlDDLGenerator" allow-connection="true" target-catalog="heartofrana"> </ddl-generator>
+ <ddl-generator type="ca.sqlpower.architect.ddl.MySqlDDLGenerator" allow-connection="false" target-catalog="heartofrana"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
  <play-pen zoom="1.0" viewportX="0" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">

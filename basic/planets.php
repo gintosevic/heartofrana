@@ -16,6 +16,7 @@ function display_planet_short($planet) {
 //   echo "<td>".$planet->owner."</td>\n";
   echo "<td>".$planet->get_population_level()."</td>\n";
   echo "<td>".$planet->get_building_level("starbase")."</td>\n";
+  echo "<td>".$planet->get_production_points()."</td>\n";
   echo "<td><a href=\"view_planet.php?sid=$sid&position=$position\">[See details]</a></td>\n";
   echo "</tr>\n";
 }
@@ -23,7 +24,7 @@ function display_planet_short($planet) {
 function display_planets() {
   echo "<div class='tab' id='planets_tab'><h1>Planets</h1>";
   echo "<table class='planets'>\n";
-  echo "<tr id='description' class='planets'><td>System</td><td>Position</td><td>Population</td><td>Starbase</td><td></td></tr>\n";
+  echo "<tr id='description' class='planets'><td>System</td><td>Position</td><td>Population</td><td>Starbase</td><td>Production points</td><td></td></tr>\n";
   foreach ($_SESSION['player']->get_planets() as $p) {
     display_planet_short($p);
   }

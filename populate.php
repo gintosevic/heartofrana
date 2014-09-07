@@ -2,21 +2,26 @@
 require("lib/common.php");
 
 
+
 function set_random_player_stats($player) {
-  $player->set_experience_points(rand(70, 7000));
-  $player->set_culture_points(rand(70, 7000));
+  $player->set_experience_points(rand(70, 20000));
+  $player->set_culture_points(rand(70, 20000));
   foreach (Player::$ALL_SCIENCES as $s) {
-    $player->set_science_points($s, rand(70, 7000));
+    $player->set_science_points($s, rand(70, 20000));
   }
   $n = count(Player::$ALL_SCIENCES);
   $player->set_current_science(Player::$ALL_SCIENCES[rand(0, $n-1) % $n]);
 }
+
+
 
 function set_random_race($player) {
   foreach (Player::$ALL_RACES as $trait) {
     $player->set_race($trait, rand(-4, 4));
   }
 }
+
+
 
 function list_home_free_planets($player) {
   $home_list = $player->list_home_systems();
@@ -68,15 +73,50 @@ function set_random_planet_stats($planet) {
     $planet->set_building_points($s, rand(50, 1000));
   }
   $planet->set_population_points(rand(50, 1000));
-  
+  $planet->set_production_points(rand(0, 1000));
 }
+
+function build_random_fleets(Player $player) {
+  $planets = $player->get_planets();
+  $n_planets = count($planets);
+  for ($i = 0; $i < $n_planets; $i++) {
+    $random = rand(0,100);
+    if ($random >= 50) {
+      $fleet = new Fleet();
+      $fleet->set_owner($player->get_player_id());
+      if (rand(0,3) == 0) {
+	$n = rand(0, 2*$n_planets);
+	$fleet->set_ships("colonyships", rand(1, $n));
+      }
+      if (rand(0,3) == 0) {
+	$n = rand(0, 2*$n_planets);
+	$fleet->set_ships("transports", $n);
+      }
+      $n = rand(0, 100*$n_planets);
+      $fleet->set_ships("destroyers", $n);
+      if ($player->is_enabled("cruisers")) {
+	$n = rand(0, 25*$n_planets);
+	$fleet->set_ships("cruisers", $n);
+      }
+      if ($player->is_enabled("battleships")) {
+	$n = rand(0, 5*$n_planets);
+	$fleet->set_ships("battleships", $n);
+      }
+      $fleet->save();
+      $fleet->land_on_planet($planets[$i]);
+      $planets[$i]->save();
+    }
+  }
+}
+
+
 
 function flush_database() {
   echo "<h2>Prepare empty database</h2>\n";
   $c = Database::get_connection();
   $all_commands = "SET FOREIGN_KEY_CHECKS = 0;";
   // Flush the database
-  $result = db_query("SELECT concat('DROP TABLE IF EXISTS ', table_name, ';') FROM information_schema.tables WHERE table_schema = 'heartofrana';");
+  $result = db_query("SELECT concat('DROP TABLE IF EXISTS ', table_name, ';') FROM information_schema.tables WHERE table_schema = '".DB_NAME."';");
   if (!$result) {
 //     "DROP TABLE heartofrana; CREATE DATABASE heartofrana CHARACTER SET utf8 COLLATE utf8_bin;")) {
     die("Unable to drop the tables: (" . $c->errno . ") " . $c->error);
@@ -138,6 +178,16 @@ function populate($num_players) {
     }
   }
   
+  if (isset($_GET['random_fleets'])) {
+    echo "<h2>Build fleets</h2>\n";
+    for ($i = 0; $i < $num_players; $i++) {
+      $pl = $players[$i];
+      echo "<h3>Build fleets for player ".$pl->get_player_id()."</h3>\n";
+      build_random_fleets($pl);
+      $pl->save();
+    }
+  }
+  
   echo "<h2>Save planets</h2>\n";
   for ($i = 0; $i < $num_players; $i++) {
       foreach ($players[$i]->get_planets() as $p) {
@@ -161,7 +211,7 @@ else {
   echo <<<EOHTML
 <form action='./populate.php' method='GET'>
 <h2>Database</h2>
-<li>Flush database? <input type='checkbox' name='flush_database'></li>
+<li>Flush database? <input type='checkbox' name='flush_database' checked></li>
 <h2>Galaxy</h2>
 <ul>
 <li>Galaxy density: <input type='text' name='galaxy_density' size='1' value='$density'></li>
@@ -174,6 +224,16 @@ else {
 <li>Random races? <input type='checkbox' name='random_races' checked></li>
 <li>Random points? <input type='checkbox' name='random_points' checked></li>
 <li>Random colonization? <input type='checkbox' name='random_colonization' checked></li>
+<li class="todo">Random artefacts? <input type='checkbox' name='random_artefacts' checked></li>
+<li>Random fleets? <input type='checkbox' name='random_fleets' checked></li>
+</ul>
+<h2>Alliances/relationships</h2>
+<ul>
+<li class="todo">Number of alliances: <input type='text' name='n_alliances' size='5' value='4'></li>
+<li class="todo">Random trade agreements? <input type='checkbox' name='random_tas' checked></li>
+<li class="todo">Random attacks? <input type='checkbox' name='random_attacks' checked></li>
+<li class="todo">Random messages? <input type='checkbox' name='random_messages' checked></li>
+
 </ul>
 <input type='submit' value='Populate!'>
 </form>
