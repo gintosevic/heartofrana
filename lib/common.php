@@ -13,7 +13,7 @@ require_once "galaxy.php";
 require_once "system.php";
 require_once "planet.php";
 require_once "account.php";
-require_once __ROOT__."/lib/fleet.php";
+require_once "fleet.php";
 require_once "flight.php";
 require_once "player.php";
 require_once "event.php";
@@ -60,13 +60,14 @@ function check_login() {
 	$pl->load();
 	$pl->load_planets();
 	$pl->load_fleets();
-	foreach ($pl->get_planets() as $planet) {
-	  $planet->load_owner_fleet();
-	  $planet->load_sieging_fleet();
-	}
+// 	foreach ($pl->get_planets() as $planet) {
+// 	  $planet->load_owner_fleet();
+// 	  $planet->load_sieging_fleet();
+// 	}
 	$_SESSION['player'] = $pl;
 	$_SESSION['galaxy'] = new Galaxy();
 	//       print_r($_SESSION);
+// 	print_r($_SESSION['player']);
 	return true;
       }
       catch(Exception $e) {
@@ -122,7 +123,7 @@ function build_menu() {
 <li> <a href="science.php">Science</a> </li>
 <li> <a href="trade.php">Trade</a> </li>
 <li> <a href="alliance.php">Alliance</a> </li>
-<li> <a href="fleet.php">Fleet</a> </li>
+<li> <a href="fleets.php">Fleets</a> </li>
 <li> <a href="?logout" id='logout'>Logout</a> </li>
 </ul>
 <br>

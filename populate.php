@@ -4,10 +4,10 @@ require("lib/common.php");
 
 
 function set_random_player_stats($player) {
-  $player->set_experience_points(rand(70, 20000));
-  $player->set_culture_points(rand(70, 20000));
+  $player->set_experience_points(rand(20, 20000));
+  $player->set_culture_points(rand(100, 15000));
   foreach (Player::$ALL_SCIENCES as $s) {
-    $player->set_science_points($s, rand(70, 20000));
+    $player->set_science_points($s, rand(2000, 20000));
   }
   $n = count(Player::$ALL_SCIENCES);
   $player->set_current_science(Player::$ALL_SCIENCES[rand(0, $n-1) % $n]);
@@ -46,7 +46,7 @@ function give_random_planets($player) {
   $continue = 0;
   $n_planets = 1;
   $culture = culture_points_to_level($player->get_culture_points());
-  while ($culture >= $n_planets && $continue < 80 && $n_vis > 0) {
+  while ($culture >= $n_planets && $continue < 60 && $n_vis > 0) {
     $random = rand(0, 10000);
     $home = rand(0,100);
     if ($home < 80 && $n_homes > 0) {
@@ -82,8 +82,8 @@ function build_random_fleets(Player $player) {
   for ($i = 0; $i < $n_planets; $i++) {
     $random = rand(0,100);
     if ($random >= 50) {
-      $fleet = new Fleet();
-      $fleet->set_owner($player->get_player_id());
+      $fleet = new RestingFleet($planets[$i]->get_sid(), $planets[$i]->get_position());
+      $fleet->set_owner($player);
       if (rand(0,3) == 0) {
 	$n = rand(0, 2*$n_planets);
 	$fleet->set_ships("colonyships", rand(1, $n));
@@ -102,13 +102,39 @@ function build_random_fleets(Player $player) {
 	$n = rand(0, 5*$n_planets);
 	$fleet->set_ships("battleships", $n);
       }
-      $fleet->save();
-      $fleet->land_on_planet($planets[$i]);
+      $fleet->save(); // Fleet ID is assigned here -- Do NOT interchange with next line
+      $fleet->set_planet($planets[$i]);
       $planets[$i]->save();
     }
   }
 }
 
+
+function launch_random_fleets(Player $player, Galaxy $galaxy) {
+  $n_flights = 0;
+  foreach ($player->get_planets() as $p) {
+    $rand = rand(0,100);
+    if ($rand >= 20 && $n_flights < 5 && $p->has_owner_fleet()) {
+      $launched = false;
+      while (!$launched) {
+	try {
+	  $sid = rand(1, $galaxy->spiral);
+	  $position = rand(1, 15);
+	  $target = new Planet($sid, $position);
+	  $target->load();
+	  $flight = $p->get_owner_fleet()->launch($target);
+	  $flight->save();
+	  $launched = true;
+	  $n_flights++;
+	}
+	catch (Exception $e) {
+	  // Exception handling
+	}
+      }
+      print "Launched fleet from ".$p->to_string()." to ".$target->to_string()."<br>\n";
+    }
+  }
+}
 
 
 function flush_database() {
@@ -184,6 +210,10 @@ function populate($num_players) {
       $pl = $players[$i];
       echo "<h3>Build fleets for player ".$pl->get_player_id()."</h3>\n";
       build_random_fleets($pl);
+      if (isset($_GET['random_flights'])) {
+	echo "<h3>Launch fleets for player ".$pl->get_player_id()."</h3>\n";
+	launch_random_fleets($pl, $galaxy);
+      }
       $pl->save();
     }
   }
@@ -231,7 +261,7 @@ else {
 <ul>
 <li class="todo">Number of alliances: <input type='text' name='n_alliances' size='5' value='4'></li>
 <li class="todo">Random trade agreements? <input type='checkbox' name='random_tas' checked></li>
-<li class="todo">Random attacks? <input type='checkbox' name='random_attacks' checked></li>
+<li>Random flights? <input type='checkbox' name='random_flights' checked></li>
 <li class="todo">Random messages? <input type='checkbox' name='random_messages' checked></li>
 
 </ul>

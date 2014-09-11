@@ -155,7 +155,7 @@ class System {
   function list_free_planets() {
     $list = array();
     foreach ($this->planets as $p) {
-      if (!$p->get_owner()) {
+      if (!$p->has_owner()) {
 	array_push($list, $p);
       }
     }

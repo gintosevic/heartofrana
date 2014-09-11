@@ -1,44 +1,83 @@
 <?php
 
-class Flight {
+/********************************************************************
+ * Flying fleet
+ ********************************************************************/
 
-  private $flight_id;
+class FlyingFleet extends Fleet {
+
   private $departure_time;
   private $departure_sid;
   private $departure_position;
   private $arrival_time;
   private $arrival_sid;
   private $arrival_position;
+  private $departure_planet;
+  private $arrival_planet;
   
-  private $fleet_id;
-  private $fleet;
-
   function __construct($id) {
-    $this->fleet_id = $id;
+    parent::__construct($id);
     $this->departure_time = null;
-    $this->departure_sid = 0;
-    $this->departure_position = 0;
+    $this->departure_sid = null;
+    $this->departure_position = null;
     $this->arrival_time = null;
-    $this->arrival_sid = 0;
-    $this->arrival_position = 0;
-    $this->fleet_id = null;
-    $this->fleet = null;
+    $this->arrival_sid = null;
+    $this->arrival_position = null;
+    $this->departure_planet = null;
+    $this->arrival_planet = null;
   }
 
   function load() {
+    parent::load();
     $result = db_query("SELECT * FROM Flight WHERE fleet_id = ".$this->fleet_id);
     $row = db_fetch_assoc($result);
-    $this->departure_time = $row['departure_time'];
+    $this->departure_time = strtotime($row['departure_time']);
     $this->departure_sid = $row['departure_sid'];
     $this->departure_position = $row['departure_position'];
-    $this->arrival_time = $row['arrival_time'];
+    $this->arrival_time = strtotime($row['arrival_time']);
     $this->arrival_sid = $row['arrival_sid'];
     $this->arrival_position = $row['arrival_position'];
-    $this->fleet_id = $row['fleet_id'];
   }
 
   function save() {
-    $result = db_query("INSERT INTO Flight VALUES(".$this->fleet_id.", ".$this->departure_time.", ".$this->departure_sid.", ".$this->departure_position.", ".$this->arrival_time.", ".$this->arrival_sid.", ".$this->arrival_position.")");
+    parent::save();
+    $result = db_query("INSERT INTO Flight VALUES(".$this->fleet_id.", FROM_UNIXTIME(".$this->departure_time."), ".$this->departure_sid.", ".$this->departure_position.", FROM_UNIXTIME(".$this->arrival_time."), ".$this->arrival_sid.", ".$this->arrival_position.")");
+  }
+  
+  function load_departure_planet() {
+    $this->departure_planet = new Planet($this->departure_sid, $this->departure_position);
+    $this->departure_planet->load();
+  }
+  
+  function get_departure_planet() {
+    if ($this->departure_planet == null && $this->departure_sid !== null && $this->departure_position !== null) {
+      $this->load_departure_planet();
+    }
+    return $this->departure_planet;
+  }
+  
+  function set_departure_planet(Planet $planet) {
+    $this->departure_planet = $planet;
+    $this->departure_sid = $planet->get_sid();
+    $this->departure_position = $planet->get_position();
+  }
+  
+  function load_arrival_planet() {
+    $this->arrival_planet = new Planet($this->arrival_sid, $this->arrival_position);
+    $this->arrival_planet->load();
+  }
+  
+  function get_arrival_planet() {
+    if ($this->arrival_planet == null && $this->arrival_sid !== null && $this->arrival_position !== null) {
+      $this->load_arrival_planet();
+    }
+    return $this->arrival_planet;
+  }
+  
+  function set_arrival_planet(Planet $planet) {
+    $this->arrival_planet = $planet;
+    $this->arrival_sid = $planet->get_sid();
+    $this->arrival_position = $planet->get_position();
   }
   
   function get_departure_time() {

@@ -10,6 +10,7 @@ class Planet {
   private $population_points;
   private $building_points;
   private $production_points;
+  private $owner_id;
   private $owner;
   private $owner_fleet_id;
   private $owner_fleet;
@@ -27,6 +28,7 @@ class Planet {
     foreach (Planet::$ALL_BUILDINGS as $b) {
       $this->building_points[$b] = 0;
     }
+    $this->owner_id = null;
     $this->owner = null;
     $this->owner_fleet_id = null;
     $this->owner_fleet = null;
@@ -40,8 +42,8 @@ class Planet {
     foreach (Planet::$ALL_BUILDINGS as $b) {
       array_push($building_update_attr, "$b = ".$this->get_building_points($b));
     }
-    $result = db_query("INSERT INTO Planet VALUES(".$this->sid.", ".$this->position.", ".($this->bonus?1:0).", ".$this->population_points.", ".join(", ", $this->building_points).", ".$this->production_points.", ".($this->owner === null?"NULL":$this->owner) .", ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id).")
-    ON DUPLICATE KEY UPDATE sid = ".$this->sid.", position = ".$this->position.", bonus = ".($this->bonus?1:0).", population = ".$this->population_points.", ".join(", ", $building_update_attr).", production = ".$this->production_points.", owner = ".($this->owner === null?"NULL":$this->owner) .", owner_fleet = ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", sieging_fleet = ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id));
+    $result = db_query("INSERT INTO Planet VALUES(".$this->sid.", ".$this->position.", ".($this->bonus?1:0).", ".$this->population_points.", ".join(", ", $this->building_points).", ".$this->production_points.", ".($this->owner_id === null?"NULL":$this->owner_id) .", ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id).")
+    ON DUPLICATE KEY UPDATE sid = ".$this->sid.", position = ".$this->position.", bonus = ".($this->bonus?1:0).", population = ".$this->population_points.", ".join(", ", $building_update_attr).", production = ".$this->production_points.", owner = ".($this->owner_id === null?"NULL":$this->owner_id) .", owner_fleet = ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", sieging_fleet = ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id));
   }
   
   function load() {
@@ -49,7 +51,7 @@ class Planet {
     $p = $this->position;
     $result = db_query("SELECT * FROM Planet WHERE sid = '$s' AND position = '$p';");
     if (!$result || db_num_rows($result) == 0) {
-      die("No planet SID=$s position=$p.<br>\n");
+      throw new Exception("No planet SID=$s position=$p.");
     }
     $row = db_fetch_assoc($result);
     $this->bonus = ($row['bonus'] == 1);
@@ -59,11 +61,18 @@ class Planet {
       $this->building_points[$b] = $row[$b];
     }
     $this->production_points = $row['production'];
-    $this->owner = $row['owner'];
+    $this->owner_id = $row['owner'];
     $this->owner_fleet_id = $row['owner_fleet'];
     $this->owner_fleet = null;
     $this->sieging_fleet_id = $row['sieging_fleet'];
     $this->sieging_fleet = null;
+  }
+  
+  function load_owner() {
+    if ($this->owner_id !== null) {
+      $this->owner = new Player($this->owner_id);
+      $this->owner->load();
+    }
   }
   
   function load_owner_fleet() {
@@ -97,20 +106,19 @@ class Planet {
   function get_position() { return $this->position; }
   
   function set_owner(Player $pl) {
-    if (!($this->owner === $pl->get_player_id())) {
-//       $result = db_query("UPDATE Planet SET owner = ".$pl->get_player_id()." WHERE sid = ".$this->sid." AND position = ".$this->position.";");
-      $this->owner = $pl->get_player_id();
+    if ($this->owner_id !== $pl->get_player_id()) {
+      $this->owner_id = $pl->get_player_id();
+      $this->owner = $pl;
       $pl->add_planet($this);
     }
   }
   
-  function get_owner() {
-    if (isset($this->owner)) {
-      return $this->owner;
-    }
-    else {
-      return false;
-    }
+  function get_owner_id() {
+      return $this->owner_id;
+  }
+  
+  function has_owner() {
+    return ($this->owner_id !== null);
   }
   
   function set_bonus($bool) {
@@ -172,10 +180,16 @@ class Planet {
   }
   
   function get_owner_fleet() {
+    if ($this->owner_fleet_id !== null && $this->owner_fleet === null) {
+      $this->load_owner_fleet();
+    }
     return $this->owner_fleet;
   }
   
   function get_sieging_fleet() {
+    if ($this->sieging_fleet_id !== null && $this->sieging_fleet === null) {
+      $this->load_sieging_fleet();
+    }
     return $this->sieging_fleet;
   }
   
@@ -188,6 +202,11 @@ class Planet {
     $this->owner_fleet_id = $fleet->get_fleet_id();
   }
   
+  function unset_owner_fleet() {
+    $this->owner_fleet = null;
+    $this->owner_fleet_id = null;
+  }
+  
   function set_sieging_fleet_id($fleet_id) {
     $this->sieging_fleet_id = $fleet_id;
   }
@@ -195,6 +214,15 @@ class Planet {
   function set_sieging_fleet(Fleet $fleet) {
     $this->sieging_fleet = $fleet;
     $this->sieging_fleet_id = $fleet->get_fleet_id();
+  }
+  
+  function unset_sieging_fleet() {
+    $this->sieging_fleet = null;
+    $this->sieging_fleet_id = null;
+  }
+  
+  function to_string() {
+    return "SID".$this->sid." #".$this->position;
   }
   
 }

@@ -4,7 +4,7 @@ require("../lib/common.php");
 function display_planet_in_system($planet) {
   $planet->load();
   echo "<tr";
-  if ($planet->get_owner() && ($planet->get_owner() == $_SESSION['player']->get_player_id())
+  if ($planet->has_owner() && ($planet->get_owner_id() == $_SESSION['player']->get_player_id())
     ) {
     echo " class='me'";
   }
@@ -14,8 +14,8 @@ function display_planet_in_system($planet) {
     echo " class='bonus_planet'";
   }
   echo ">".$planet->get_position()."</td>\n";
-  if ($planet->get_owner()) {
-    echo "<td><a class='todo'>".player_id_to_name($planet->get_owner())."</a></td>\n";
+  if ($planet->has_owner()) {
+    echo "<td><a class='todo'>".player_id_to_name($planet->get_owner_id())."</a></td>\n";
     echo "<td>".$planet->get_population_level()."</td>\n";
     echo "<td>".$planet->get_building_level("starbase")."</td>\n";
   }

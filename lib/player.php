@@ -203,7 +203,7 @@ class Player {
   }
   
   function load_planets() {
-    $results = db_query("SELECT sid, position FROM Planet WHERE owner = '".$this->player_id."'");
+    $results = db_query("SELECT sid, position FROM Planet WHERE owner = ".$this->player_id);
     $list = array();
     $n = db_num_rows($results);
     for ($i =0; $i < $n; $i++) {
@@ -257,12 +257,34 @@ class Player {
   }
   
   function load_fleets() {
-    $results = db_query("SELECT fleet_id FROM Fleet WHERE owner = ".$this->get_player_id());
-    $n = db_num_rows($results);
     $this->fleets = array();
+    
+    // Resting fleets
+    $results = db_query("SELECT f.fleet_id, p.sid, p.position FROM Fleet f, Planet p WHERE f.owner = ".$this->get_player_id()." AND p.owner_fleet = f.fleet_id");
+    $n = db_num_rows($results);
     for ($i = 0; $i < $n; $i++) {
       $row = db_fetch_assoc($results, $i);
-      $fleet = new Fleet($row['fleet_id']);
+      $fleet = new RestingFleet($row['sid'], $row['position'], $row['fleet_id']);
+      $fleet->load();
+      array_push($this->fleets, $fleet);
+    }
+    
+    // Sieging fleets
+    $results = db_query("SELECT f.fleet_id, p.sid, p.position FROM Fleet f, Planet p WHERE f.owner = ".$this->get_player_id()." AND p.sieging_fleet = f.fleet_id");
+    $n = db_num_rows($results);
+    for ($i = 0; $i < $n; $i++) {
+      $row = db_fetch_assoc($results, $i);
+      $fleet = new SiegingFleet($row['sid'], $row['position'], $row['fleet_id']);
+      $fleet->load();
+      array_push($this->fleets, $fleet);
+    }
+    
+    // Flying fleets
+    $results = db_query("SELECT f.fleet_id FROM Fleet f, Flight g WHERE f.owner = ".$this->get_player_id()." AND f.fleet_id = g.fleet_id");
+    $n = db_num_rows($results);
+    for ($i = 0; $i < $n; $i++) {
+      $row = db_fetch_assoc($results, $i);
+      $fleet = new FlyingFleet($row['fleet_id']);
       $fleet->load();
       array_push($this->fleets, $fleet);
     }

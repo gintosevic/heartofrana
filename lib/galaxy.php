@@ -140,15 +140,15 @@ class Galaxy {
       $system->add_bonus_planet();
     }
     
-    echo "Add planet<br>\n";
-    $system->add_planet();
-    echo "Add planet<br>\n";
+    $planet = $system->add_planet();
+    echo "Add free planet SID=".$planet->get_sid()." position=".$planet->get_position()."<br>\n";
     $planet = $system->add_planet();
     $planet->set_owner($pl);
     Event::create_and_save($pl->get_player_id(), "new_planet", "Your first planet", "People has elected you as the new leader of planet <a href=''view_planet.php?sid=".$planet->get_sid()."&position=".$planet->get_position()."''>".$system->get_name()." (SID ".$planet->get_sid().") #".$planet->get_position()."</a>.");
     $system->increase_num_homes();
-    echo "Add planet<br>\n";
+    echo "Add owned planet SID=".$planet->get_sid()." position=".$planet->get_position()."<br>\n";
     $system->add_planet();
+    echo "Add free planet SID=".$planet->get_sid()." position=".$planet->get_position()."<br>\n";
     $system->save();
     $system->save_planets();
     sem_release($sem);
