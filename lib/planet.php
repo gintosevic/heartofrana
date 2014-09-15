@@ -121,6 +121,14 @@ class Planet {
     return ($this->owner_id !== null);
   }
   
+  function get_owner() {
+    if ($this->has_owner() && $this->owner === null) {
+      $this->owner = new Player($this->owner_id);
+      $this->owner->load();
+    }
+    return false;
+  }
+  
   function set_bonus($bool) {
     $this->bonus = $bool;
   }
@@ -223,6 +231,10 @@ class Planet {
   
   function to_string() {
     return "SID".$this->sid." #".$this->position;
+  }
+  
+  function to_html() {
+    return "<a class='planet' href='view_planet.php?sid=".$this->get_sid()."&position=".$this->get_position()."'>".$this->to_string()."</a>";
   }
   
 }

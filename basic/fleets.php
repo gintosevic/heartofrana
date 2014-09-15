@@ -60,7 +60,7 @@ EOL;
   }
   
   echo "<h2>Sieging fleets</h2>\n";
-  if (count($resting_fleets) > 0) {
+  if (count($sieging_fleets) > 0) {
     echo "<table class='fleets'>\n";
     echo "<tr id='description' class='fleets'><td>System</td><td>Position</td><td>Colonyships</td><td>Transports</td><td>Destroyers</td><td>Cruisers</td><td>Battleships</td></tr>\n";
     foreach ($sieging_fleets as $f) {

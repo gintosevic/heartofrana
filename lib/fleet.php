@@ -110,6 +110,17 @@ class Fleet {
     }
   }
   
+  function to_html() {
+    $str = "<span class='fleet'>\n<ul>\n";
+    foreach (Fleet::$ALL_SHIPS as $ship) {
+      if ($this->ships[$ship] > 0) {
+	$str .= "<li>".$this->ships[$ship]." ".($this->ships[$ship] > 1?$ship:substr($ship, 0, -1))."</li>\n";
+      }
+    }
+    $str .= "</ul>\n</span>\n";
+    return $str;
+  }
+  
 }
 
 /********************************************************************

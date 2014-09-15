@@ -2,7 +2,7 @@
 
 class Event {
 
-  static $ALL_EVENT_TYPES = array("normal", "important", "won_fight", "lost_fight", "new_planet", "lost_planet");
+  static $ALL_EVENT_TYPES = array("normal", "important", "enemy_attack", "allied_attack", "won_fight", "lost_fight", "new_planet", "lost_planet");
 
   var $event_id;
   var $player_id;
@@ -38,7 +38,9 @@ class Event {
     if ($this->event_id != null) {
       $id = $this->event_id;
     }
-    $result = db_query("INSERT INTO Event VALUES($id, ".$this->player_id.", NOW(), '".$this->type."', '".$this->title."', '".$this->text."', ".($this->new?1:0).")");
+    $escaped_title = str_replace("'", "''", $this->title);
+    $escaped_text = str_replace("'", "''", $this->text);
+    $result = db_query("INSERT INTO Event VALUES($id, ".$this->player_id.", NOW(), '".$this->type."', '$escaped_title', '$escaped_text', ".($this->new?1:0).")");
     $result = db_query("SELECT * FROM Event WHERE event_id = LAST_INSERT_ID()");
     $row = db_fetch_assoc($result);
     $this->event_id = $row['event_id'];

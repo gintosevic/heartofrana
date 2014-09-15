@@ -144,7 +144,7 @@ class Galaxy {
     echo "Add free planet SID=".$planet->get_sid()." position=".$planet->get_position()."<br>\n";
     $planet = $system->add_planet();
     $planet->set_owner($pl);
-    Event::create_and_save($pl->get_player_id(), "new_planet", "Your first planet", "People has elected you as the new leader of planet <a href=''view_planet.php?sid=".$planet->get_sid()."&position=".$planet->get_position()."''>".$system->get_name()." (SID ".$planet->get_sid().") #".$planet->get_position()."</a>.");
+    Event::create_and_save($pl->get_player_id(), "new_planet", "Your first planet", "People has elected you as the new leader of planet ".$planet->to_html().".");
     $system->increase_num_homes();
     echo "Add owned planet SID=".$planet->get_sid()." position=".$planet->get_position()."<br>\n";
     $system->add_planet();

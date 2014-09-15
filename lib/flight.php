@@ -42,6 +42,12 @@ class FlyingFleet extends Fleet {
   function save() {
     parent::save();
     $result = db_query("INSERT INTO Flight VALUES(".$this->fleet_id.", FROM_UNIXTIME(".$this->departure_time."), ".$this->departure_sid.", ".$this->departure_position.", FROM_UNIXTIME(".$this->arrival_time."), ".$this->arrival_sid.", ".$this->arrival_position.")");
+    
+    if ($this->get_owner_id() !== $this->get_arrival_planet()->get_owner_id()
+      && $this->get_arrival_planet()->has_owner()) {
+      $owner_str = $this->get_owner()->get_name();
+      Event::create_and_save($this->get_arrival_planet()->get_owner_id(), "enemy_attack", "Attack from $owner_str", "An incoming fleet from $owner_str has been detected. The target planet is ".$this->get_arrival_planet()->to_html().". Below the estimation of the incoming fleet:<br>".$this->to_html());
+    }
   }
   
   function load_departure_planet() {

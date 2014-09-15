@@ -152,7 +152,13 @@ li.news_new_planet div.news_time {
   background-color: rgba(0,100,0,0.9);
 }
 
+li.news_enemy_attack div.news_title {
+  color: red;
+}
 
+li.news_enemy_attack div.news_time {
+  background-color: rgba(100,0,0,0.9);
+}
 
 /*****************************************
 * Map
@@ -273,7 +279,7 @@ color: green;
 }
 
 /*****************************************
-* System view
+* Fleets
 *****************************************/
 
 div#fleet_tab {
@@ -289,4 +295,15 @@ text-decoration: underline;
   background-color: rgba(32,32,32,0.7);
   border: 1px solid white;
   text-align: center;
+}
+
+span.fleet {
+  text-decoration: none;
+}
+
+.fleet li {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
 }
