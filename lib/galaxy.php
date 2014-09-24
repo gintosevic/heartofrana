@@ -1,10 +1,5 @@
 <?php
 
-function create_new_random_player($l, $p, $e) {
-  $ac = new Account($l, $p, $e);
-  $pl = new Player($ac);
-}
-
 class Galaxy {
   var $galaxy_id;
   var $spiral;
@@ -33,7 +28,8 @@ class Galaxy {
   function add_player($l, $p, $e) {
     // Create an account and the corresponding player
     $ac = new Account($l, $p, $e);
-    $pl = new Player($ac->login);
+    $pl = new Player();
+    $pl->set_name($ac->login);
     $pl->save(); // Create the player in the DB and set the player ID
     Event::create_and_save($pl->get_player_id(), "normal", "Welcome to Heart of Rana", "This is a super game.<br>With super people playing it.<br>If you too wants to become awesome, please read the tutorial.");
     // Prepare a home planet + 2 free planet

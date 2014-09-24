@@ -26,6 +26,24 @@ div.query {
   background-color: grey;
 }
 
+a.button {
+  border: 1px solid;
+  padding-right: 2px;
+  padding-left: 2px;
+  cursor: pointer;
+  margin: 1px;
+}
+
+a.disabled_button {
+  border: 1px solid;
+  border-color: gray;
+  color: gray;
+  padding-right: 2px;
+  padding-left: 2px;
+  cursor: not-allowed;
+  margin: 1px;
+}
+
 /*****************************************
 * Menu
 *****************************************/

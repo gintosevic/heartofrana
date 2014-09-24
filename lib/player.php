@@ -21,9 +21,9 @@ class Player {
   /**
    * Constructor to load a given player based on his name
    */
-  function __construct($name) {
-    $this->name = $name;
-    $this->player_id = null;
+  function __construct($player_id = null) {
+    $this->name = null;
+    $this->player_id = $player_id;
     $this->race_id = 0;
     $this->points = 0;
     $this->rank = 0;
@@ -41,8 +41,8 @@ class Player {
     }
     
     $this->tag = null;
-    $this->planets = array();
-    $this->fleets = array();
+    $this->planets = null;
+    $this->fleets = null;
   }
   
   function save_race() {
@@ -87,8 +87,17 @@ class Player {
   }
   
   function load() {
-    $name = $this->name;
-    $result = db_query("SELECT * FROM Player WHERE name = '$name';");
+    $filter = "";
+    if ($this->player_id !== null) {
+      $filter = "player_id = ".$this->player_id;
+    }
+    elseif ($this->name !== null) {
+      $filter = "name = '".$this->name."'";
+    }
+    else {
+      throw new Exception("Impossible to load requested player.");
+    }
+    $result = db_query("SELECT * FROM Player WHERE $filter");
     $row = db_fetch_assoc($result);
     $this->player_id = $row['player_id'];
     $this->name = $row['name'];
@@ -104,13 +113,18 @@ class Player {
     $this->race = db_fetch_assoc($result);
     
     $result = db_query("SELECT * FROM Science WHERE player_id = ".$this->player_id);
-    $this->science_points = db_fetch_assoc($result);
-    
+    $row = db_fetch_assoc($result);
+    $this->science_points = array();
+    foreach (Player::$ALL_SCIENCES as $science) {
+      $this->science_points[$science] = $row[$science];
+    }
   }
   
   function get_player_id() { return $this->player_id; }
   
   function get_name() { return $this->name; }
+  
+  function set_name($name) { $this->name = $name; }
   
   function get_points() { return $this->points; }
   
@@ -126,7 +140,6 @@ class Player {
   // EXPERIENCE AND PLAYER LEVEL
   
   function set_experience_points($n) {
-//     db_query("UPDATE Player SET experience = $n WHERE player_id = ".$this->player_id);
     $this->experience_points = $n;
   }
   
@@ -151,8 +164,35 @@ class Player {
   
   function set_science_points($field, $n) {
     if (array_search($field, Player::$ALL_SCIENCES) === false) { die(__FILE__ . ": line " . __LINE__.": No science called $field."); }
-//     db_query("UPDATE Science SET ${field} = $n WHERE player_id = ".$this->player_id);
     $this->science_points[$field] = $n;
+  }
+  
+  function increment_points() {
+    if ($this->planets === null) {
+      $this->load_planets();
+    }
+    $science_new_points = 0;
+    $culture_new_points = 0;
+    foreach ($this->planets as $p) {
+      $science_new_points += $p->get_building_level("lab");
+      $culture_new_points += $p->get_building_level("cybernet");
+      $production_new_points = $p->get_building_level("farm") + $p->get_building_level("factory");
+      $p->set_production_points($p->get_production_points() + $production_new_points);
+//       $production_multiplier = $this->get_production_multiplier();
+      print "Increment production by ".$production_new_points." in ".$p->to_string()."<br>\n";
+      $population_new_points = $p->get_building_level("farm");
+//       $population_multiplier = $this->get_population_multiplier();
+      $p->set_population_points($p->get_population_points() + $population_new_points);
+      print "Increment population by ".$population_new_points." in ".$p->to_string()."<br>\n";
+      $p->save();
+    }
+    $cur_science = $this->get_current_science();
+    $science_cur_points = $this->get_science_points($cur_science);
+    $culture_cur_points = $this->get_culture_points();
+    $this->set_science_points($cur_science, $science_cur_points + $science_new_points);
+    print "Increment ".$this->get_current_science()." by ".$science_new_points."<br>\n";
+    $this->set_culture_points($culture_cur_points + $culture_new_points);
+    print "Increment culture by ".$culture_new_points."<br>\n";
   }
   
   function get_current_science() {
@@ -161,7 +201,6 @@ class Player {
 
   function set_current_science($science) {
     if (array_search($science, Player::$ALL_SCIENCES) === false) { die(__FILE__ . ": line " . __LINE__.": No science called $science."); }
-//     $result = db_query("UPDATE Player SET current_science = '$science' WHERE player_id = ".$this->player_id);
     $this->current_science = $science;
     return true;
   }
@@ -177,7 +216,6 @@ class Player {
   }
   
   function set_culture_points($n) {
-//     db_query("UPDATE Player SET culture = $n WHERE player_id = ".$this->player_id);
     $this->culture_points = $n;
   }
   
@@ -194,11 +232,13 @@ class Player {
   // PLANETS
   
   function get_planets() {
+    if ($this->planets === null) { $this->load_planets(); }
     return $this->planets;
   }
   
   function add_planet(Planet $planet) {
     $planet->set_owner($this);
+    if ($this->planets === null) { $this->load_planets(); }
     array_push($this->planets, $planet);
   }
   
@@ -217,6 +257,7 @@ class Player {
   
   function list_home_systems() {
     $list = array();
+    if ($this->planets === null) { $this->load_planets(); }
     foreach ($this->planets as $p) {
       $s = System::get_cache_or_load($p->get_sid());
       $list[$p->get_sid()] = $s;
@@ -253,6 +294,7 @@ class Player {
   }
   
   function get_fleets() {
+    if ($this->fleets === null) { $this->load_fleets(); }
     return $this->fleets;
   }
   

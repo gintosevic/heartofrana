@@ -117,7 +117,7 @@ CREATE TABLE Planet (
                 sid INT NOT NULL,
                 position TINYINT NOT NULL,
                 bonus BOOLEAN DEFAULT false NOT NULL,
-                population TINYINT DEFAULT 1 NOT NULL,
+                population INT DEFAULT 0 NOT NULL,
                 farm INT DEFAULT 0 NOT NULL,
                 factory INT DEFAULT 0 NOT NULL,
                 cybernet INT DEFAULT 0 NOT NULL,

@@ -43,7 +43,7 @@ class Planet {
       array_push($building_update_attr, "$b = ".$this->get_building_points($b));
     }
     $result = db_query("INSERT INTO Planet VALUES(".$this->sid.", ".$this->position.", ".($this->bonus?1:0).", ".$this->population_points.", ".join(", ", $this->building_points).", ".$this->production_points.", ".($this->owner_id === null?"NULL":$this->owner_id) .", ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id).")
-    ON DUPLICATE KEY UPDATE sid = ".$this->sid.", position = ".$this->position.", bonus = ".($this->bonus?1:0).", population = ".$this->population_points.", ".join(", ", $building_update_attr).", production = ".$this->production_points.", owner = ".($this->owner_id === null?"NULL":$this->owner_id) .", owner_fleet = ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", sieging_fleet = ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id));
+    ON DUPLICATE KEY UPDATE bonus = ".($this->bonus?1:0).", population = ".$this->population_points.", ".join(", ", $building_update_attr).", production = ".$this->production_points.", owner = ".($this->owner_id === null?"NULL":$this->owner_id) .", owner_fleet = ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", sieging_fleet = ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id));
   }
   
   function load() {
@@ -142,6 +142,10 @@ class Planet {
     $this->building_points[$field] = $n;
   }
   
+  function add_building_points($field, $n) {
+    $this->set_building_points($field, $this->get_building_points($field) + $n);
+  }
+  
   function get_building_points($field) {
     if (array_search($field, Planet::$ALL_BUILDINGS) === false) { die(__FILE__ . ": line " . __LINE__.": No building called $field."); }
     return $this->building_points[$field];
@@ -167,8 +171,23 @@ class Planet {
     $this->production_points = $n;
   }
   
+  function substract_production_points($n) {
+    $this->production_points -= $n;
+  }
+  
   function get_production_points() {
     return $this->production_points;
+  }
+  
+  function upgrade_building($type, $amount) {
+    if ($amount <= 0) { return; }
+    $this->add_building_points($type, $amount);
+    $this->substract_production_points($amount);
+  }
+  
+  function build_fleet($type, $amount) {
+    if ($amount <= 0) { return; }
+    
   }
   
   function has_owner_fleet() {

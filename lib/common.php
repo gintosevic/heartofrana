@@ -56,7 +56,8 @@ function check_login() {
 	session_destroy();
 	session_start();
 	$_SESSION['account'] = new Account($_POST['login'], $_POST['password']);
-	$pl = new Player($_POST['login']);
+	$pl = new Player();
+	$pl->set_name($_POST['login']);
 	$pl->load();
 	$pl->load_planets();
 	$pl->load_fleets();

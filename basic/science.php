@@ -21,7 +21,7 @@ function display_science($player) {
       echo "<tr id='current_science' class='science'><td>$name</td><td>$current_level</td><td>$progress%</td><td>$remaining_points</td><td></td></tr>\n";
     }
     else {
-      echo "<tr><td>$name</td><td>$current_level</td><td>$progress%</td><td>$remaining_points</td><td><a class='todo'>[Select]</a></td></tr>\n";
+      echo "<tr><td>$name</td><td>$current_level</td><td>$progress%</td><td>$remaining_points</td><td><a class='button' onclick=\"window.location.href='".basename(__FILE__)."?set_science=$type'\">Select</a></td></tr>\n";
     }
   }
   $current_points = $player->get_culture_points();
@@ -40,6 +40,10 @@ if (!check_login()) {
 }
 else {
   build_menu();
+  if (isset($_GET['set_science'])) {
+    $_SESSION['player']->set_current_science($_GET['set_science']);
+    $_SESSION['player']->save();
+  }
   display_science($_SESSION['player']);
 }
 build_footer();
