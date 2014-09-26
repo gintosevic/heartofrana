@@ -28,6 +28,8 @@ div.query {
 
 a.button {
   border: 1px solid;
+  background-color: #631;
+  text-decoration: none;
   padding-right: 2px;
   padding-left: 2px;
   cursor: pointer;
@@ -37,7 +39,9 @@ a.button {
 a.disabled_button {
   border: 1px solid;
   border-color: gray;
+  background-color: #151515;
   color: gray;
+  text-decoration: none;
   padding-right: 2px;
   padding-left: 2px;
   cursor: not-allowed;
@@ -205,18 +209,18 @@ div#map_tab {
 * System view
 *****************************************/
 
-div#science_tab {
-  background: black url("./img/backgrounds/sciences.jpg") no-repeat center center;
+div#system_view_tab {
+  background: black url("./img/backgrounds/system_view.jpg") no-repeat center top;
 }
 
 .system_view {
-  background-color: #202020;
+  background-color: rgba(32,32,32,0.7);
   border: 1px solid white;
   text-align: center;
 }
 
 #title.system_view {
-  color: blue;
+  color: #4444ff;
   font-weight: bold;
 }
 
@@ -257,18 +261,23 @@ text-decoration: underline;
 }
 
 /*****************************************
-* System view
+* Planet view
 *****************************************/
 
+div#planet_view_tab {
+  background: black url("./img/backgrounds/planet_view.jpg") no-repeat center top;
+}
+
 .planet_view {
-  background-color: #202020;
+  background-color: rgba(32,32,32,0.7);
   border: 1px solid white;
   text-align: center;
 }
 
 #title.planet_view {
-  color: blue;
+  color: #4444ff;
   font-weight: bold;
+  font-size: 1.1em;
 }
 
 #description.planet_view {
@@ -277,8 +286,14 @@ text-decoration: underline;
 }
 
 /*****************************************
-* System view
+* Science
 *****************************************/
+
+div#science_tab {
+  background: black url("./img/backgrounds/sciences.jpg") no-repeat center center;
+}
+
+
 
 .science {
   background-color: rgba(32,32,32,0.7);

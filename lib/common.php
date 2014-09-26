@@ -200,9 +200,12 @@ function biology_level_to_range($level) {
   else { return $level; }
 }
 
+function player_level_to_experience_points($player_level){
+  return int(5 * pow($player_level, 2.7));
+}
 
 function experience_points_to_player_level($points) {
-  return round(sqrt($points));
+  return intval(pow($points/5, 1/2.7));
 }
 
 /**

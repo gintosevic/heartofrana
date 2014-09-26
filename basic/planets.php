@@ -17,7 +17,7 @@ function display_planet_short($planet) {
   echo "<td>".$planet->get_population_level()."</td>\n";
   echo "<td>".$planet->get_building_level("starbase")."</td>\n";
   echo "<td>".$planet->get_production_points()."</td>\n";
-  echo "<td><a href=\"view_planet.php?sid=$sid&position=$position\">[See details]</a></td>\n";
+  echo "<td><a class='button' href=\"view_planet.php?sid=$sid&position=$position\">See details</a></td>\n";
   echo "</tr>\n";
 }
 

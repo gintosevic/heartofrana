@@ -34,12 +34,17 @@ function display_system($sid) {
   
   $s = $list[$sid];
   $s->load_planets();
+  echo <<<EOL
+<div class="tab" id="system_view_tab">
+<h1>System details</h1>
+EOL;
   echo "<table class='system_view'><tr><td colspan=4 id='title' class='system_view'>System ".$s->get_name()."<br>(sid=".$s->get_sid().", x=".$s->get_x().", y= ".$s->get_y().")</td></tr>\n";
   echo "<tr id='description' class='system_view'><td>Position</td><td>Owner</td><td>Population</td><td>Starbase</td></tr>\n";
   foreach ($s->get_planets() as $p) {
     display_planet_in_system($p);
   }
   echo "</table>";
+  echo "</div>\n";
 }
 
 build_header("basic.css");

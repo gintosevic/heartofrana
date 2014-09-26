@@ -9,6 +9,7 @@ class Planet {
   private $bonus;
   private $population_points;
   private $building_points;
+  private $ship_points;
   private $production_points;
   private $owner_id;
   private $owner;
@@ -28,6 +29,10 @@ class Planet {
     foreach (Planet::$ALL_BUILDINGS as $b) {
       $this->building_points[$b] = 0;
     }
+    $this->ship_points = array();
+    foreach (Fleet::$ALL_SHIPS as $s) {
+      $this->ship_points[$s] = 0;
+    }
     $this->owner_id = null;
     $this->owner = null;
     $this->owner_fleet_id = null;
@@ -42,8 +47,12 @@ class Planet {
     foreach (Planet::$ALL_BUILDINGS as $b) {
       array_push($building_update_attr, "$b = ".$this->get_building_points($b));
     }
-    $result = db_query("INSERT INTO Planet VALUES(".$this->sid.", ".$this->position.", ".($this->bonus?1:0).", ".$this->population_points.", ".join(", ", $this->building_points).", ".$this->production_points.", ".($this->owner_id === null?"NULL":$this->owner_id) .", ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id).")
-    ON DUPLICATE KEY UPDATE bonus = ".($this->bonus?1:0).", population = ".$this->population_points.", ".join(", ", $building_update_attr).", production = ".$this->production_points.", owner = ".($this->owner_id === null?"NULL":$this->owner_id) .", owner_fleet = ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", sieging_fleet = ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id));
+    $ship_update_attr = array();
+    foreach (Fleet::$ALL_SHIPS as $s) {
+      array_push($ship_update_attr, "$s = ".$this->get_ship_points($s));
+    }
+    $result = db_query("INSERT INTO Planet VALUES(".$this->sid.", ".$this->position.", ".($this->bonus?1:0).", ".$this->population_points.", ".join(", ", $this->building_points).", ".join(", ", $this->ship_points).", ".$this->production_points.", ".($this->owner_id === null?"NULL":$this->owner_id) .", ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id).")
+    ON DUPLICATE KEY UPDATE bonus = ".($this->bonus?1:0).", population = ".$this->population_points.", ".join(", ", $building_update_attr).", ".join(", ", $ship_update_attr).", production = ".$this->production_points.", owner = ".($this->owner_id === null?"NULL":$this->owner_id) .", owner_fleet = ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", sieging_fleet = ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id));
   }
   
   function load() {
@@ -59,6 +68,9 @@ class Planet {
     $this->population_level = population_points_to_level($row['population']);
     foreach (Planet::$ALL_BUILDINGS as $b) {
       $this->building_points[$b] = $row[$b];
+    }
+    foreach (Fleet::$ALL_SHIPS as $s) {
+      $this->ship_points[$s] = $row[$s];
     }
     $this->production_points = $row['production'];
     $this->owner_id = $row['owner'];
@@ -126,7 +138,7 @@ class Planet {
       $this->owner = new Player($this->owner_id);
       $this->owner->load();
     }
-    return false;
+    return $this->owner;
   }
   
   function set_bonus($bool) {
@@ -137,22 +149,51 @@ class Planet {
     return $this->bonus;
   }
   
-  function set_building_points($field, $n) {
-    if (array_search($field, Planet::$ALL_BUILDINGS) === false) { die(__FILE__ . ": line " . __LINE__.": No building called $field."); }
-    $this->building_points[$field] = $n;
+  function set_building_points($type, $n) {
+    if (array_search($type, Planet::$ALL_BUILDINGS) === false) { die(__FILE__ . ": line " . __LINE__.": No building called $type."); }
+    $this->building_points[$type] = $n;
   }
   
-  function add_building_points($field, $n) {
-    $this->set_building_points($field, $this->get_building_points($field) + $n);
+  function set_ship_points($type, $n) {
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    if ($n <= 0) { return; }
+    if (!$this->has_owner_fleet()) {
+      $fleet = new RestingFleet($this->sid, $this->position);
+      $fleet->set_owner_id($this->get_owner_id());
+      $fleet->set_planet($this);
+      $fleet->save();
+      $this->set_owner_fleet($fleet);
+      $this->get_owner()->add_fleet($fleet);
+    }
+    $fleet = $this->owner_fleet;
+    $price = Fleet::get_ship_price($type, $this->get_owner()->get_science_level("economy"));
+    $n_ships = intval($n / $price);
+    $remaining_points = $n % $price;
+    $this->ship_points[$type] = $remaining_points;
+    $fleet->add_ships($type, $n_ships);
+    $this->ship_points[$type] = $remaining_points;
   }
   
-  function get_building_points($field) {
-    if (array_search($field, Planet::$ALL_BUILDINGS) === false) { die(__FILE__ . ": line " . __LINE__.": No building called $field."); }
-    return $this->building_points[$field];
+  function add_building_points($type, $n) {
+    $this->set_building_points($type, $this->get_building_points($type) + $n);
   }
   
-  function get_building_level($field) {
-    return building_points_to_level($this->get_building_points($field));
+  function add_ship_points($type, $n) {
+    $this->set_ship_points($type, $this->get_ship_points($type) + $n);
+  }
+  
+  function get_building_points($type) {
+    if (array_search($type, Planet::$ALL_BUILDINGS) === false) { die(__FILE__ . ": line " . __LINE__.": No building called $type."); }
+    return $this->building_points[$type];
+  }
+  
+  function get_ship_points($type) {
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    return $this->ship_points[$type];
+  }
+  
+  function get_building_level($type) {
+    return building_points_to_level($this->get_building_points($type));
   }
   
   function set_population_points($n) {
@@ -180,14 +221,19 @@ class Planet {
   }
   
   function upgrade_building($type, $amount) {
-    if ($amount <= 0) { return; }
-    $this->add_building_points($type, $amount);
-    $this->substract_production_points($amount);
+    if ($amount <= 0 || $this->has_sieging_fleet()) { return; }
+    if ($amount <= $this->get_production_points()) {
+      $this->add_building_points($type, $amount);
+      $this->substract_production_points($amount);
+    }
   }
   
-  function build_fleet($type, $amount) {
-    if ($amount <= 0) { return; }
-    
+  function upgrade_ship($type, $amount) {
+    if ($amount <= 0 || $this->has_sieging_fleet()) { return; }
+    if ($amount <= $this->get_production_points()){
+      $this->add_ship_points($type, $amount);
+      $this->substract_production_points($amount);
+    }
   }
   
   function has_owner_fleet() {

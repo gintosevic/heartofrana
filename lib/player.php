@@ -148,7 +148,7 @@ class Player {
   }
   
   function get_player_level() {
-    return experience_points_to_player_level($this->get_experience_points);
+    return experience_points_to_player_level($this->get_experience_points());
   }
   
   // SCIENCES
@@ -330,6 +330,11 @@ class Player {
       $fleet->load();
       array_push($this->fleets, $fleet);
     }
+  }
+  
+  function add_fleet(Fleet $fleet) {
+    if ($this->fleets === null) { $this->load_fleets(); }
+    array_push($this->fleets, $fleet);
   }
 
 }

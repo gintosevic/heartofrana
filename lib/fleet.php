@@ -7,6 +7,49 @@
 class Fleet {
   
   static $ALL_SHIPS = array("colonyships", "transports", "destroyers", "cruisers", "battleships");
+  static $SHIP_BASE_PRICES = array("colonyships" => 60, "transports" => 60, "destroyers" => 30, "cruisers" => 240, "battleships" => 600);
+  static $FIXED_PRICE_SHIPS = array("colonyships", "transports");
+  static $SHIP_PRICE_RATES = array(0 => 30, 1 => 30, 2 => 30, 3 => 30,
+				   4 => 29, 5 => 29, 6 => 29,
+				   7 => 28, 8 => 28, 9 => 28,
+				   10 => 27, 11 => 27, 12 => 27, 13 => 27,
+				   14 => 26, 15 => 26, 16 => 26,
+				   17 => 25, 18 => 25, 19 => 25,
+				   20 => 24, 21 => 24, 22 => 24, 23 => 24,
+				   24 => 23, 25 => 23, 26 => 23,
+				   27 => 22, 28 => 22, 29 => 22,
+				   30 => 21, 31 => 21, 32 => 21, 33 => 21,
+				   34 => 20, 35 => 20, 36 => 20,
+				   37 => 19, 38 => 19, 39 => 19,
+				   40 => 18, 41 => 18, 42 => 18, 43 => 18,
+				   44 => 17, 45 => 17, 46 => 17,
+				   47 => 16, 48 => 16, 49 => 16,
+				   50 => 15, 51 => 15, 52 => 15, 53 => 15,
+				   54 => 14, 55 => 14, 56 => 14,
+				   57 => 13, 58 => 13, 59 => 13,
+				   60 => 12, 61 => 12, 62 => 12, 63 => 12,
+				   64 => 11, 65 => 11, 66 => 11,
+				   67 => 10, 68 => 10, 69 => 10,
+				   70 => 9, 71 => 9, 72 => 9, 73 => 9,
+				   74 => 8, 75 => 8, 76 => 8,
+				   77 => 7, 78 => 7, 79 => 7,
+				   80 => 6, 81 => 6, 82 => 6, 83 => 6,
+				   84 => 5, 85 => 5, 86 => 5,
+				   87 => 4, 88 => 4, 89 => 4,
+				   90 => 3, 91 => 3, 92 => 3, 93 => 3,
+				   94 => 2, 95 => 2, 96 => 2,
+				   97 => 1, 98 => 1, 99 => 1
+				   );
+				   
+  static function get_ship_price($type, $eco_level) {
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    $eco_level = min($eco_level, max(array_keys(Fleet::$SHIP_PRICE_RATES)));
+    $price = Fleet::$SHIP_BASE_PRICES[$type];
+    if (array_search($type, Fleet::$FIXED_PRICE_SHIPS) === false) {
+      $price *= (Fleet::$SHIP_PRICE_RATES[$eco_level] / Fleet::$SHIP_BASE_PRICES["destroyers"]);
+    }
+    return $price;
+  }
   
   protected $fleet_id;
   protected $owner_id;
@@ -86,14 +129,19 @@ class Fleet {
     $this->owner_id = $player->get_player_id();
   }
   
-  function set_ships($field, $n) {
-    if (array_search($field, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $field."); }
-    $this->ships[$field] = $n;
+  function set_ships($type, $n) {
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    $this->ships[$type] = $n;
   }
   
-  function get_ships($field) {
-    if (array_search($field, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $field."); }
-    return $this->ships[$field];
+  function get_ships($type) {
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    return $this->ships[$type];
+  }
+  
+  function add_ships($type, $n) {
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    $this->ships[$type] = $this->ships[$type] + $n;
   }
   
   function is_empty() {

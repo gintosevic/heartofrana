@@ -15,6 +15,10 @@ function display_planet_details(Planet $planet) {
   $sid = $planet->get_sid();
   $position = $planet->get_position();
   $name = sid_to_name($sid);
+  echo <<<EOL
+<div class="tab" id="planet_view_tab">
+<h1>Planet details</h1>
+EOL;
   echo "<table class='planet_view'><tr><td colspan=5 id='title' class='planet_view'>Planet $name (SID $sid) #$position";
   if ($planet->is_bonus()) {
     echo "<br><a class='bonus_planet'>(Bonus planet)</a>";
@@ -44,32 +48,52 @@ function display_planet_details(Planet $planet) {
     $remaining_points = $next_level_points-$current_points;
     $progress = round((1-($remaining_points/$next_level_points))*100);
     echo "<tr><td>$name</td><td>$current_level</td><td>$progress%</td><td>$remaining_points</td><td>";
-    if ($planet->get_production_points() > 0) {
-      echo "<a class='button'  onclick=\"window.location.href='".basename(__FILE__)."?sid=$sid&position=$position&building=$type&spend=".$planet->get_production_points()."'\">Spend all</a>";
-    }
-    else {
-      echo "<a class='disabled_button'>Spend all</a>";
-    }
     if ($remaining_points <= $planet->get_production_points()) {
       echo "<a class='button'  onclick=\"window.location.href='".basename(__FILE__)."?sid=$sid&position=$position&building=$type&spend=$remaining_points'\">Upgrade</a>";
     }
     else {
       echo "<a class='disabled_button'>Upgrade</a>";
     }
+    if ($planet->get_production_points() > 0) {
+      echo "<a class='button'  onclick=\"window.location.href='".basename(__FILE__)."?sid=$sid&position=$position&building=$type&spend=".$planet->get_production_points()."'\">Spend all</a>";
+    }
+    else {
+      echo "<a class='disabled_button'>Spend all</a>";
+    }
     echo "</td></tr>\n";
   }
     // Fleet
-    echo "<tr class='planet_view' id='description'><td>Ship type</td><td colspan='3'>Quantity</td><td></td></tr>\n";
+    echo "<tr class='planet_view' id='description'><td>Ship type</td><td>Quantity</td><td>Price</td><td>Remaining</td><td></td></tr>\n";
     $player = $_SESSION['player'];
     $planet->load_owner_fleet();
     foreach (Fleet::$ALL_SHIPS as $ship) {
       if ($player->is_enabled($ship)) {
 	$name = ucfirst($ship);
 	$n_ships = $planet->get_owner_ships($ship);
-	echo "<tr><td>$name</td><td colspan='3'>$n_ships</td><td><a class='todo'>Build</a></td></tr>\n";
+	$price = Fleet::get_ship_price($ship, $player->get_science_level("economy"));
+	$remaining = $price - $planet->get_ship_points($ship);
+	echo "<tr><td>$name</td><td>$n_ships</td><td>$price</td><td>$remaining</td><td>";
+	foreach (array("1", "10", "100", "1000") as $num) {
+	  $required = $remaining + ($num-1)*$price;
+	  if ($required <= $planet->get_production_points()) {
+	    echo "<a class='button'  onclick=\"window.location.href='".basename(__FILE__)."?sid=$sid&position=$position&ship=$ship&spend=$required'\">+$num</a>";
+	  }
+	  else {
+	    echo "<a class='disabled_button'>+$num</a>";
+	  }
+	}
+	if ($planet->get_production_points() > 0) {
+	  echo "<a class='button'  onclick=\"window.location.href='".basename(__FILE__)."?sid=$sid&position=$position&ship=$ship&spend=".$planet->get_production_points()."'\">Spend all</a>";
+	}
+	else {
+	  echo "<a class='disabled_button'>Spend all</a>";
+	}
+	echo "</td></tr>\n";
       }
     }
   echo "</table>";
+  echo "</div>\n";
+
 }
 
 build_header("basic.css");
@@ -89,7 +113,15 @@ else {
 	$planet->upgrade_building($_GET['building'], $_GET['spend']);
       }
       elseif (isset($_GET['ship'])) {
-	$planet->build_fleet($_GET['ship'], $_GET['spend']);
+	$before = $planet->has_owner_fleet();
+	$planet->upgrade_ship($_GET['ship'], $_GET['spend']);
+	$after = $planet->has_owner_fleet();
+	if ($after) {
+	  if ($before != $after) {
+	    $_SESSION['player']->add_fleet($planet->get_owner_fleet());
+	  }
+	  $planet->get_owner_fleet()->save();
+	}
       }
       $planet->save();
     }
