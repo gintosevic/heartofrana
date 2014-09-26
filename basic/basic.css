@@ -222,6 +222,7 @@ div#system_view_tab {
 #title.system_view {
   color: #4444ff;
   font-weight: bold;
+  font-size: 1.1em;
 }
 
 #description.system_view {

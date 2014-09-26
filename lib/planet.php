@@ -89,14 +89,14 @@ class Planet {
   
   function load_owner_fleet() {
     if ($this->owner_fleet_id !== null) {
-      $this->owner_fleet = new Fleet($this->owner_fleet_id);
+      $this->owner_fleet = new RestingFleet($this->sid, $this->position, $this->owner_fleet_id);
       $this->owner_fleet->load();
     }
   }
   
   function load_sieging_fleet() {
     if ($this->sieging_fleet_id !== null) {
-      $this->sieging_fleet = new Fleet($this->sieging_fleet_id);
+      $this->sieging_fleet = new SiegingFleet($this->sid, $this->position, $this->sieging_fleet_id);
       $this->sieging_fleet->load();
     }
   }

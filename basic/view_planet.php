@@ -120,6 +120,9 @@ else {
 	  if ($before != $after) {
 	    $_SESSION['player']->add_fleet($planet->get_owner_fleet());
 	  }
+	  else {
+	    $_SESSION['player']->update_fleet($planet->get_owner_fleet());
+	  }
 	  $planet->get_owner_fleet()->save();
 	}
       }

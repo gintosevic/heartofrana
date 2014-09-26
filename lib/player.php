@@ -336,6 +336,16 @@ class Player {
     if ($this->fleets === null) { $this->load_fleets(); }
     array_push($this->fleets, $fleet);
   }
+  
+  function update_fleet(Fleet $fleet) {
+    if ($this->fleets === null) { $this->load_fleets(); }
+    $n = count($this->fleets);
+    for ($i = 0; $i < $n; $i++) {
+      if ($this->fleets[$i]->get_fleet_id() === $fleet->get_fleet_id()) {
+	$this->fleets[$i] = $fleet;
+      }
+    }
+  }
 
 }
 
