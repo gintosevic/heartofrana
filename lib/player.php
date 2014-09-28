@@ -346,6 +346,10 @@ class Player {
       }
     }
   }
+  
+  function to_html() {
+    return "<a href='profile.php?player_id=".$this->get_player_id()."'>".$this->get_name()."</a>";
+  }
 
 }
 

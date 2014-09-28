@@ -15,7 +15,7 @@ function display_planet_in_system($planet) {
   }
   echo ">".$planet->get_position()."</td>\n";
   if ($planet->has_owner()) {
-    echo "<td><a class='todo'>".player_id_to_name($planet->get_owner_id())."</a></td>\n";
+    echo "<td><a href='profile.php?player_id=".$planet->get_owner_id()."'>".player_id_to_name($planet->get_owner_id())."</a></td>\n";
     echo "<td>".$planet->get_population_level()."</td>\n";
     echo "<td>".$planet->get_building_level("starbase")."</td>\n";
   }
