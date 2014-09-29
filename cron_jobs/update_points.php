@@ -1,5 +1,10 @@
+#!/usr/bin/php
+#
+# Script to update production, population, science and culture points
+#
+
 <?php
-require("lib/common.php");
+require(__DIR__."/../lib/common.php");
 
 function update_points_one_player(Player $player) {
   print "Updating player ".$player->get_name()."<br>\n";
