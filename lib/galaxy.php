@@ -67,6 +67,9 @@ class Galaxy {
       $circle = sqrt(($this->spiral-1)*2/Galaxy::$DENSITY);
       $rho = round($circle);
       $theta = 2*pi()*($circle - $rho);
+      //Jitter on rho
+      $random = (0.95+0.1*(rand(0,100)/100));
+      $rho *= $random;
       //Jitter on theta
       $random = (1-(1/Galaxy::$DENSITY)*(rand(0,100)/100));
       $theta *= $random;

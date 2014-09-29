@@ -193,7 +193,7 @@ div#map_tab {
 #map {
   border: 1px solid white;
   background-color: rgba(0, 0, 0, 0.9);
-  opacity: 0.9;
+  opacity: 0.8;
   background-image: url("img/startile.gif");
 }
 

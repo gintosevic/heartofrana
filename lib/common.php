@@ -196,8 +196,7 @@ function science_level_to_points($level) {
 }
 
 function biology_level_to_range($level) {
-  if ($level < 10) { return intval($level / 2); }
-  else { return $level; }
+  return intval($level / 2);
 }
 
 function player_level_to_experience_points($player_level){

@@ -29,7 +29,7 @@ function build_map() {
   foreach ($list as $s) {
     echo "<div style=\"position: relative; left: 50%; top: 50%;\">";
     echo "<div class=\"system\" style=\"position: absolute; bottom: ".(($s->get_y() - $middle_y)*$BLOCK_SIZE)."px; left: ".(($s->get_x() - $middle_x)*$BLOCK_SIZE)."px;\">\n";
-    echo "<a href='view_system.php?sid=".$s->get_sid()."' alt='".$s->get_name()."'>@(".$s->get_sid().",".$s->get_x().",".$s->get_y().")</a>\n";
+    echo "<a href='view_system.php?sid=".$s->get_sid()."' alt='".$s->get_name()." (".$s->get_x().",".$s->get_y().")'><img src='img/stars/star.png'>".$s->get_sid()."</a>\n";
     echo "</div>";
     echo "</div>\n";
   }
