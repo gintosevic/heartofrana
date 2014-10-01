@@ -224,8 +224,8 @@ function population_next_level_points($level) {
  */
 function population_level_to_points($level) {
   $cum_pps = 0;
-  for ($i = 1; $i <= $level; $i++) {
-    $cum_pps += population_next_level_points($level);
+  for ($i = 1; $i < $level; $i++) {
+    $cum_pps += population_next_level_points($i);
   }
   return $cum_pps;
 }

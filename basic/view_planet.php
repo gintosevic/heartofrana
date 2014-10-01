@@ -28,8 +28,9 @@ EOL;
   $current_points = $planet->get_population_points();
   $current_level = $planet->get_population_level();
   $next_level_points = population_level_to_points($current_level+1);
+  $next_level_step = $next_level_points - population_level_to_points($current_level);
   $remaining_points = $next_level_points-$current_points;
-  $progress = round((1-($remaining_points/$next_level_points))*100);
+  $progress = round((1-($remaining_points/$next_level_step))*100);
   echo "<tr><td>Population</td><td>$current_level</td><td>$progress%</td><td>$remaining_points</td><td></td></tr>\n";
   // Production
   $current_points = $planet->get_production_points();
@@ -45,8 +46,9 @@ EOL;
     $current_points = $planet->get_building_points($type);
     $current_level = $planet->get_building_level($type);
     $next_level_points = building_level_to_points($current_level+1);
+    $next_level_step = $next_level_points - building_level_to_points($current_level);
     $remaining_points = $next_level_points-$current_points;
-    $progress = round((1-($remaining_points/$next_level_points))*100);
+    $progress = round((1-($remaining_points/$next_level_step))*100);
     echo "<tr><td>$name</td><td>$current_level</td><td>$progress%</td><td>$remaining_points</td><td>";
     if ($remaining_points <= $planet->get_production_points()) {
       echo "<a class='button'  onclick=\"window.location.href='".basename(__FILE__)."?sid=$sid&position=$position&building=$type&spend=$remaining_points'\">Upgrade</a>";
