@@ -266,9 +266,9 @@ function building_level_to_points($level) {
   $current_lvl_pps = PLANET_DEVELOPMENT_INITIAL_COST;
   for ($i = 1; $i <= $level; $i++) {
     $cum_pps += $current_lvl_pps;
-    $current_lvl_pps = round($current_lvl_pps*PLANET_DEVELOPMENT_COMMON_RATIO);
+    $current_lvl_pps = $current_lvl_pps*PLANET_DEVELOPMENT_COMMON_RATIO;
   }
-  return $cum_pps;
+  return round($cum_pps);
   //     return PLANET_DEVELOPMENT_INITIAL_COST*(1-pow(PLANET_DEVELOPMENT_COMMON_RATIO,$level))/(1-PLANET_DEVELOPMENT_COMMON_RATIO);
 }
 
