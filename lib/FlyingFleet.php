@@ -1,10 +1,10 @@
 <?php
 
-/********************************************************************
+/**
  * Flying fleet
- ********************************************************************/
+ */
 
-class FlyingFleet extends Fleet {
+class FlyingFleet extends AbstractFleet {
 
   private $departure_time;
   private $departure_sid;
@@ -144,7 +144,7 @@ class FlyingFleet extends Fleet {
   
   function load_fleet() {
     if (isset($this->fleet_id)) {
-      $this->fleet = new Fleet($this->fleet_id);
+      $this->fleet = new AbstractFleet($this->fleet_id);
       $this->fleet->load();
     }
   }

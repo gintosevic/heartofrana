@@ -4,22 +4,27 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL | E_STRICT);
 
 if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-	require_once "password_compat.php";
+  require_once "password_compat.php";
 }
+set_include_path("../lib");
 require_once "constants.php";
 require_once "database.php";
-define('__ROOT__', dirname(dirname(__FILE__))); 
-require_once "galaxy.php";
-require_once "system.php";
-require_once "planet.php";
-require_once "account.php";
-require_once "fleet.php";
-require_once "flight.php";
-require_once "player.php";
-require_once "event.php";
+define('__ROOT__', dirname(dirname(__FILE__)));
+require_once "Galaxy.php";
+require_once "Account.php";
+require_once "Owned.php";
+require_once "Fightable.php";
+require_once "Planet.php";
+require_once "System.php";
+require_once "AbstractFleet.php";
+require_once "RestingFleet.php";
+require_once "SiegingFleet.php";
+require_once "FlyingFleet.php";
+require_once "Player.php";
+require_once "Event.php";
 
 function print_login_form() {
-  $url = $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
+  $url = $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
   $url = strtok($url, '?');
   echo <<<EOL
 <table>
@@ -49,40 +54,36 @@ function check_login() {
   if (isset($_GET['logout'])) {
     session_destroy();
     return false;
-  }
-  else {
+  } else {
     if (isset($_POST['login']) && isset($_POST['password'])) {
       try {
-	session_destroy();
-	session_start();
-	$_SESSION['account'] = new Account($_POST['login'], $_POST['password']);
-	$pl = new Player();
-	$pl->set_name($_POST['login']);
-	$pl->load();
-	$pl->load_planets();
-	$pl->load_fleets();
+        session_destroy();
+        session_start();
+        $_SESSION['account'] = new Account($_POST['login'], $_POST['password']);
+        $pl = new Player();
+        $pl->set_name($_POST['login']);
+        $pl->load();
+        $pl->load_planets();
+        $pl->load_fleets();
 // 	foreach ($pl->get_planets() as $planet) {
 // 	  $planet->load_owner_fleet();
 // 	  $planet->load_sieging_fleet();
 // 	}
-	$_SESSION['player'] = $pl;
-	$_SESSION['galaxy'] = new Galaxy();
-	//       print_r($_SESSION);
+        $_SESSION['player'] = $pl;
+        $_SESSION['galaxy'] = new Galaxy();
+        //       print_r($_SESSION);
 // 	print_r($_SESSION['player']);
-	return true;
+        return true;
+      } catch (Exception $e) {
+        return false;
       }
-      catch(Exception $e) {
-	return false;
-      }
-    }
-    elseif (isset($_SESSION['account'])) {
+    } elseif (isset($_SESSION['account'])) {
       //     print_r($_SESSION['account']);
       //     echo "\n<br>\n";
 //           print_r($_SESSION['player']);
       //     echo "<br>\n";
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -103,10 +104,10 @@ function build_header($css = '') {
 <head>
 <title>HoR0.1</title>
 EOL;
-if ($css != '') {
-  echo "<link rel='stylesheet' type='text/css' href='$css'/>\n";
-}
-echo <<<EOL
+  if ($css != '') {
+    echo "<link rel='stylesheet' type='text/css' href='$css'/>\n";
+  }
+  echo <<<EOL
 </head>
 <body>
 <center>
@@ -144,7 +145,7 @@ EOL;
 
 function build_footer() {
   db_dump_queries();
-echo <<<EOL
+  echo <<<EOL
 
 </center>
 </body>
@@ -167,7 +168,7 @@ function generate_random_string($length = 10) {
 function build_system_name() {
   $min = 4;
   $max = 9;
-  return generate_random_string(rand($min, $max))." ".generate_random_string(rand($min, $max));
+  return generate_random_string(rand($min, $max)) . " " . generate_random_string(rand($min, $max));
 }
 
 function build_player_name() {
@@ -180,31 +181,31 @@ function build_player_name() {
  * Function to decide whether a bonus planet should be added or not in a given system.
  */
 function decide_bonus_planet($sid) {
-  $mean = BONUS_PLANETS_PER_SYSTEM_MEAN/(PLAYERS_PER_SYSTEM-1);
-  $stddev = BONUS_PLANETS_PER_SYSTEM_STDDEV/(PLAYERS_PER_SYSTEM-1);
-  $x = rand(0,1000)/1000;
+  $mean = BONUS_PLANETS_PER_SYSTEM_MEAN / (PLAYERS_PER_SYSTEM - 1);
+  $stddev = BONUS_PLANETS_PER_SYSTEM_STDDEV / (PLAYERS_PER_SYSTEM - 1);
+  $x = rand(0, 1000) / 1000;
   //TODO: integrate standard deviation
   return ($x < $mean);
 }
 
 function science_points_to_level($points) {
-  return round((pow($points, 1/3)/1.55)-1);
+  return round((pow($points, 1 / 3) / 1.55) - 1);
 }
 
 function science_level_to_points($level) {
-  return round(pow((($level+1)*1.55), 3));
+  return round(pow((($level + 1) * 1.55), 3));
 }
 
 function biology_level_to_range($level) {
   return intval($level / 2);
 }
 
-function player_level_to_experience_points($player_level){
+function player_level_to_experience_points($player_level) {
   return int(5 * pow($player_level, 2.7));
 }
 
 function experience_points_to_player_level($points) {
-  return intval(pow($points/5, 1/2.7));
+  return intval(pow($points / 5, 1 / 2.7));
 }
 
 /**
@@ -212,9 +213,8 @@ function experience_points_to_player_level($points) {
  */
 function population_next_level_points($level) {
   if ($level >= 1) {
-    return pow($level*3-1.5, 2)+0.75;
-  }
-  else {
+    return pow($level * 3 - 1.5, 2) + 0.75;
+  } else {
     return 0;
   }
 }
@@ -238,7 +238,7 @@ function population_points_to_level($points) {
   $next_lvl_pps = 0;
   while ($points >= $next_lvl_pps) {
     $points -= $next_lvl_pps;
-    $next_lvl_pps = population_next_level_points($level+1);
+    $next_lvl_pps = population_next_level_points($level + 1);
     $level++;
   }
   return $level;
@@ -266,10 +266,20 @@ function building_level_to_points($level) {
   $current_lvl_pps = PLANET_DEVELOPMENT_INITIAL_COST;
   for ($i = 1; $i <= $level; $i++) {
     $cum_pps += $current_lvl_pps;
-    $current_lvl_pps = $current_lvl_pps*PLANET_DEVELOPMENT_COMMON_RATIO;
+    $current_lvl_pps = $current_lvl_pps * PLANET_DEVELOPMENT_COMMON_RATIO;
   }
   return round($cum_pps);
   //     return PLANET_DEVELOPMENT_INITIAL_COST*(1-pow(PLANET_DEVELOPMENT_COMMON_RATIO,$level))/(1-PLANET_DEVELOPMENT_COMMON_RATIO);
+}
+
+/**
+ * Level to corresponding defense value
+ */
+function starbase_level_to_defense_value($level) {
+  if ($level == 0) {
+    return 0;
+  }
+  return round((STARBASE_INITIAL_DEFENSE_VALUE * (1.0 - pow(PLANET_DEVELOPMENT_COMMON_RATIO, $level))) / (1.0 - PLANET_DEVELOPMENT_COMMON_RATIO));
 }
 
 /**
@@ -277,9 +287,8 @@ function building_level_to_points($level) {
  */
 function culture_level_to_points($level) {
   if ($level >= 2) {
-    return round(pow($level*3.2+0.3, 3));
-  }
-  else {
+    return round(pow($level * 3.2 + 0.3, 3));
+  } else {
     return 0;
   }
 }
@@ -288,21 +297,56 @@ function culture_level_to_points($level) {
  * Level to cumulative points
  */
 function culture_points_to_level($points) {
-    return max(0, intval((pow($points, 1/3)-0.3)/3.2));
+  return max(0, intval((pow($points, 1 / 3) - 0.3) / 3.2));
 }
 
 function player_id_to_name($player_id) {
   $result = db_query("SELECT name FROM Player WHERE player_id = $player_id");
-  if (!$result) { die(db_error()); }
+  if (!$result) {
+    die(db_error());
+  }
   $row = db_fetch_assoc($result);
   return $row['name'];
 }
 
 function sid_to_name($sid) {
   $result = db_query("SELECT name FROM System WHERE sid = $sid");
-  if (!$result) { die(db_error()); }
+  if (!$result) {
+    die(db_error());
+  }
   $row = db_fetch_assoc($result);
   return $row['name'];
 }
 
-?>
+function compute_defense_probability(Fightable $defender, Fightable $offender) {
+  $def_value = $defender->get_defense_value();
+  $off_value = $offender->get_attack_value();
+  $max_value = max($def_value, $off_value) / 2.0;
+  $def_value = max(0, $def_value - $max_value);
+  $off_value = max(0, $off_value - $max_value);
+  echo "$def_value against $off_value\n";
+  $prob = ($def_value / ($def_value + $off_value));
+  $prob = 1.0 - exp(-$prob);
+  return $prob;
+}
+
+function compute_attack_probability(Fightable $defender, Fightable $offender) {
+  return 1.0 - compute_defense_probability($defender, $offender);
+}
+
+function simulate_fight(Fightable $defender, Fightable $offender) {
+  $prob = compute_defense_probability($defender, $offender);
+  $draw = rand(0, 1e6) / 1e6;
+  // Defender wins
+  if ($draw < $prob) {
+    $margin = $draw/$prob;
+    echo "Defender wins (margin is $margin)\n";
+  }
+  // Attacker wins
+  else {
+    $prob = 1 - $prob;
+    $draw = 1 - $draw;
+    $margin = $draw/$prob;
+    echo "Attacker wins (margin is $margin)\n";
+  }
+}

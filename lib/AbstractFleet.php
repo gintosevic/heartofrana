@@ -4,10 +4,12 @@
  * Generic fleet
  ********************************************************************/
 
-class Fleet {
+class AbstractFleet extends Fightable {
   
   static $ALL_SHIPS = array("colonyships", "transports", "destroyers", "cruisers", "battleships");
   static $SHIP_BASE_PRICES = array("colonyships" => 60, "transports" => 60, "destroyers" => 30, "cruisers" => 240, "battleships" => 600);
+  static $SHIP_ATTACK_VALUES = array("colonyships" => 0, "transports" => 0, "destroyers" => 2, "cruisers" => 8, "battleships" => 36);
+  static $SHIP_DEFENSE_VALUES = array("colonyships" => 0, "transports" => 0, "destroyers" => 1, "cruisers" => 16, "battleships" => 24);
   static $FIXED_PRICE_SHIPS = array("colonyships", "transports");
   static $SHIP_PRICE_RATES = array(0 => 30, 1 => 30, 2 => 30, 3 => 30,
 				   4 => 29, 5 => 29, 6 => 29,
@@ -42,31 +44,28 @@ class Fleet {
 				   );
 				   
   static function get_ship_price($type, $eco_level) {
-    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
-    $eco_level = min($eco_level, max(array_keys(Fleet::$SHIP_PRICE_RATES)));
-    $price = Fleet::$SHIP_BASE_PRICES[$type];
-    if (array_search($type, Fleet::$FIXED_PRICE_SHIPS) === false) {
-      $price *= (Fleet::$SHIP_PRICE_RATES[$eco_level] / Fleet::$SHIP_BASE_PRICES["destroyers"]);
+    if (array_search($type, AbstractFleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    $eco_level = min($eco_level, max(array_keys(AbstractFleet::$SHIP_PRICE_RATES)));
+    $price = AbstractFleet::$SHIP_BASE_PRICES[$type];
+    if (array_search($type, AbstractFleet::$FIXED_PRICE_SHIPS) === false) {
+      $price *= (AbstractFleet::$SHIP_PRICE_RATES[$eco_level] / AbstractFleet::$SHIP_BASE_PRICES["destroyers"]);
     }
     return $price;
   }
   
   protected $fleet_id;
-  protected $owner_id;
-  protected $owner;
   protected $ships;
 
   function __construct($id=null) {
+    parent::__construct();
     $this->fleet_id = $id;
-    $this->owner_id = null;
-    $this->owner = null;
-    $this->ships = array();
-    foreach (Fleet::$ALL_SHIPS as $ship) {
+    $this->ships = [];
+    foreach (AbstractFleet::$ALL_SHIPS as $ship) {
       $this->ships[$ship] = 0;
     }
   }
   
-  function copy(Fleet $f) {
+  function copy(AbstractFleet $f) {
     $this->set_fleet_id($f->get_fleet_id());
     $this->set_owner_id($f->get_owner_id());
     if ($f->owner !== null) {
@@ -79,14 +78,8 @@ class Fleet {
     $result = db_query("SELECT * FROM Fleet WHERE fleet_id = ".$this->fleet_id);
     $row = db_fetch_assoc($result);
     $this->owner_id = $row['owner'];
-    foreach (Fleet::$ALL_SHIPS as $ship) {
+    foreach (AbstractFleet::$ALL_SHIPS as $ship) {
       $this->ships[$ship] = $row[$ship];
-    }
-  }
-  
-  function load_owner() {
-    if ($this->owner_id !== null) {
-      $this->owner = new Player($this->owner_id);
     }
   }
   
@@ -112,55 +105,69 @@ class Fleet {
     return $this->fleet_id;
   }
   
-  function get_owner_id() {
-    return $this->owner_id;
-  }
-  
-  function set_owner_id($player_id) {
-    $this->owner_id = $player_id;
-  }
-  
-  function get_owner() {
-    return $this->owner;
-  }
-  
-  function set_owner(Player $player) {
-    $this->owner = $player;
-    $this->owner_id = $player->get_player_id();
-  }
-  
   function set_ships($type, $n) {
-    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    if (array_search($type, AbstractFleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
     $this->ships[$type] = $n;
   }
   
   function get_ships($type) {
-    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    if (array_search($type, AbstractFleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
     return $this->ships[$type];
   }
   
   function add_ships($type, $n) {
-    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    if (array_search($type, AbstractFleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
     $this->ships[$type] = $this->ships[$type] + $n;
   }
   
   function is_empty() {
-    foreach (Fleet::$ALL_SHIPS as $ship) {
+    foreach (AbstractFleet::$ALL_SHIPS as $ship) {
       if ($this->get_ships($ship) > 0) { return false; }
     }
     return true;
   }
   
-  function merge(Fleet $fleet) {
-    foreach (Fleet::$ALL_SHIPS as $ship) {
+  function get_attack_value() {
+    $value = 0;
+    foreach (AbstractFleet::$ALL_SHIPS as $ship) {
+      $value += $this->get_ships($ship)*AbstractFleet::$SHIP_ATTACK_VALUES[$ship];
+    }
+    return $value;
+  }
+  
+  function get_defense_value() {
+    $value = 0;
+    foreach (AbstractFleet::$ALL_SHIPS as $ship) {
+      $value += $this->get_ships($ship)*AbstractFleet::$SHIP_DEFENSE_VALUES[$ship];
+    }
+    return $value;
+  }
+  
+  function get_combat_value() {
+    return $this->get_attack_value()+$this->get_defense_value();
+  }
+  
+  function merge(AbstractFleet $fleet) {
+    foreach (AbstractFleet::$ALL_SHIPS as $ship) {
       $this->set_ships($ship, $this->get_ships($ship) + $fleet->get_ships($ship));
       $fleet->set_ships($ship, 0);
     }
   }
   
+  function to_string() {
+    $str = "Fleet { ";
+    foreach (AbstractFleet::$ALL_SHIPS as $ship) {
+      if ($this->ships[$ship] > 0) {
+	$str .= $ship.":".$this->ships[$ship]." ";
+      }
+    }
+    $str .= "}\n";
+    return $str;
+  }
+  
   function to_html() {
     $str = "<span class='fleet'>\n<ul>\n";
-    foreach (Fleet::$ALL_SHIPS as $ship) {
+    foreach (AbstractFleet::$ALL_SHIPS as $ship) {
       if ($this->ships[$ship] > 0) {
 	$str .= "<li>".$this->ships[$ship]." ".($this->ships[$ship] > 1?$ship:substr($ship, 0, -1))."</li>\n";
       }
@@ -170,79 +177,6 @@ class Fleet {
   }
   
 }
-
-/********************************************************************
- * Resting fleet
- ********************************************************************/
-
-class RestingFleet extends Fleet {
-  private $sid;
-  private $position;
-  private $planet;
-  
-  function __construct($sid, $position, $fleet_id=null) {
-    parent::__construct($fleet_id);
-    $this->sid = $sid;
-    $this->position = $position;
-    $this->planet = null;
-  }
-  
-  function get_sid() { return $this->sid; }
-  
-  function get_position() { return $this->position; }
-  
-  function load_planet() {
-    $this->planet = new Planet($this->sid, $this->position);
-    $this->planet->load();
-  }
-  
-  function get_planet() {
-    if ($this->planet === null) {
-      $this->load_planet();
-    }
-    return $this->planet;
-  }
-  
-  function set_planet(Planet $planet) {
-    if ($planet->get_owner_id() === $this->get_owner_id()) {
-      $this->planet = $planet;
-      $planet->set_owner_fleet($this);
-    }
-    else {
-      throw new Exception("Owner of the resting fleet and of the planet must be the same.");
-    }
-  }
-  
-  function launch(Planet $target) {
-    $duration = 100;
-    $this->planet->unset_owner_fleet();
-    $flying_fleet = new FlyingFleet($this->fleet_id);
-    $flying_fleet->copy($this);
-    $flying_fleet->set_departure_planet($this->planet);
-    $flying_fleet->set_departure_time(time());
-    $flying_fleet->set_arrival_planet($target);
-    $flying_fleet->set_arrival_time(time()+$duration);
-    return $flying_fleet;
-  }
-  
-}
-
-/********************************************************************
- * Sieging fleet
- ********************************************************************/
-
-class SiegingFleet extends RestingFleet {
-  function set_planet(Planet $planet) {
-    if ($planet->get_owner_id() !== $this->get_owner_id()) {
-      $this->planet = $planet;
-      $planet->set_sieging_fleet($this);
-    }
-    else {
-      throw new Exception("Owner of the sieging fleet and of the planet must be different.");
-    }
-  }
-}
-
 
 
 ?>
