@@ -2,7 +2,7 @@
 require("lib/common.php");
 
 function update_trade_all_players() {
-  echo "<a class='todo'>Trade is not implemented yet.</a>\n"
+  echo "<a class='todo'>Trade is not implemented yet.</a>\n";
 }
 
 

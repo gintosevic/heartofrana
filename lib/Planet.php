@@ -32,7 +32,7 @@ class Planet extends Fightable {
       $this->building_points[$b] = 0;
     }
     $this->ship_points = array();
-    foreach (AbstractFleet::$ALL_SHIPS as $s) {
+    foreach (Fleet::$ALL_SHIPS as $s) {
       $this->ship_points[$s] = 0;
     }
     $this->owner_fleet_id = null;
@@ -48,7 +48,7 @@ class Planet extends Fightable {
       array_push($building_update_attr, "$b = ".$this->get_building_points($b));
     }
     $ship_update_attr = array();
-    foreach (AbstractFleet::$ALL_SHIPS as $s) {
+    foreach (Fleet::$ALL_SHIPS as $s) {
       array_push($ship_update_attr, "$s = ".$this->get_ship_points($s));
     }
     $result = db_query("INSERT INTO Planet VALUES(".$this->sid.", ".$this->position.", ".($this->bonus?1:0).", ".$this->population_points.", ".join(", ", $this->building_points).", ".join(", ", $this->ship_points).", ".$this->production_points.", ".($this->owner_id === null?"NULL":$this->owner_id) .", ".($this->owner_fleet_id === null?"NULL":$this->owner_fleet_id).", ".($this->sieging_fleet_id === null?"NULL":$this->sieging_fleet_id).")
@@ -69,7 +69,7 @@ class Planet extends Fightable {
     foreach (Planet::$ALL_BUILDINGS as $b) {
       $this->building_points[$b] = $row[$b];
     }
-    foreach (AbstractFleet::$ALL_SHIPS as $s) {
+    foreach (Fleet::$ALL_SHIPS as $s) {
       $this->ship_points[$s] = $row[$s];
     }
     $this->production_points = $row['production'];
@@ -95,13 +95,13 @@ class Planet extends Fightable {
   }
   
   public function get_owner_ships($type) {
-    if (array_search($type, AbstractFleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
     if ($this->owner_fleet === null) { return 0; }
     else { return $this->owner_fleet->get_ships($type); }
   }
   
   public function get_sieging_ships($type) {
-    if (array_search($type, AbstractFleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
     if ($this->sieging_fleet === null) { return 0; }
     else { return $this->sieging_fleet->get_ships($type); }
   }
@@ -124,7 +124,7 @@ class Planet extends Fightable {
   }
   
   public function set_ship_points($type, $n) {
-    if (array_search($type, AbstractFleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
     if ($n <= 0) { return; }
     if (!$this->has_owner_fleet()) {
       $fleet = new RestingFleet($this->sid, $this->position);
@@ -135,7 +135,7 @@ class Planet extends Fightable {
       $this->get_owner()->add_fleet($fleet);
     }
     $fleet = $this->owner_fleet;
-    $price = AbstractFleet::get_ship_price($type, $this->get_owner()->get_science_level("economy"));
+    $price = Fleet::get_ship_price($type, $this->get_owner()->get_science_level("economy"));
     $n_ships = intval($n / $price);
     $remaining_points = $n % $price;
     $this->ship_points[$type] = $remaining_points;
@@ -157,12 +157,25 @@ class Planet extends Fightable {
   }
   
   public function get_ship_points($type) {
-    if (array_search($type, AbstractFleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) { die(__FILE__ . ": line " . __LINE__.": No ship called $type."); }
     return $this->ship_points[$type];
   }
   
   public function get_building_level($type) {
     return building_points_to_level($this->get_building_points($type));
+  }
+  
+  public function decrease_building_level($type) {
+    $n = $this->get_building_level($type);
+    $delta_points = building_level_to_points($n) - building_level_to_points($n-1);
+    $points = $this->get_building_points($type);
+    $this->set_building_points($type, $points-$delta_points);
+    return $this->get_building_level($type);
+  }
+  
+  public function set_building_level($type, $n) {
+    $points = building_level_to_points($n);
+    $this->set_building_points($type, $points);
   }
   
   public function get_starbase_defense_value() {
@@ -180,6 +193,10 @@ class Planet extends Fightable {
   
   public function set_population_points($n) {
     $this->population_points = $n;
+  }
+  
+  public function set_population_level($n) {
+    $this->population_points = population_level_to_points($n);
   }
   
   public function get_population_points() {
@@ -218,6 +235,13 @@ class Planet extends Fightable {
     }
   }
   
+  public function set_owner(Player $pl) {
+    if ($this->get_owner_id() !== $pl->get_player_id()) {
+      parent::set_owner($pl);
+      $pl->add_planet($this);
+    }
+  }
+  
   public function has_owner_fleet() {
     return ($this->owner_fleet_id !== null);
   }
@@ -252,7 +276,7 @@ class Planet extends Fightable {
     $this->owner_fleet_id = $fleet_id;
   }
   
-  public function set_owner_fleet(AbstractFleet $fleet) {
+  public function set_owner_fleet(Fleet $fleet) {
     $this->owner_fleet = $fleet;
     $this->owner_fleet_id = $fleet->get_fleet_id();
   }
@@ -266,7 +290,7 @@ class Planet extends Fightable {
     $this->sieging_fleet_id = $fleet_id;
   }
   
-  public function set_sieging_fleet(AbstractFleet $fleet) {
+  public function set_sieging_fleet(Fleet $fleet) {
     $this->sieging_fleet = $fleet;
     $this->sieging_fleet_id = $fleet->get_fleet_id();
   }

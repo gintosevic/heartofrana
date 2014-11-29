@@ -17,7 +17,7 @@ a:hover {
   color: white;
 }
 
-a.errror {
+a.error {
   color: red;
 }
 
@@ -54,6 +54,8 @@ a.disabled_button {
 
 div.main_menu {
     border: 1px solid white;
+    width: 70%;
+    padding: 10px;
     color: red;
     background-color: #404040;
 }
@@ -167,19 +169,31 @@ div.news_text {
 }
 
 li.news_new_planet div.news_title {
-  color: green;
+  color: rgb(100,100,255);
+}
+li.news_new_planet div.news_time {
+  background-color: rgba(0,0,105,0.7);
 }
 
-li.news_new_planet div.news_time {
-  background-color: rgba(0,100,0,0.9);
+li.news_won_fight div.news_title {
+  color: rgb(100,255,100);
+}
+li.news_won_fight div.news_time {
+  background-color: rgba(0,105,0,0.7);
 }
 
 li.news_enemy_attack div.news_title {
-  color: red;
+  color: rgb(255,150,60);
+}
+li.news_enemy_attack div.news_time {
+  background-color: rgba(105,40,0,0.7);
 }
 
-li.news_enemy_attack div.news_time {
-  background-color: rgba(100,0,0,0.9);
+li.news_lost_fight div.news_title {
+  color: rgb(255,40,40);
+}
+li.news_lost_fight div.news_time {
+  background-color: rgba(105,0,0,0.7);
 }
 
 /*****************************************

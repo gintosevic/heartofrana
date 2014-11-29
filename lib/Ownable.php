@@ -3,7 +3,7 @@
 /**
  * Abstract class for all object which are owner by a player
  */
-class Owned {
+class Ownable {
 
   protected $owner_id;
   protected $owner;
@@ -21,13 +21,13 @@ class Owned {
 
   function set_owner_id($player_id) {
     $this->owner_id = $player_id;
+    $this->owner = null;
   }
 
   public function set_owner(Player $pl) {
     if ($this->owner_id !== $pl->get_player_id()) {
       $this->owner_id = $pl->get_player_id();
       $this->owner = $pl;
-      $pl->add_planet($this);
     }
   }
 

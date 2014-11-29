@@ -3,6 +3,9 @@ require("../lib/common.php");
 
 
 function display_profile(Player $player) {
+  if (!$_SESSION['player']->can_see_player($player)) {
+    throw new Exception("Information about player <b>".$player->get_name()." (ID ".$player->get_player_id().")</b> cannot be displayed.");
+  }
   echo <<<EOL
 <div class="tab" id="profile_tab">
 <h1>Profile</h1>
@@ -23,17 +26,23 @@ if (!check_login()) {
   print_login_form();
 }
 else {
+  check_fleet_landing($_SESSION['player']);
   build_menu();
-  $player = null;
-  echo "<div class='todo'>Visibility verification not implemented.</div>\n";
-  if (isset($_GET['player_id'])) {
-    $player = new Player($_GET['player_id']);
-    $player->load();
+  try {
+    $displayed_player = null;
+    echo "<div class='todo'>Visibility verification not implemented.</div>\n";
+    if (isset($_GET['player_id'])) {
+      $displayed_player = new Player($_GET['player_id']);
+      $displayed_player->load();
+    }
+    else {
+      $displayed_player = $_SESSION['player'];
+    }
+    display_profile($displayed_player);
   }
-  else {
-    $player = $_SESSION['player'];
+  catch (Exception $e) {
+    print_error($e->getMessage());
   }
-  display_profile($player);
 }
 build_footer();
 

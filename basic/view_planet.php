@@ -103,6 +103,7 @@ if (!check_login()) {
   print_login_form();
 }
 else {
+  check_fleet_landing($_SESSION['player']);
   build_menu();
   if (isset($_GET['sid']) && isset($_GET['position'])) {
     $planet = check_planet_autorization($_GET['sid'], $_GET['position']);

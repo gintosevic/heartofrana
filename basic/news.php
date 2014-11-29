@@ -19,7 +19,7 @@ function build_news() {
 <ul class='news_list'>
 EOL;
   $player_id = $_SESSION['player']->get_player_id();
-  $results = db_query("SELECT event_id FROM Event WHERE player_id = $player_id");
+  $results = db_query("SELECT event_id FROM Event WHERE player_id = $player_id ORDER BY event_id DESC");
   $n = db_num_rows($results);
   for ($i = 0; $i < $n; $i++) {
     $row = db_fetch_assoc($results);
@@ -34,6 +34,7 @@ if (!check_login()) {
   print_login_form();
 }
 else {
+  check_fleet_landing($_SESSION['player']);
   build_menu();
   build_news();
 }

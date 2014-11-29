@@ -1,4 +1,5 @@
 <?php
+
 require("../lib/common.php");
 
 
@@ -42,9 +43,9 @@ if (!check_login()) {
   print_login_form();
 }
 else {
+  check_fleet_landing($_SESSION['player']);
   build_menu();
   build_map();
 }
 build_footer();
 
-?> 

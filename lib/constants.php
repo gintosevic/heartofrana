@@ -15,5 +15,7 @@ define("CRUISER_TRIGGER_SCIENCE", "mathematics"); // Science to develop to build
 define("CRUISER_TRIGGER_LEVEL", 15); // Science level to reach to build cruisers
 define("BATTLESHIP_TRIGGER_SCIENCE", "physics"); // Science to develop to build battleships
 define("BATTLESHIP_TRIGGER_LEVEL", 15); // Science level to reach to build battleships
+define("XP_LOSER_MALUS", 0.5); // XPs earned by battle losers are XP_LOSER_MALUS * killed CV
+define("FLYING_FLEET_MAX_NUMBER", 2); // Maximum number of flying fleets
 
 ?>

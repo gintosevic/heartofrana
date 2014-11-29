@@ -155,6 +155,10 @@ class Player {
   function get_experience_points() {
     return $this->experience_points;
   }
+  
+  function add_experience_points($n) {
+    $this->set_experience_points($this->get_experience_points()+$n);
+  }
 
   function get_player_level() {
     return experience_points_to_player_level($this->get_experience_points());
@@ -171,6 +175,10 @@ class Player {
 
   function get_science_level($field) {
     return science_points_to_level($this->get_science_points($field));
+  }
+  
+  public function get_visibility_range() {
+    return biology_level_to_range($this->get_science_level('biology'));
   }
 
   function set_science_points($field, $n) {
@@ -299,6 +307,25 @@ class Player {
     }
     return $list;
   }
+  
+  public function can_see_planet(Planet $planet) {
+    $vis_sys = $this->list_visible_systems();
+    foreach ($vis_sys as $sys) {
+      if ($planet->get_sid() == $sys->get_sid()) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public function can_see_player(Player $player) {
+    $vis_sys = array();
+    foreach ($this->list_visible_systems() as $s) { array_push($vis_sys, $s->get_sid()); }
+    $pl_home_sys = array();
+    foreach ($player->list_home_systems() as $s) { array_push($pl_home_sys, $s->get_sid()); }
+    $inter = array_intersect($vis_sys, $pl_home_sys);
+    return (count($inter) > 0);
+  }
 
   function is_enabled($type) {
     switch ($type) {
@@ -355,14 +382,14 @@ class Player {
     }
   }
 
-  function add_fleet(AbstractFleet $fleet) {
+  function add_fleet(Fleet $fleet) {
     if ($this->fleets === null) {
       $this->load_fleets();
     }
     array_push($this->fleets, $fleet);
   }
 
-  function update_fleet(AbstractFleet $fleet) {
+  function update_fleet(Fleet $fleet) {
     if ($this->fleets === null) {
       $this->load_fleets();
     }
@@ -372,6 +399,25 @@ class Player {
         $this->fleets[$i] = $fleet;
       }
     }
+  }
+  
+  public function remove_fleet(Fleet $fleet) {
+    $n = count($this->fleets);
+    for ($i = 0; $i < $n; $i++) {
+      if ($this->fleets[$i]->get_fleet_id() === $fleet->get_fleet_id()) {
+        unset($this->fleets[$i]);
+        $this->fleets = array_values($this->fleets);
+        return;
+      }
+    }
+  }
+  
+  public function count_flying_fleets() {
+    $n = 0;
+    foreach ($this->get_fleets() as $f) {
+      if (get_class($f) == "FlyingFleet") { $n++; }
+    }
+    return $n;
   }
 
   function to_html() {

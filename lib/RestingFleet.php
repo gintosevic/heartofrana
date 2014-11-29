@@ -4,35 +4,51 @@
  * Resting fleet
  */
 
-class RestingFleet extends AbstractFleet {
+class RestingFleet extends Fleet {
   private $sid;
   private $position;
   private $planet;
   
-  function __construct($sid, $position, $fleet_id=null) {
+  public function __construct($sid, $position, $fleet_id=null) {
     parent::__construct($fleet_id);
     $this->sid = $sid;
     $this->position = $position;
     $this->planet = null;
   }
   
-  function get_sid() { return $this->sid; }
+  public function get_sid() { return $this->sid; }
   
-  function get_position() { return $this->position; }
+  public function get_position() { return $this->position; }
   
-  function load_planet() {
+  public function load_planet() {
     $this->planet = new Planet($this->sid, $this->position);
     $this->planet->load();
   }
   
-  function get_planet() {
+  function unset_planet() {
+    if (!($this->planet === null)) {
+      $this->get_planet()->unset_owner_fleet();
+    }
+    $this->planet = null;
+  }
+  
+  public function destroy() {
+    if (!($this->planet === null)) {
+      $planet = $this->get_planet();
+      $this->unset_planet();
+      $planet->save();
+    }
+    parent::destroy();
+  }
+  
+  public function get_planet() {
     if ($this->planet === null) {
       $this->load_planet();
     }
     return $this->planet;
   }
   
-  function set_planet(Planet $planet) {
+  public function set_planet(Planet $planet) {
     if ($planet->get_owner_id() === $this->get_owner_id()) {
       $this->planet = $planet;
       $planet->set_owner_fleet($this);
@@ -42,9 +58,12 @@ class RestingFleet extends AbstractFleet {
     }
   }
   
-  function launch(Planet $target) {
-    $duration = 100;
-    $this->planet->unset_owner_fleet();
+  public function launch(Planet $target) {
+    if (!$this->get_owner()->can_see_planet($target)) {
+      throw new Exception("Planet ".$target->to_html()." does not exist or is not currently visible");
+    }
+    $duration = 10;
+    $this->get_planet()->unset_owner_fleet();
     $flying_fleet = new FlyingFleet($this->fleet_id);
     $flying_fleet->copy($this);
     $flying_fleet->set_departure_planet($this->planet);

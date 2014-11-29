@@ -39,6 +39,7 @@ if (!check_login()) {
   print_login_form();
 }
 else {
+  check_fleet_landing($_SESSION['player']);
   build_menu();
   if (isset($_GET['set_science'])) {
     $_SESSION['player']->set_current_science($_GET['set_science']);

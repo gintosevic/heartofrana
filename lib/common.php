@@ -12,11 +12,12 @@ require_once "database.php";
 define('__ROOT__', dirname(dirname(__FILE__)));
 require_once "Galaxy.php";
 require_once "Account.php";
-require_once "Owned.php";
+require_once "Ownable.php";
 require_once "Fightable.php";
+require_once "Battle.php";
 require_once "Planet.php";
 require_once "System.php";
-require_once "AbstractFleet.php";
+require_once "Fleet.php";
 require_once "RestingFleet.php";
 require_once "SiegingFleet.php";
 require_once "FlyingFleet.php";
@@ -97,6 +98,10 @@ You need to login with proper credentials.
 EOHTML;
 }
 
+function print_error($msg) {
+  echo "<div class='error'>$msg</div>\n";
+}
+
 function build_header($css = '') {
   echo <<<EOL
 <html>
@@ -113,6 +118,24 @@ EOL;
 <center>
 
 EOL;
+}
+
+function check_fleet_landing(Player $player) {
+  $results = db_query("SELECT fleet_id FROM Flight, Planet WHERE Flight.arrival_time < NOW() AND Flight.arrival_sid = Planet.sid AND Flight.arrival_position = Planet.position");
+  $n_fleets = db_num_rows($results);
+  for ($i = 0; $i < $n_fleets; $i++) {
+    $line = db_fetch_row($results, $i);
+    $flight = new FlyingFleet($line['fleet_id']);
+    $flight->load();
+    $resulting_fleet = $flight->land();
+    $resulting_fleet->save();
+    if ($flight->get_owner_id() == $player->get_player_id()) {
+      $player->remove_fleet($flight);
+      if ($resulting_fleet != null) {
+        $player->add_fleet($resulting_fleet);
+      }
+    }
+  }
 }
 
 function build_menu() {
@@ -318,35 +341,32 @@ function sid_to_name($sid) {
   return $row['name'];
 }
 
-function compute_defense_probability(Fightable $defender, Fightable $offender) {
-  $def_value = $defender->get_defense_value();
-  $off_value = $offender->get_attack_value();
-  $max_value = max($def_value, $off_value) / 2.0;
-  $def_value = max(0, $def_value - $max_value);
-  $off_value = max(0, $off_value - $max_value);
-  echo "$def_value against $off_value\n";
-  $prob = ($def_value / ($def_value + $off_value));
-  $prob = 1.0 - exp(-$prob);
-  return $prob;
-}
-
-function compute_attack_probability(Fightable $defender, Fightable $offender) {
-  return 1.0 - compute_defense_probability($defender, $offender);
-}
-
-function simulate_fight(Fightable $defender, Fightable $offender) {
-  $prob = compute_defense_probability($defender, $offender);
-  $draw = rand(0, 1e6) / 1e6;
-  // Defender wins
-  if ($draw < $prob) {
-    $margin = $draw/$prob;
-    echo "Defender wins (margin is $margin)\n";
-  }
-  // Attacker wins
-  else {
-    $prob = 1 - $prob;
-    $draw = 1 - $draw;
-    $margin = $draw/$prob;
-    echo "Attacker wins (margin is $margin)\n";
-  }
+/**
+ * Class casting
+ *
+ * @param string|object $destination
+ * @param object $sourceObject
+ * @return object
+ */
+function cast($destination, $sourceObject)
+{
+    if (is_string($destination)) {
+        $destination = new $destination();
+    }
+    $sourceReflection = new ReflectionObject($sourceObject);
+    $destinationReflection = new ReflectionObject($destination);
+    $sourceProperties = $sourceReflection->getProperties();
+    foreach ($sourceProperties as $sourceProperty) {
+        $sourceProperty->setAccessible(true);
+        $name = $sourceProperty->getName();
+        $value = $sourceProperty->getValue($sourceObject);
+        if ($destinationReflection->hasProperty($name)) {
+            $propDest = $destinationReflection->getProperty($name);
+            $propDest->setAccessible(true);
+            $propDest->setValue($destination,$value);
+        } else {
+            $destination->$name = $value;
+        }
+    }
+    return $destination;
 }

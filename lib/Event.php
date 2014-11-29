@@ -40,27 +40,37 @@ class Event {
     }
     $escaped_title = str_replace("'", "''", $this->title);
     $escaped_text = str_replace("'", "''", $this->text);
-    $result = db_query("INSERT INTO Event VALUES($id, ".$this->player_id.", NOW(), '".$this->type."', '$escaped_title', '$escaped_text', ".($this->new?1:0).")");
+    $time_field = "";
+    if ($this->time === null) {
+      $time_field = "NOW()";
+    }
+    else {
+      $time_field = "FROM_UNIXTIME(".$this->time.")";
+    }
+    db_query("INSERT INTO Event VALUES($id, ".$this->player_id.", $time_field, '".$this->type."', '$escaped_title', '$escaped_text', ".($this->new?1:0).")");
     $result = db_query("SELECT * FROM Event WHERE event_id = LAST_INSERT_ID()");
     $row = db_fetch_assoc($result);
     $this->event_id = $row['event_id'];
-    $this->time = $row['time'];
+    if ($this->time === null) {
+      $this->time = strtotime($row['time']);
+    }
   }
   
-  static function create_and_save($player_id, $type, $title, $text) {
+  static function create_and_save($player_id, $type, $title, $text, $time=null) {
     if (!array_key_exists($type, Event::$ALL_EVENT_TYPES)) {
       $event = new Event();
       $event->player_id = $player_id;
       $event->type = $type;
       $event->title = $title;
       $event->text = $text;
+      $event->time = $time;
       $event->save();
     }
     else {
       die("Invalid event type \"$type\".\n");
     }
   }
-
+  
 }
 
 ?>

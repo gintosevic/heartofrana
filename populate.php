@@ -46,7 +46,7 @@ function give_random_planets($player) {
   $continue = 0;
   $n_planets = 1;
   $culture = culture_points_to_level($player->get_culture_points());
-  while ($culture >= $n_planets && $continue < 60 && $n_vis > 0) {
+  while ($culture >= $n_planets && $continue < 40 && $n_vis > 0) {
     $random = rand(0, 10000);
     $home = rand(0,100);
     if ($home < 80 && $n_homes > 0) {
@@ -81,26 +81,26 @@ function build_random_fleets(Player $player) {
   $n_planets = count($planets);
   for ($i = 0; $i < $n_planets; $i++) {
     $random = rand(0,100);
-    if ($random >= 50) {
+    if ($random >= 40) {
       $fleet = new RestingFleet($planets[$i]->get_sid(), $planets[$i]->get_position());
       $fleet->set_owner($player);
       if (rand(0,3) == 0) {
-	$n = rand(0, 2*$n_planets);
-	$fleet->set_ships("colonyships", rand(1, $n));
+        $n = rand(0, 2*$n_planets);
+        $fleet->set_ships("colonyships", rand(1, $n));
       }
       if (rand(0,3) == 0) {
-	$n = rand(0, 2*$n_planets);
-	$fleet->set_ships("transports", $n);
+        $n = rand(0, 2*$n_planets);
+        $fleet->set_ships("transports", $n);
       }
       $n = rand(0, 100*$n_planets);
       $fleet->set_ships("destroyers", $n);
       if ($player->is_enabled("cruisers")) {
-	$n = rand(0, 25*$n_planets);
-	$fleet->set_ships("cruisers", $n);
+        $n = rand(0, 25*$n_planets);
+        $fleet->set_ships("cruisers", $n);
       }
       if ($player->is_enabled("battleships")) {
-	$n = rand(0, 5*$n_planets);
-	$fleet->set_ships("battleships", $n);
+        $n = rand(0, 5*$n_planets);
+        $fleet->set_ships("battleships", $n);
       }
       $fleet->save(); // Fleet ID is assigned here -- Do NOT interchange with next line
       $fleet->set_planet($planets[$i]);
