@@ -26,14 +26,14 @@ class RestingFleet extends Fleet {
   }
   
   function unset_planet() {
-    if (!($this->planet === null)) {
-      $this->get_planet()->unset_owner_fleet();
+    if ($this->planet != null) {
+      $this->planet->unset_owner_fleet();
     }
     $this->planet = null;
   }
   
   public function destroy() {
-    if (!($this->planet === null)) {
+    if ($this->planet != null) {
       $planet = $this->get_planet();
       $this->unset_planet();
       $planet->save();
@@ -63,13 +63,13 @@ class RestingFleet extends Fleet {
       throw new Exception("Planet ".$target->to_html()." does not exist or is not currently visible");
     }
     $duration = 10;
-    $this->get_planet()->unset_owner_fleet();
     $flying_fleet = new FlyingFleet($this->fleet_id);
     $flying_fleet->copy($this);
-    $flying_fleet->set_departure_planet($this->planet);
+    $flying_fleet->set_departure_planet($this->get_planet());
     $flying_fleet->set_departure_time(time());
     $flying_fleet->set_arrival_planet($target);
     $flying_fleet->set_arrival_time(time()+$duration);
+    $this->destroy();
     return $flying_fleet;
   }
   

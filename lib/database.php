@@ -1,7 +1,7 @@
 <?php
 
 require_once "credentials.php";
-define("DATABASE_DEBUG_MODE", 2);
+define("DATABASE_DEBUG_MODE", 1);
 
 
 $all_queries = array();

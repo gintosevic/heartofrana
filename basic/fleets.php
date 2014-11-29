@@ -32,7 +32,6 @@ function try_launching() {
         $p->load();
         $new_f = $f->launch($p);
         $player->update_fleet($new_f);
-        $f->get_planet()->save();
         $new_f->save();
       } catch (Exception $ex) {
         print_error($ex->getMessage());

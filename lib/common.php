@@ -128,10 +128,10 @@ function check_fleet_landing(Player $player) {
     $flight = new FlyingFleet($line['fleet_id']);
     $flight->load();
     $resulting_fleet = $flight->land();
-    $resulting_fleet->save();
     if ($flight->get_owner_id() == $player->get_player_id()) {
       $player->remove_fleet($flight);
       if ($resulting_fleet != null) {
+        $resulting_fleet->save();
         $player->add_fleet($resulting_fleet);
       }
     }
