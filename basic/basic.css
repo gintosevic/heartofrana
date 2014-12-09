@@ -48,6 +48,21 @@ a.disabled_button {
   margin: 1px;
 }
 
+#description {
+  background-color: rgba(32,32,32,0);
+  font-style: italic;
+  text-decoration: underline;
+}
+
+.box {
+  border: 1px solid gray;
+  padding: 10px;
+}
+
+.box h2 {
+  color: yellow;
+}
+
 /*****************************************
 * Menu
 *****************************************/
@@ -76,6 +91,8 @@ div.main_menu {
   color: #8588C3;
   background-color: transparent;
   text-decoration: none;
+  font-size: 1.1em;
+  font-variant: small-caps;
 }
 
 .main_menu a:hover {
@@ -145,7 +162,7 @@ div.news_time {
   padding: 10px;
   display: table-cell;
   height: 100%;
-  vertical-align: top;
+  vertical-align: middle;
   background-color: rgba(32,32,32,0.9);
 }
 
@@ -239,11 +256,6 @@ div#system_view_tab {
   font-size: 1.1em;
 }
 
-#description.system_view {
-font-style: italic;
-text-decoration: underline;
-}
-
 #position.system_view {
 text-align: right;
 }
@@ -270,11 +282,6 @@ div#planets_tab {
   text-align: center;
 }
 
-#description.planets {
-font-style: italic;
-text-decoration: underline;
-}
-
 /*****************************************
 * Planet view
 *****************************************/
@@ -295,11 +302,6 @@ div#planet_view_tab {
   font-size: 1.1em;
 }
 
-#description.planet_view {
-font-style: italic;
-text-decoration: underline;
-}
-
 /*****************************************
 * Science
 *****************************************/
@@ -308,17 +310,10 @@ div#science_tab {
   background: black url("./img/backgrounds/sciences.jpg") no-repeat center center;
 }
 
-
-
 .science {
   background-color: rgba(32,32,32,0.7);
   border: 1px solid white;
   text-align: center;
-}
-
-#description.science {
-font-style: italic;
-text-decoration: underline;
 }
 
 #current_science.science {
@@ -332,11 +327,6 @@ color: green;
 
 div#fleet_tab {
   background: black url("./img/backgrounds/fleet.jpg") no-repeat center top;
-}
-
-#description.fleets {
-font-style: italic;
-text-decoration: underline;
 }
 
 .fleets {
@@ -355,3 +345,39 @@ span.fleet {
   text-decoration: none;
   border: none;
 }
+
+.fleet_selector {
+  text-align: center;
+  border: 0px;
+  border-spacing: 0px 0px;
+  color: rgb(250,150,50);
+  background-color: #111;
+  text-decoration: none;
+  margin: 0px;
+  padding: 0px;
+  height: 20px;
+}
+
+table.fleet_selector {
+  border: 1px solid #333;
+}
+
+td.fleet_selector {
+  border: 1px solid #333;
+  cursor: pointer;
+  min-width: 20px;
+}
+
+td.fleet_selector:hover {
+  border: 1px solid #fff;
+  color: white;
+}
+
+input.fleet_selector {
+  height: 40px;
+}
+
+input.fleet_selector:hover {
+  color: white;
+}
+

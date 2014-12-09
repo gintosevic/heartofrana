@@ -54,7 +54,13 @@ class RestingFleet extends Fleet {
       $planet->set_owner_fleet($this);
     }
     else {
-      throw new Exception("Owner of the resting fleet and of the planet must be the same.");
+      throw new Exception("Owner of the resting fleet (".$this->get_owner_id().") and of the planet (".$planet->get_owner_id().") must be the same.");
+    }
+  }
+  
+  public function substract(Fleet $fleet) {
+    foreach (Fleet::$ALL_SHIPS as $ship) {
+      $this->set_ships($ship, max(0, $this->get_ships($ship) - $fleet->get_ships($ship)));
     }
   }
   

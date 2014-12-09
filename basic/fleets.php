@@ -28,11 +28,32 @@ function try_launching() {
     else {
       try {
         $f = find_fleet($_GET['fleet_id']);
+        $start_planet = $f->get_planet();
         $p = new Planet($_GET['sid'], $_GET['position']);
         $p->load();
-        $new_f = $f->launch($p);
-        $player->update_fleet($new_f);
-        $new_f->save();
+        
+        $to_be_launched = clone $f;
+        foreach (Fleet::$ALL_SHIPS as $ship) {
+          if (!isset($_GET[$ship])) { $_GET[$ship] = 0; }
+          $to_be_launched->set_ships($ship, $_GET[$ship]);
+        }
+        $to_be_launched->set_owner_id($player->get_player_id());
+        
+        $f->substract($to_be_launched);
+        $to_be_launched->substract($f);
+        $to_be_launched->set_planet($start_planet);
+        $launched = $to_be_launched->launch($p);
+        $player->add_fleet($launched);
+        if (!$f->is_empty()) {
+          $player->update_fleet($f);
+          $f->save();
+        }
+        else {
+          $player->remove_fleet($f);
+          
+          $f->destroy();
+        }
+        $launched->save();
       } catch (Exception $ex) {
         print_error($ex->getMessage());
       }
@@ -58,15 +79,47 @@ function build_target_planet_form() {
   return $str;
 }
 
+function build_ship_selector($ship, $n, $root_id) {
+  echo "<table class='fleet_selector'><tr>";
+  echo "<td class='fleet_selector' onClick='set_n_ships(${ship}_${root_id}, 0, $n)'>0</td>\n";
+  echo "<td class='fleet_selector' rowspan='2'><input class='fleet_selector' id='${ship}_${root_id}' value='$n' size='".(log10($n)+1)."' maxlength='".(log10($n)+1)."' onblur='set_n_ships(${ship}_${root_id}, ${ship}_${root_id}.value, $n)'/></td>\n";
+  echo "<td class='fleet_selector' onClick='set_n_ships(${ship}_${root_id}, $n, $n)'>All</td>\n";
+  echo "</tr><tr>";
+  echo "<td class='fleet_selector' onClick='set_n_ships(${ship}_${root_id}, ${ship}_${root_id}.value-1, $n)'>&ndash;</td>\n";
+  echo "<td class='fleet_selector' onClick='set_n_ships(${ship}_${root_id}, parseInt(${ship}_${root_id}.value)+1, $n)'>+</td>\n";
+  echo "</tr></table>";
+  echo <<<EOJS
+<script>
+  function set_n_ships(object, n, max) {
+      object.value = Math.max(0, Math.min(n, max));
+  }
+</script>
+EOJS;
+  return "document.getElementById('${ship}_${root_id}').value";
+}
+
 function display_stationary_fleet(RestingFleet $fleet) {
   echo "<tr>\n";
   echo "<td>".$fleet->get_sid()."</td><td>".$fleet->get_position()."</td>\n";
   foreach (Fleet::$ALL_SHIPS as $ship) {
     echo "<td>".$fleet->get_ships($ship)."</td>\n";
   }
+  echo "<td></td></tr>\n";
+  echo "<tr>\n";
+  echo "<td></td><td></td>\n";
+  $js_cmd = "";
+  foreach (Fleet::$ALL_SHIPS as $ship) {
+    $n = $fleet->get_ships($ship);
+    echo "<td>";
+    if ($n > 0) {
+      $js_cmd .= "&$ship='+".build_ship_selector($ship, $n, $fleet->get_fleet_id())."+'";
+    }
+    echo "</td>\n";
+  }
+  
   $selected_sid = "document.getElementById('target_sid').value";
   $specified_planet = "document.getElementById('target_position').value";
-  echo "<td><a class='button' onclick=\"window.location.href='".basename(__FILE__)."?fleet_id=".$fleet->get_fleet_id()."&sid='+$selected_sid+'&position='+$specified_planet\">Launch</a></td>\n";
+  echo "<td><a class='button' onclick=\"window.location.href='".basename(__FILE__)."?fleet_id=".$fleet->get_fleet_id()."$js_cmd&sid='+$selected_sid+'&position='+$specified_planet\">Launch</a></td>\n";
   echo "</tr>\n";
 }
 

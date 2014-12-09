@@ -30,23 +30,38 @@ function print_login_form() {
   echo <<<EOL
 <table>
 <tr>
-<td span=2>
-<h1>Heart of Rana</h1>
-Version 0.1
+<td background='img/logos/Veil_nebula_modified.png' width='520px' height='320px' valign='bottom' style='padding: 20px;'>
+  <span style='letter-spacing: 0.1em; font-size: 4em; font-weight: bold;'>Heart of Rana</span><br>
+  <span style='letter-spacing: 0.1em; font-size: 1em; font-weight: bold;'>Version 0.1</span>
 </td>
 
 </tr>
-<form action="http://$url" method="post">
-<tr>
-<td>
-Login: <input name="login">
-Password: <input type="password" name="password">
-</td>
-<td>
-<input type="submit" value="Login">
-</td>
-</tr>
-</form>
+<tr><td>
+    
+    <div class='box'>
+      <h2>Existing account</h2>
+      <form action="http://$url" method="post">
+      Login: <input name="login" size='18'>
+      Password: <input type="password" name="password" size='18'>
+      <input type="submit" value="Login">
+      </form>
+    </div>
+    
+</td></tr>
+<tr><td>
+    
+    <div class='box'>
+      <h2>New account</h2>
+      <form action="basic/news.php" method="post">
+        Email address: <input name="login" size='30'><br>
+      Login: <input name="login" size='18'>
+      Password: <input type="password" name="password" size='18'>
+      <input type="submit" value="Login">
+      </form>
+    </div>
+    
+</td></tr>
+</table>
 EOL;
 }
 
@@ -121,7 +136,7 @@ EOL;
 }
 
 function check_fleet_landing(Player $player) {
-  $results = db_query("SELECT fleet_id FROM Flight, Planet WHERE Flight.arrival_time < NOW() AND Flight.arrival_sid = Planet.sid AND Flight.arrival_position = Planet.position");
+  $results = db_query("SELECT fleet_id FROM Flight WHERE arrival_time < NOW()");
   $n_fleets = db_num_rows($results);
   for ($i = 0; $i < $n_fleets; $i++) {
     $line = db_fetch_row($results, $i);
@@ -136,6 +151,7 @@ function check_fleet_landing(Player $player) {
       }
     }
   }
+
 }
 
 function build_menu() {
