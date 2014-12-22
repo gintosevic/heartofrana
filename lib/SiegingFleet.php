@@ -7,9 +7,7 @@
 class SiegingFleet extends RestingFleet {
   
   function unset_planet() {
-    if ($this->planet == null) {
-      $this->get_planet()->unset_sieging_fleet();
-    }
+    $this->get_planet()->unset_sieging_fleet();
     $this->planet = null;
   }
   

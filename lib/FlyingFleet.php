@@ -92,7 +92,7 @@ class FlyingFleet extends Fleet {
     if (!$this->is_empty()) {
       $planet = $this->get_arrival_planet();
       $f = new RestingFleet($this->get_arrival_sid(), $this->get_arrival_position());
-      $f->copy($this);
+      $f->replace($this);
       $f->set_planet($this->get_arrival_planet());
       $f->save(); // This will provide a new fleet ID
       $planet->set_owner_fleet($f);
@@ -107,7 +107,7 @@ class FlyingFleet extends Fleet {
     if (!$this->is_empty()) {
       $planet = $this->get_arrival_planet();
       $f = new SiegingFleet($this->get_arrival_sid(), $this->get_arrival_position());
-      $f->copy($this);
+      $f->replace($this);
       $f->set_planet($planet);
       $f->save(); // This will provide a new fleet ID
       $planet->set_sieging_fleet($f);

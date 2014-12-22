@@ -155,9 +155,9 @@ class Player {
   function get_experience_points() {
     return $this->experience_points;
   }
-  
+
   function add_experience_points($n) {
-    $this->set_experience_points($this->get_experience_points()+$n);
+    $this->set_experience_points($this->get_experience_points() + $n);
   }
 
   function get_player_level() {
@@ -176,9 +176,13 @@ class Player {
   function get_science_level($field) {
     return science_points_to_level($this->get_science_points($field));
   }
-  
+
   public function get_visibility_range() {
     return biology_level_to_range($this->get_science_level('biology'));
+  }
+  
+  public function get_population_limit() {
+    return social_level_to_population_limit($this->get_science_level('biology'));
   }
 
   function set_science_points($field, $n) {
@@ -203,8 +207,10 @@ class Player {
       print "Increment production by " . $production_new_points . " in " . $p->to_string() . "<br>\n";
       $population_new_points = $p->get_building_level("farm");
 //       $population_multiplier = $this->get_population_multiplier();
-      $p->set_population_points($p->get_population_points() + $population_new_points);
-      print "Increment population by " . $population_new_points . " in " . $p->to_string() . "<br>\n";
+      if ($this->get_population_limit() <= population_points_to_level($p->get_population_points() + $population_new_points)) {
+        $p->set_population_points($p->get_population_points() + $population_new_points);
+        print "Increment population by " . $population_new_points . " in " . $p->to_string() . "<br>\n";
+      }
       $p->save();
     }
     $cur_science = $this->get_current_science();
@@ -307,7 +313,7 @@ class Player {
     }
     return $list;
   }
-  
+
   public function can_see_planet(Planet $planet) {
     $vis_sys = $this->list_visible_systems();
     foreach ($vis_sys as $sys) {
@@ -317,12 +323,16 @@ class Player {
     }
     return false;
   }
-  
+
   public function can_see_player(Player $player) {
     $vis_sys = array();
-    foreach ($this->list_visible_systems() as $s) { array_push($vis_sys, $s->get_sid()); }
+    foreach ($this->list_visible_systems() as $s) {
+      array_push($vis_sys, $s->get_sid());
+    }
     $pl_home_sys = array();
-    foreach ($player->list_home_systems() as $s) { array_push($pl_home_sys, $s->get_sid()); }
+    foreach ($player->list_home_systems() as $s) {
+      array_push($pl_home_sys, $s->get_sid());
+    }
     $inter = array_intersect($vis_sys, $pl_home_sys);
     return (count($inter) > 0);
   }
@@ -400,7 +410,7 @@ class Player {
       }
     }
   }
-  
+
   public function remove_fleet(Fleet $fleet) {
     $n = count($this->fleets);
     for ($i = 0; $i < $n; $i++) {
@@ -411,11 +421,13 @@ class Player {
       }
     }
   }
-  
+
   public function count_flying_fleets() {
     $n = 0;
     foreach ($this->get_fleets() as $f) {
-      if (get_class($f) == "FlyingFleet") { $n++; }
+      if (get_class($f) == "FlyingFleet") {
+        $n++;
+      }
     }
     return $n;
   }

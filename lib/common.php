@@ -239,6 +239,15 @@ function biology_level_to_range($level) {
   return intval($level / 2);
 }
 
+function social_level_to_population_limit($evel) {
+  if ($level < 10) {
+    return max(PLANET_MIN_POPULATION_LIMIT, intval((10+$level)/2));
+  }
+  else {
+    return $level;
+  }
+}
+
 function player_level_to_experience_points($player_level) {
   return int(5 * pow($player_level, 2.7));
 }

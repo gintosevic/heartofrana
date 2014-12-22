@@ -18,9 +18,10 @@ function display_planet_in_system($planet) {
     echo "<td><a href='profile.php?player_id=".$planet->get_owner_id()."'>".player_id_to_name($planet->get_owner_id())."</a></td>\n";
     echo "<td>".$planet->get_population_level()."</td>\n";
     echo "<td>".$planet->get_building_level("starbase")."</td>\n";
+    echo "<td>".($planet->has_sieging_fleet()?"<a class=sieged>sieged</a>":"")."</td>\n";
   }
   else {
-    echo "<td span=3>Free planet</td>\n";
+    echo "<td span=4>Free planet</td>\n";
   }
   echo "</tr>\n";
 }
@@ -38,8 +39,8 @@ function display_system($sid) {
 <div class="tab" id="system_view_tab">
 <h1>System details</h1>
 EOL;
-  echo "<table class='system_view'><tr><td colspan=4 id='title' class='system_view'>System ".$s->get_name()."<br>(sid=".$s->get_sid().", x=".$s->get_x().", y= ".$s->get_y().")</td></tr>\n";
-  echo "<tr id='description' class='system_view'><td>Position</td><td>Owner</td><td>Population</td><td>Starbase</td></tr>\n";
+  echo "<table class='system_view'><tr><td colspan=5 id='title' class='system_view'>System ".$s->get_name()."<br>(sid=".$s->get_sid().", x=".$s->get_x().", y= ".$s->get_y().")</td></tr>\n";
+  echo "<tr id='description' class='system_view'><td>Position</td><td>Owner</td><td>Population</td><td>Starbase</td><td></td></tr>\n";
   foreach ($s->get_planets() as $p) {
     display_planet_in_system($p);
   }
