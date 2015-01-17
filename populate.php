@@ -51,7 +51,11 @@ function give_random_planets($player) {
     $home = rand(0,100);
     if ($home < 80 && $n_homes > 0) {
       $planet = $home_free_planets[$random % $n_homes];
+//      echo "<font color='red'>AVANT</font><br><pre>";
+//      print_r($planet);
+//      echo "</pre><br>\n";
       $planet->set_owner($player);
+//      $planet->set_owner_id($player->get_player_id());
       echo "Set owner = ".$player->get_name()." in home system for planet ".$planet->get_sid()." #".$planet->get_position()."<br>\n";
     }
     else {
@@ -80,6 +84,7 @@ function build_random_fleets(Player $player) {
   $planets = $player->get_planets();
   $n_planets = count($planets);
   for ($i = 0; $i < $n_planets; $i++) {
+//    echo "Planet $i/$n_planets = <pre>".var_dump($planets[$i])."</pre><br>\n";
     $random = rand(0,100);
     if ($random >= 40) {
       $fleet = new RestingFleet($planets[$i]->get_sid(), $planets[$i]->get_position());
@@ -120,7 +125,7 @@ function launch_random_fleets(Player $player, Galaxy $galaxy) {
 	try {
 	  $sid = rand(1, $galaxy->spiral);
 	  $position = rand(1, 15);
-	  $target = new Planet($sid, $position);
+	  $target = new ProxyPlanet($sid, $position);
 	  $target->load();
 	  $flight = $p->get_owner_fleet()->launch($target);
 	  $flight->save();

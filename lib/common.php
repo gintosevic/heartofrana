@@ -16,6 +16,8 @@ require_once "Ownable.php";
 require_once "Fightable.php";
 require_once "Battle.php";
 require_once "Planet.php";
+require_once "RealPlanet.php";
+require_once "ProxyPlanet.php";
 require_once "System.php";
 require_once "Fleet.php";
 require_once "RestingFleet.php";

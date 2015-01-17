@@ -34,14 +34,14 @@ class RestingFleet extends Fleet {
   }
 
   public function load_planet() {
-    $this->planet = new Planet($this->sid, $this->position);
+    $this->planet = new ProxyPlanet($this->sid, $this->position);
     $this->planet->load();
   }
 
   function unset_planet() {
-    if ($this->planet != null) {
-      $this->planet->unset_owner_fleet();
-    }
+//    echo "Unset owner fleet<br>\n";
+    $this->get_planet()->unset_owner_fleet();
+//    print_r($this->get_planet())."<br>\n";
     $this->planet = null;
   }
 
@@ -64,7 +64,7 @@ class RestingFleet extends Fleet {
       $this->planet = $planet;
       $planet->set_owner_fleet($this);
     } else {
-      throw new Exception("Owner of the resting fleet (" . $this->get_owner_id() . ") and of the planet (" . $planet->get_owner_id() . ") must be the same.");
+      throw new Exception("Owner of the resting fleet (owner ID = " . $this->get_owner_id() . ") and of the planet (".$planet->to_string().", owner ID = " . $planet->get_owner_id() . ") must be the same.");
     }
   }
 

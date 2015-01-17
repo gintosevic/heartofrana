@@ -29,7 +29,7 @@ function try_launching() {
       try {
         $f = find_fleet($_GET['fleet_id']);
         $start_planet = $f->get_planet();
-        $p = new Planet($_GET['sid'], $_GET['position']);
+        $p = new ProxyPlanet($_GET['sid'], $_GET['position']);
         $p->load();
         
         $to_be_launched = clone $f;

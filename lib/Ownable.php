@@ -3,48 +3,18 @@
 /**
  * Abstract class for all object which are owner by a player
  */
-class Ownable {
+abstract class Ownable {
 
-  protected $owner_id;
-  protected $owner;
+  abstract function load_owner();
 
-  public function __construct() {
-    $this->owner_id = null;
-    $this->owner = null;
-  }
+  abstract function set_owner_id($player_id);
 
-  function load_owner() {
-    if ($this->owner_id !== null) {
-      $this->owner = new Player($this->owner_id);
-    }
-  }
+  abstract public function set_owner(Player $pl);
 
-  function set_owner_id($player_id) {
-    $this->owner_id = $player_id;
-    $this->owner = null;
-  }
+  abstract public function get_owner_id();
 
-  public function set_owner(Player $pl) {
-    if ($this->owner_id !== $pl->get_player_id()) {
-      $this->owner_id = $pl->get_player_id();
-      $this->owner = $pl;
-    }
-  }
+  abstract public function has_owner();
 
-  public function get_owner_id() {
-    return $this->owner_id;
-  }
-
-  public function has_owner() {
-    return ($this->owner_id !== null);
-  }
-
-  public function get_owner() {
-    if ($this->has_owner() && $this->owner === null) {
-      $this->owner = new Player($this->owner_id);
-      $this->owner->load();
-    }
-    return $this->owner;
-  }
+  abstract public function get_owner();
 
 }

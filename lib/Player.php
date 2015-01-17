@@ -281,7 +281,7 @@ class Player {
     $n = db_num_rows($results);
     for ($i = 0; $i < $n; $i++) {
       $row = db_fetch_assoc($results, $i);
-      $p = new Planet($row['sid'], $row['position']);
+      $p = new ProxyPlanet($row['sid'], $row['position']);
       $p->load();
       array_push($list, $p);
     }

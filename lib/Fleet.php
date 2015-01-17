@@ -57,9 +57,43 @@ class Fleet extends Fightable {
 
   protected $fleet_id;
   protected $ships;
+  // Ownable
+  protected $owner_id;
+  protected $owner;
+
+  function load_owner() {
+    if ($this->get_owner_id() !== null) {
+      $this->set_owner(new Player($this->get_owner_id()));
+    }
+  }
+
+  function set_owner_id($player_id) {
+    $this->owner_id = $player_id;
+    $this->owner = null;
+  }
+
+  public function get_owner_id() {
+    return $this->owner_id;
+  }
+
+  public function has_owner() {
+    return ($this->get_owner_id() !== null);
+  }
+
+  public function get_owner() {
+    if ($this->has_owner() && $this->owner === null) {
+      $this->owner = new Player($this->get_owner_id());
+      $this->owner->load();
+    }
+    return $this->owner;
+  }
+  
+  // Fleet
 
   function __construct($id = null) {
     parent::__construct();
+    $this->owner_id = null;
+    $this->owner = null;
     $this->fleet_id = $id;
     $this->ships = [];
     foreach (Fleet::$ALL_SHIPS as $ship) {
@@ -110,7 +144,8 @@ class Fleet extends Fightable {
 
   public function set_owner(\Player $pl) {
     if ($this->get_owner_id() !== $pl->get_player_id()) {
-      parent::set_owner($pl);
+      $this->owner_id = $pl->get_player_id();
+      $this->owner = $pl;
       $pl->add_fleet($this);
     }
   }

@@ -1,7 +1,7 @@
 <?php
 
 require_once "credentials.php";
-define("DATABASE_DEBUG_MODE", 1);
+define("DATABASE_DEBUG_MODE", 0);
 
 
 $all_queries = array();
@@ -24,7 +24,7 @@ function db_query($q) {
   }
   
   $result = Database::get_connection()->query($q);
-  if (!$result) { die("<a class='error'><b>Error</b> ".db_error()."</a>"); }
+  if (!$result) { echo "<a class='error'><b>Error</b> ".db_error()."</a>"; var_dump(debug_backtrace()); die(); }
   return $result;
 }
 

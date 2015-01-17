@@ -153,16 +153,18 @@ class Battle {
       $loser_msg = $this->build_defeat_message("defending");
       // Destroy all defenses of the loser
       if ($this->defender instanceof Planet) {
+//        print_r($this->defender);
         if ($this->defender->has_owner_fleet()) {
           $this->defender->get_owner_fleet()->destroy();
         }
         $this->defender->set_building_points("starbase", 0);
-      }
-      elseif ($this->defender instanceof Fleet) {
+      } elseif ($this->defender instanceof Fleet) {
+//        print_r($this->defender->get_planet());
         $this->defender->destroy();
       }
       // Perform landing
       $resulting_fleet = $this->get_survivor()->perform_landing();
+
     } else {
       // Announce the victory
       $winner_msg = $this->build_victory_message("defending");
@@ -194,7 +196,7 @@ class Battle {
     $str .= "- Defender details: " . $this->defender->to_string();
     if ($this->defender instanceof Planet) {
       if ($this->defender->has_owner_fleet()) {
-        $str .= " ".$this->defender->get_owner_fleet()->to_string() . " +";
+        $str .= " " . $this->defender->get_owner_fleet()->to_string() . " +";
       }
       $str .= " SB " . $this->defender->get_building_level("starbase");
     }

@@ -107,7 +107,7 @@ class System {
     $this->planets = array();
     for ($i = 0; $i < $n; $i++) {
       $row = db_fetch_assoc($results, $i);
-      $planet = new Planet($this->sid, $row['position']);
+      $planet = new ProxyPlanet($this->sid, $row['position']);
       $planet->load();
       array_push($this->planets, $planet);
     }
@@ -168,7 +168,7 @@ class System {
   }
 
   function add_planet() {
-    $planet = new Planet($this->sid, count($this->planets) + 1);
+    $planet = new ProxyPlanet($this->sid, count($this->planets) + 1);
     array_push($this->planets, $planet);
     return $planet;
   }
