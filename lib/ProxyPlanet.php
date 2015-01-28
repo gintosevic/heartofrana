@@ -115,13 +115,21 @@ class ProxyPlanet extends Planet {
   public function get_population_level() {
     return $this->planet->get_population_level();
   }
+  
+  public function decrease_population_level($n_levels) {
+    return $this->planet->decrease_population_level($n_levels);
+  }
 
   public function set_production_points($n) {
     $this->planet->set_production_points($n);
   }
 
-  protected function substract_production_points($n) {
-    $this->planet->substract_production_points($n);
+  public function decrease_production_points($n) {
+    $this->planet->decrease_production_points($n);
+  }
+  
+  public function increase_production_points($n) {
+    $this->planet->increase_production_points($n);
   }
 
   public function get_production_points() {

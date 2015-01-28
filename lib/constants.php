@@ -18,5 +18,6 @@ define("BATTLESHIP_TRIGGER_SCIENCE", "physics"); // Science to develop to build 
 define("BATTLESHIP_TRIGGER_LEVEL", 15); // Science level to reach to build battleships
 define("XP_LOSER_MALUS", 1.0/3.0); // XPs earned by battle losers are XP_LOSER_MALUS * killed CV
 define("FLYING_FLEET_MAX_NUMBER", 2); // Maximum number of flying fleets
-
+define("COLONYSHIP_PRODUCTION_POINT_GROUP_SIZE", 2); // Number of colonyships to be gathered to allow conversion into production points
+define("COLONYSHIP_PRODUCTION_POINT_GROUP_VALUE", 30); // Production points earned after converting a group of colonyships
 ?>

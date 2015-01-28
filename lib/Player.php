@@ -180,7 +180,7 @@ class Player {
   public function get_visibility_range() {
     return biology_level_to_range($this->get_science_level('biology'));
   }
-  
+
   public function get_population_limit() {
     return social_level_to_population_limit($this->get_science_level('biology'));
   }
@@ -286,6 +286,16 @@ class Player {
       array_push($list, $p);
     }
     $this->planets = $list;
+  }
+
+  function count_planets() {
+//    if ($this->planets === null) {
+    $results = db_query("SELECT COUNT(*) AS n_planets FROM Planet WHERE owner = " . $this->player_id);
+    $row = db_fetch_assoc($results);
+    return $row['n_planets'];
+//    } else {
+//      return count($this->planets);
+//    }
   }
 
   function list_home_systems() {
@@ -396,6 +406,20 @@ class Player {
     if ($this->fleets === null) {
       $this->load_fleets();
     }
+    $n = count($this->fleets);
+    // If fleet to be added should be merged with one of the existing ones
+    if ($fleet instanceof RestingFleet) {
+      for ($i = 0; $i < $n; $i++) {
+        if ($this->fleets[$i] instanceof RestingFleet
+          && $this->fleets[$i]->get_sid() == $fleet->get_sid()
+          && $this->fleets[$i]->get_position() == $fleet->get_position()) {
+          $fleet->merge($this->fleets[$i]);
+          $this->fleets[$i] = $fleet;
+        }
+        return;
+      }
+    }
+    // If the fleet to be added is a really new fleet
     array_push($this->fleets, $fleet);
   }
 

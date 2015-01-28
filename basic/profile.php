@@ -30,8 +30,7 @@ else {
   build_menu();
   try {
     $displayed_player = null;
-    echo "<div class='todo'>Visibility verification not implemented.</div>\n";
-    if (isset($_GET['player_id'])) {
+    if (isset($_GET['player_id']) && $_SESSION['player']->get_player_id() != $_GET['player_id']) {
       $displayed_player = new Player($_GET['player_id']);
       $displayed_player->load();
     }

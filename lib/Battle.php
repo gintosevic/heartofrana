@@ -122,7 +122,8 @@ class Battle {
     $loss = round($this->get_loss_ratio() * 100);
     $msg = "Your $def_or_att fleet was defeated at $planet_html against $player_html.<br>\n";
     $msg .= "You destroyed about <b>$loss%</b> of the enemy fleet and gained <b>$xp XPs</b>.<br>\n";
-    $msg .= "For information, your strength was " . $this->get_loser()->to_html();
+    $msg .= "For information, your strength was " . $this->get_loser()->get_combat_value() . "CVs : " . $this->get_loser()->to_html()."<br>\n";
+    $msg .= "Opponent's strength was " . $this->get_winner()->get_combat_value() . "CVs.";
     return $msg;
   }
 
@@ -133,7 +134,8 @@ class Battle {
     $loss = round($this->get_loss_ratio() * 100);
     $msg = "Congratulations! Your $def_or_att fleet won a battle at $planet_html against $player_html.<br>\n";
     $msg .= "You lost about <b>$loss%</b> of your troups and gained <b>$xp XPs</b>.<br>\n";
-    $msg .= "For information, your strength was " . $this->get_winner()->to_html();
+    $msg .= "For information, your strength was " . $this->get_winner()->get_combat_value() . "CVs : " . $this->get_winner()->to_html()."<br>\n";
+    $msg .= "Opponent's strength was " . $this->get_loser()->get_combat_value() . "CVs.";
     return $msg;
   }
 
@@ -149,7 +151,9 @@ class Battle {
     $resulting_fleet = null;
     if ($this->get_winner() == $this->get_attacker()) {
       // Announce the victory
+      $winner_title = "Your attack is victorious";
       $winner_msg = $this->build_victory_message("attacking");
+      $loser_title = "Your defense has been defeated";
       $loser_msg = $this->build_defeat_message("defending");
       // Destroy all defenses of the loser
       if ($this->defender instanceof Planet) {
@@ -162,12 +166,11 @@ class Battle {
 //        print_r($this->defender->get_planet());
         $this->defender->destroy();
       }
-      // Perform landing
-      $resulting_fleet = $this->get_survivor()->perform_landing();
-
     } else {
       // Announce the victory
+      $winner_title = "Your defense won a battle";
       $winner_msg = $this->build_victory_message("defending");
+      $loser_title = "Your attack has been defeated";
       $loser_msg = $this->build_defeat_message("attacking");
       // Apply losses on the initial planet or fleet
       if ($this->defender instanceof Planet) {
@@ -181,8 +184,13 @@ class Battle {
 
     // Announce the defeat
     $time = $this->get_attacker()->get_arrival_time();
-    Event::create_and_save($winner_player->get_player_id(), "won_fight", "You won a battle", $winner_msg, $time);
-    Event::create_and_save($loser_player->get_player_id(), "lost_fight", "You lost a battle", $loser_msg, $time);
+    Event::create_and_save($winner_player->get_player_id(), "won_fight", $winner_title, $winner_msg, $time);
+    Event::create_and_save($loser_player->get_player_id(), "lost_fight", $loser_title, $loser_msg, $time);
+
+    // Perform landing if needed
+    if ($this->get_winner() == $this->get_attacker()) {
+      $resulting_fleet = $this->get_survivor()->perform_landing();
+    }
 
     return $resulting_fleet;
   }

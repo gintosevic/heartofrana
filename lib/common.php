@@ -138,6 +138,7 @@ EOL;
 }
 
 function check_fleet_landing(Player $player) {
+  db_query("LOCK TABLES Flight WRITE, Fleet WRITE, Planet WRITE, Player WRITE, Race Read, Science Read, Event WRITE");
   $results = db_query("SELECT fleet_id FROM Flight WHERE arrival_time < NOW()");
   $n_fleets = db_num_rows($results);
   for ($i = 0; $i < $n_fleets; $i++) {
@@ -153,6 +154,7 @@ function check_fleet_landing(Player $player) {
       }
     }
   }
+  db_query("UNLOCK TABLES");
 
 }
 

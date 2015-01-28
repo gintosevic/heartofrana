@@ -21,7 +21,8 @@ function display_planet_in_system($planet) {
     echo "<td>".($planet->has_sieging_fleet()?"<a class=sieged>sieged</a>":"")."</td>\n";
   }
   else {
-    echo "<td span=4>Free planet</td>\n";
+    echo "<td colspan=3>F r e e &nbsp;&nbsp; p l a n e t</td>\n";
+    echo "<td>".($planet->has_sieging_fleet()?"<a class=sieged>sieged</a>":"")."</td>\n";
   }
   echo "</tr>\n";
 }

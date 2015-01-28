@@ -174,6 +174,14 @@ class Fleet extends Fightable {
     }
     $this->ships[$type] = $this->ships[$type] + $n;
   }
+  
+  function decrease_ships($type, $n) {
+    if (array_search($type, Fleet::$ALL_SHIPS) === false) {
+      die(__FILE__ . ": line " . __LINE__ . ": No ship called $type.");
+    }
+    $this->ships[$type] = max(0, $this->ships[$type] - $n);
+    return $this->ships[$type];
+  }
 
   function is_empty() {
     foreach (Fleet::$ALL_SHIPS as $ship) {

@@ -65,6 +65,10 @@ class FlyingFleet extends Fleet {
 
   public function perform_landing() {
     $planet = $this->get_arrival_planet();
+    $culture_level = $this->get_owner()->get_culture_level();
+    $n_planets = $this->get_owner()->count_planets();
+
+    // Landing on a owned planet
     if ($this->get_owner_id() === $planet->get_owner_id()) {
       if ($planet->has_owner_fleet()) {
         $owner_fleet = $planet->get_owner_fleet();
@@ -73,14 +77,67 @@ class FlyingFleet extends Fleet {
       } else {
         return $this->convert_to_resting_fleet();
       }
-    } else {
+    }
+
+    // Planet to be conquered or popkilled
+    elseif ($planet->has_owner()) {
       $n_transports = $this->get_ships('transports');
-      $n_pop = $planet->get_population_level();
-      if ($n_transports >= $n_pop) {
-        $planet->set_owner_id($this->get_owner_id());
+      $n_initial_pop = $planet->get_population_level();
+      $n_pop = $planet->decrease_population_level($n_transports);
+      $this->decrease_ships('transports', $n_initial_pop);
+
+      // All population killed
+      if ($n_pop == 0) {
+        // Free culture slot
+        if ($culture_level > $n_planets) {
+          $former_id = $this->get_owner_id();
+          if ($_SESSION['player']->get_player_id() === $this->get_owner_id()) {
+            $_SESSION['player']->add_planet($planet);
+          } else {
+            $planet->set_owner_id($this->get_owner_id());
+          }
+
+          Event::create_and_save($this->get_owner_id(), "new_planet", "You conquered a planet", "Your troups have conquered planet " . $planet->to_html() . ". Congratulations!", $this->get_arrival_time());
+          Event::create_and_save($former_id(), "lost_planet", "You lost a planet", "Your planet " . $planet->to_html() . " has been conquered by " . $this->get_owner()->to_html() . ".", $this->get_arrival_time());
+          return $this->convert_to_resting_fleet();
+        }
+        // No free culture slot
+        else {
+          $planet->set_population_level(1);
+          $this->add_ships('transports', 1);
+          Event::create_and_save($this->get_owner_id(), "normal", "Impossible to conquer a planet", "Your troups cannot conquer planet " . $planet->to_html() . " since your cultural influence is too weak. Increase your culture level.", $this->get_arrival_time());
+        }
+      }
+
+      // Not all population killed
+      if ($n_initial_pop != $n_pop) {
+        Event::create_and_save($planet->get_owner_id(), "important", "Population decreased", "People at planet " . $planet->to_html() . " has been attacked. Population decreased by <b>" . ($n_initial_pop - $n_pop) . "</b>.", $this->get_arrival_time());
+      }
+      return $this->convert_to_sieging_fleet();
+    }
+
+    // Free planet to colonize or siege
+    else {
+      $n_colonyships = $this->get_ships('colonyships');
+      if ($n_colonyships > 0 && $culture_level > $n_planets) {
+        if ($_SESSION['player']->get_player_id() === $this->get_owner_id()) {
+          $_SESSION['player']->add_planet($planet);
+        } else {
+          $planet->set_owner_id($this->get_owner_id());
+        }
+
+        // Consume the colonizing colony ship
+        $this->decrease_ships('colonyships', 1);
+        // Consume colony ships which are transformed into productions points
+        $n_groups = (int) ($this->get_ships('colonyships') / COLONYSHIP_PRODUCTION_POINT_GROUP_SIZE);
+        $n_pps = $n_groups * COLONYSHIP_PRODUCTION_POINT_GROUP_VALUE;
+        $planet->increase_production_points($n_pps);
+        $this->decrease_ships('colonyships', $n_groups * COLONYSHIP_PRODUCTION_POINT_GROUP_SIZE);
+
+        Event::create_and_save($this->get_owner_id(), "new_planet", "You colonized a new planet", "Your troups have colonized planet " . $planet->to_html() . ". Congratulations!", $this->get_arrival_time());
         return $this->convert_to_resting_fleet();
       } else {
-        $planet->set_population_level($n_pop - $n_transports);
+        Event::create_and_save($this->get_owner_id(), "normal", "Impossible to colonize a new planet", "Your troups cannot colonize planet " . $planet->to_html() . " since your culture is too weak. Increase your culture level first.", $this->get_arrival_time());
         return $this->convert_to_sieging_fleet();
       }
     }

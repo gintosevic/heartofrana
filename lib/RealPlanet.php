@@ -82,14 +82,18 @@ class RealPlanet extends Planet {
   }
 
   public function replace(Planet $planet) {
-    $this->population_points = $planet->population_points;
-    $this->production_points = $planet->production_points;
-    $this->building_points = $planet->building_points;
-    $this->ship_points = $planet->ship_points;
-    $this->owner_fleet_id = $planet->owner_fleet_id;
-    $this->owner_fleet = $planet->owner_fleet;
-    $this->sieging_fleet_id = $planet->sieging_fleet_id;
-    $this->sieging_fleet = $planet->sieging_fleet;
+    $this->population_points = $planet->get_population_points();
+    $this->production_points = $planet->get_production_points();
+    foreach (RealPlanet::$ALL_BUILDINGS as $building) {
+      $this->set_building_points($building, $planet->get_building_points($building));
+    }
+    foreach (Fleet::$ALL_SHIPS as $ship)  {
+      $this->set_ship_points($ship, $planet->get_ship_points($ship));
+    }
+    $this->owner_fleet_id = $planet->get_owner_fleet_id();
+    $this->owner_fleet = $planet->get_owner_fleet();
+    $this->sieging_fleet_id = $planet->get_sieging_fleet_id();
+    $this->sieging_fleet = $planet->get_sieging_fleet();
   }
 
   public function save() {
@@ -267,13 +271,25 @@ class RealPlanet extends Planet {
   public function get_population_level() {
     return population_points_to_level($this->get_population_points());
   }
+  
+  public function decrease_population_level($n_levels) {
+    $n = $this->get_population_level();
+    $delta_points = population_level_to_points($n) - population_level_to_points($n - $n_levels);
+    $points = $this->get_population_points();
+    $this->set_population_points($points - $delta_points);
+    return $this->get_population_level();
+  }
 
   public function set_production_points($n) {
     $this->production_points = $n;
   }
 
-  protected function substract_production_points($n) {
+  public function decrease_production_points($n) {
     $this->production_points -= $n;
+  }
+  
+  public function increase_production_points($n) {
+    $this->production_points += $n;
   }
 
   public function get_production_points() {
@@ -286,7 +302,7 @@ class RealPlanet extends Planet {
     }
     if ($amount <= $this->get_production_points()) {
       $this->add_building_points($type, $amount);
-      $this->substract_production_points($amount);
+      $this->decrease_production_points($amount);
     }
   }
 
@@ -296,7 +312,7 @@ class RealPlanet extends Planet {
     }
     if ($amount <= $this->get_production_points()) {
       $this->add_ship_points($type, $amount);
-      $this->substract_production_points($amount);
+      $this->decrease_production_points($amount);
     }
   }
 

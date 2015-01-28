@@ -78,7 +78,7 @@ class RestingFleet extends Fleet {
     if (!$this->get_owner()->can_see_planet($target)) {
       throw new Exception("Planet " . $target->to_html() . " does not exist or is not currently visible");
     }
-    $duration = 10;
+    $duration = 1;
     $flying_fleet = new FlyingFleet($this->fleet_id);
     $flying_fleet->replace($this);
     $flying_fleet->set_departure_planet($this->get_planet());

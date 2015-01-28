@@ -67,10 +67,14 @@ abstract class Planet extends Fightable {
   public abstract function get_population_points();
 
   public abstract function get_population_level();
+  
+  public abstract function decrease_population_level($n_levels);
 
   public abstract function set_production_points($n);
 
-  protected abstract function substract_production_points($n);
+  public abstract function decrease_production_points($n);
+  
+  public abstract function increase_production_points($n);
 
   public abstract function get_production_points();
 
