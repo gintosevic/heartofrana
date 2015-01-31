@@ -85,12 +85,12 @@ class FlyingFleet extends Fleet {
       $n_initial_pop = $planet->get_population_level();
       $n_pop = $planet->decrease_population_level($n_transports);
       $this->decrease_ships('transports', $n_initial_pop);
-
+      
       // All population killed
-      if ($n_pop == 0) {
+      if ($n_transports >= $n_initial_pop) {
         // Free culture slot
         if ($culture_level > $n_planets) {
-          $former_id = $this->get_owner_id();
+          $former_id = $planet->get_owner_id();
           if ($_SESSION['player']->get_player_id() === $this->get_owner_id()) {
             $_SESSION['player']->add_planet($planet);
           } else {
@@ -98,7 +98,7 @@ class FlyingFleet extends Fleet {
           }
 
           Event::create_and_save($this->get_owner_id(), "new_planet", "You conquered a planet", "Your troups have conquered planet " . $planet->to_html() . ". Congratulations!", $this->get_arrival_time());
-          Event::create_and_save($former_id(), "lost_planet", "You lost a planet", "Your planet " . $planet->to_html() . " has been conquered by " . $this->get_owner()->to_html() . ".", $this->get_arrival_time());
+          Event::create_and_save($former_id, "lost_planet", "You lost a planet", "Your planet " . $planet->to_html() . " has been conquered by " . $this->get_owner()->to_html() . ".", $this->get_arrival_time());
           return $this->convert_to_resting_fleet();
         }
         // No free culture slot

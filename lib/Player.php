@@ -407,13 +407,13 @@ class Player {
       $this->load_fleets();
     }
     $n = count($this->fleets);
-    // If fleet to be added should be merged with one of the existing ones
+    // If fleet to be added should be replaced with one of the existing ones
     if ($fleet instanceof RestingFleet) {
       for ($i = 0; $i < $n; $i++) {
         if ($this->fleets[$i] instanceof RestingFleet
           && $this->fleets[$i]->get_sid() == $fleet->get_sid()
           && $this->fleets[$i]->get_position() == $fleet->get_position()) {
-          $fleet->merge($this->fleets[$i]);
+//          $fleet->merge($this->fleets[$i]);
           $this->fleets[$i] = $fleet;
           return;
         }

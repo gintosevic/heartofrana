@@ -77,7 +77,7 @@ function set_random_planet_stats($planet) {
     $planet->set_building_points($s, rand(50, 1000));
   }
   $planet->set_population_points(rand(50, 1000));
-  $planet->set_production_points(rand(0, 1000));
+  $planet->set_production_points(rand(0, 2000));
 }
 
 function build_random_fleets(Player $player) {

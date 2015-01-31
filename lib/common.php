@@ -243,7 +243,7 @@ function biology_level_to_range($level) {
   return intval($level / 2);
 }
 
-function social_level_to_population_limit($evel) {
+function social_level_to_population_limit($level) {
   if ($level < 10) {
     return max(PLANET_MIN_POPULATION_LIMIT, intval((10+$level)/2));
   }

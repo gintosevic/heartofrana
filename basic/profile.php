@@ -3,7 +3,7 @@ require("../lib/common.php");
 
 
 function display_profile(Player $player) {
-  if (!$_SESSION['player']->can_see_player($player)) {
+  if ($_SESSION['player']->get_player_id() != $player->get_player_id() && !$_SESSION['player']->can_see_player($player)) {
     throw new Exception("Information about player <b>".$player->get_name()." (ID ".$player->get_player_id().")</b> cannot be displayed.");
   }
   echo <<<EOL
