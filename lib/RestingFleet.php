@@ -79,7 +79,7 @@ class RestingFleet extends Fleet {
       throw new Exception("Planet " . $target->to_html() . " does not exist or is not currently visible");
     }
     $duration = 1;
-    $flying_fleet = new FlyingFleet($this->fleet_id);
+    $flying_fleet = new FlyingFleet(null);
     $flying_fleet->replace($this);
     $flying_fleet->set_departure_planet($this->get_planet());
     $flying_fleet->set_departure_time(time());

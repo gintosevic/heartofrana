@@ -111,7 +111,7 @@ class FlyingFleet extends Fleet {
 
       // Not all population killed
       if ($n_initial_pop != $n_pop) {
-        Event::create_and_save($planet->get_owner_id(), "important", "Population decreased", "People at planet " . $planet->to_html() . " has been attacked. Population decreased by <b>" . ($n_initial_pop - $n_pop) . "</b>.", $this->get_arrival_time());
+        Event::create_and_save($planet->get_owner_id(), "important", "Population decreased", "People at planet " . $planet->to_html() . " have been attacked. Population decreased by <b>" . ($n_initial_pop - $n_pop) . "</b>.", $this->get_arrival_time());
       }
       return $this->convert_to_sieging_fleet();
     }
@@ -137,7 +137,9 @@ class FlyingFleet extends Fleet {
         Event::create_and_save($this->get_owner_id(), "new_planet", "You colonized a new planet", "Your troups have colonized planet " . $planet->to_html() . ". Congratulations!", $this->get_arrival_time());
         return $this->convert_to_resting_fleet();
       } else {
-        Event::create_and_save($this->get_owner_id(), "normal", "Impossible to colonize a new planet", "Your troups cannot colonize planet " . $planet->to_html() . " since your culture is too weak. Increase your culture level first.", $this->get_arrival_time());
+        if ($n_colonyships > 0) {
+          Event::create_and_save($this->get_owner_id(), "normal", "Impossible to colonize a new planet", "Your troups cannot colonize planet " . $planet->to_html() . " since your culture is too weak. Increase your culture level first.", $this->get_arrival_time());
+        }
         return $this->convert_to_sieging_fleet();
       }
     }

@@ -138,6 +138,9 @@ class Fleet extends Fightable {
 
   function destroy() {
     if ($this->fleet_id !== null) {
+      if ($this->owner !== null) {
+        $this->owner->remove_fleet($this);
+      }
       db_query("DELETE FROM Fleet WHERE fleet_id = " . $this->fleet_id);
     }
   }

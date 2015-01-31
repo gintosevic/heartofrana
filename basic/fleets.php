@@ -32,7 +32,7 @@ function try_launching() {
         $p = new ProxyPlanet($_GET['sid'], $_GET['position']);
         $p->load();
         
-        $to_be_launched = clone $f;
+        $to_be_launched = new RestingFleet($f->get_sid(), $f->get_position());
         foreach (Fleet::$ALL_SHIPS as $ship) {
           if (!isset($_GET[$ship])) { $_GET[$ship] = 0; }
           $to_be_launched->set_ships($ship, $_GET[$ship]);
@@ -40,8 +40,6 @@ function try_launching() {
         $to_be_launched->set_owner_id($player->get_player_id());
         
         $f->substract($to_be_launched);
-        $to_be_launched->substract($f);
-        $to_be_launched->set_planet($start_planet);
         $launched = $to_be_launched->launch($p);
         $player->add_fleet($launched);
         if (!$f->is_empty()) {
@@ -50,7 +48,6 @@ function try_launching() {
         }
         else {
           $player->remove_fleet($f);
-          
           $f->destroy();
         }
         $launched->save();

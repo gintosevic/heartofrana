@@ -415,8 +415,8 @@ class Player {
           && $this->fleets[$i]->get_position() == $fleet->get_position()) {
           $fleet->merge($this->fleets[$i]);
           $this->fleets[$i] = $fleet;
+          return;
         }
-        return;
       }
     }
     // If the fleet to be added is a really new fleet
