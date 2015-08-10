@@ -17,6 +17,7 @@ class Player {
   private $science_points;
   private $culture_points;
   private $tag;
+  private $alliance;
   private $planets;
   private $fleets;
 
@@ -43,6 +44,7 @@ class Player {
     }
 
     $this->tag = null;
+    $this->alliance = null;
     $this->planets = null;
     $this->fleets = null;
   }
@@ -250,12 +252,39 @@ class Player {
 
   // ALLIANCE
 
-  function get_alliance_tag() {
+  public function get_alliance_tag() {
     return $this->tag;
   }
 
-  function get_alliance() {
-    // TODO
+  public function get_alliance() {
+    $this->alliance = new Alliance($this->tag);
+    return $alliance;
+  }
+  
+  public function set_alliance_tag($tag) {
+    if ($this->tag !== null) {
+      die("Impossible to leave an alliance to move to another.\n");
+    } else {
+      $this->tag = $tag;
+    }
+  }
+  
+  public function set_alliance(Alliance $alliance) {
+    if ($this->alliance !== null) {
+      die("Impossible to leave an alliance to move to another.\n");
+    } else {
+      $this->alliance = $alliance;
+      $this->tag = $alliance->get_tag();
+    }
+  }
+  
+  public function unset_alliance() {
+    $this->tag = null;
+    $this->alliance = null;
+  }
+  
+  public function has_alliance() {
+    return ($this->tag !== null);
   }
 
   // PLANETS
@@ -410,9 +439,7 @@ class Player {
     // If fleet to be added should be replaced with one of the existing ones
     if ($fleet instanceof RestingFleet) {
       for ($i = 0; $i < $n; $i++) {
-        if ($this->fleets[$i] instanceof RestingFleet
-          && $this->fleets[$i]->get_sid() == $fleet->get_sid()
-          && $this->fleets[$i]->get_position() == $fleet->get_position()) {
+        if ($this->fleets[$i] instanceof RestingFleet && $this->fleets[$i]->get_sid() == $fleet->get_sid() && $this->fleets[$i]->get_position() == $fleet->get_position()) {
 //          $fleet->merge($this->fleets[$i]);
           $this->fleets[$i] = $fleet;
           return;
