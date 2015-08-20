@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cp lib/default_credentials.php lib/credentials.php
+cp php/lib/default_credentials.php php/lib/credentials.php
 
