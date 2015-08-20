@@ -1,0 +1,395 @@
+/*****************************************
+* General
+*****************************************/
+
+body {
+  color: white;
+  background-color: black;
+  font-family: arial;
+  text-align: center;
+  padding: 10px;
+}
+
+a {
+  color: rgb(250,150,50);
+}
+
+a:hover {
+  color: white;
+}
+
+a.error {
+  color: red;
+}
+
+div.query {
+  border: 1px dashed black;
+  background-color: grey;
+}
+
+a.button {
+  border: 1px solid;
+  background-color: #631;
+  text-decoration: none;
+  padding-right: 2px;
+  padding-left: 2px;
+  cursor: pointer;
+  margin: 1px;
+}
+
+a.disabled_button {
+  border: 1px solid;
+  border-color: gray;
+  background-color: #151515;
+  color: gray;
+  text-decoration: none;
+  padding-right: 2px;
+  padding-left: 2px;
+  cursor: not-allowed;
+  margin: 1px;
+}
+
+#description {
+  background-color: rgba(32,32,32,0);
+  font-style: italic;
+  text-decoration: underline;
+}
+
+.box {
+  border: 1px solid gray;
+  padding: 10px;
+}
+
+.box h2 {
+  color: yellow;
+}
+
+/*****************************************
+* Menu
+*****************************************/
+
+div.main_menu {
+    border: 1px solid white;
+    width: 70%;
+    padding: 10px;
+    color: red;
+    background-color: #404040;
+}
+
+.main_menu ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.main_menu li {
+  display: inline;
+  padding: 10px;
+}
+
+.main_menu a {
+  cursor: pointer;
+  color: #8588C3;
+  background-color: transparent;
+  text-decoration: none;
+  font-size: 1.1em;
+  font-variant: small-caps;
+}
+
+.main_menu a:hover {
+  color: white;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a#logout {
+  color: #e22;
+}
+
+/*****************************************
+* Tabs
+*****************************************/
+
+.tab {
+  background-color: black;
+  color: yellow;
+  border: 1px dotted;
+  border-color: white;
+  width: 70%;
+  min-width: 800px;
+  max-width: 1600px;
+  padding: 10px;
+}
+
+
+.todo {
+  border: 2px dashed red;
+  color: red;
+  font-weight: bold;
+}
+
+/*****************************************
+* News
+*****************************************/
+
+div#news_tab {
+  background: black url("./img/backgrounds/news.jpg") no-repeat center center;
+}
+
+ul.news_list {
+    border: 1px solid white;
+    background-color: rgba(64, 64, 64, 0.9);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    width: 100%;
+}
+
+.news_list li {
+/*   padding: 20px; */
+  border-bottom: 1px solid white;
+}
+
+div.news {
+    display: table;
+    width: 100%;
+}
+
+div.news_time {
+/*   float: left; */
+  width: 100px;
+  font-size: 0.9em;
+  border-right: 1px dotted white;
+  padding: 10px;
+  display: table-cell;
+  height: 100%;
+  vertical-align: middle;
+  background-color: rgba(32,32,32,0.9);
+}
+
+div.news_time:before {
+  content: "[";
+}
+
+div.news_time:after {
+  content: "]";
+}
+
+div.news_title {
+  font-weight: bold;
+  font-size: 1.2em;
+  padding: 10px 10px 0px 10px;
+}
+
+div.news_text {
+  color: white;
+  padding: 10px;
+}
+
+li.news_new_planet div.news_title {
+  color: rgb(100,100,255);
+}
+li.news_new_planet div.news_time {
+  background-color: rgba(0,0,105,0.7);
+}
+
+li.news_won_fight div.news_title {
+  color: rgb(100,255,100);
+}
+li.news_won_fight div.news_time {
+  background-color: rgba(0,105,0,0.7);
+}
+
+li.news_enemy_attack div.news_title {
+  color: rgb(255,150,60);
+}
+li.news_enemy_attack div.news_time {
+  background-color: rgba(105,40,0,0.7);
+}
+
+li.news_lost_fight div.news_title {
+  color: rgb(255,40,40);
+}
+li.news_lost_fight div.news_time {
+  background-color: rgba(105,0,0,0.7);
+}
+
+li.news_lost_planet div.news_title {
+  color: rgb(255,40,40);
+}
+li.news_lost_planet div.news_time {
+  background-color: rgba(105,0,0,0.7);
+}
+
+/*****************************************
+* Map
+*****************************************/
+
+div#map_tab {
+  background: black url("./img/backgrounds/map2.jpg") no-repeat center top;
+}
+
+#map {
+  border: 1px solid white;
+  background-color: rgba(0, 0, 0, 0.9);
+  opacity: 0.8;
+  background-image: url("img/startile.gif");
+}
+
+.system {
+  color: blue;
+}
+
+.system a {
+  text-decoration: none;
+}
+
+/*****************************************
+* System view
+*****************************************/
+
+div#system_view_tab {
+  background: black url("./img/backgrounds/system_view.jpg") no-repeat center top;
+}
+
+.system_view {
+  background-color: rgba(32,32,32,0.7);
+  border: 1px solid white;
+  text-align: center;
+}
+
+#title.system_view {
+  color: #4444ff;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+#position.system_view {
+text-align: right;
+}
+
+.bonus_planet {
+  color: yellow;
+}
+
+.me {
+  color: green;
+}
+
+.sieged {
+  color: red;
+}
+
+/*****************************************
+* List of planets
+*****************************************/
+
+div#planets_tab {
+  background: black url("./img/backgrounds/planets.jpg") no-repeat center top;
+}
+
+.planets {
+  background-color: rgba(32,32,32,0.7);
+  border: 1px solid white;
+  text-align: center;
+}
+
+/*****************************************
+* Planet view
+*****************************************/
+
+div#planet_view_tab {
+  background: black url("./img/backgrounds/planet_view.jpg") no-repeat center top;
+}
+
+.planet_view {
+  background-color: rgba(32,32,32,0.7);
+  border: 1px solid white;
+  text-align: center;
+}
+
+#title.planet_view {
+  color: #4444ff;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/*****************************************
+* Science
+*****************************************/
+
+div#science_tab {
+  background: black url("./img/backgrounds/sciences.jpg") no-repeat center center;
+}
+
+.science {
+  background-color: rgba(32,32,32,0.7);
+  border: 1px solid white;
+  text-align: center;
+}
+
+#current_science.science {
+font-weight: bold;
+color: green;
+}
+
+/*****************************************
+* Fleets
+*****************************************/
+
+div#fleet_tab {
+  background: black url("./img/backgrounds/fleet.jpg") no-repeat center top;
+}
+
+.fleets {
+  background-color: rgba(32,32,32,0.7);
+  border: 1px solid white;
+  text-align: center;
+}
+
+span.fleet {
+  text-decoration: none;
+}
+
+.fleet li {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+}
+
+.fleet_selector {
+  text-align: center;
+  border: 0px;
+  border-spacing: 0px 0px;
+  color: rgb(250,150,50);
+  background-color: #111;
+  text-decoration: none;
+  margin: 0px;
+  padding: 0px;
+  height: 20px;
+}
+
+table.fleet_selector {
+  border: 1px solid #333;
+}
+
+td.fleet_selector {
+  border: 1px solid #333;
+  cursor: pointer;
+  min-width: 20px;
+}
+
+td.fleet_selector:hover {
+  border: 1px solid #fff;
+  color: white;
+}
+
+input.fleet_selector {
+  height: 40px;
+}
+
+input.fleet_selector:hover {
+  color: white;
+}
+

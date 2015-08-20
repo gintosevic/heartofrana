@@ -6,7 +6,7 @@ Installation
 - Install a PHP5 server
 - Install a MySQL server
 - Run the script init.sh in the root directory
-- Edit lib/credentials.php
+- Edit php/lib/credentials.php
 - Run the web page populate.php
 - Run the web page index.php and play
 
