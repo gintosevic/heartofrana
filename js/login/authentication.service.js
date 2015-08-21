@@ -10,6 +10,11 @@
     var service = {};
 
     service.Login = Login;
+    service.Logout = Logout;
+    service.CheckSession = CheckSession;
+    service.hasCurrentUser = hasCurrentUser;
+    service.getCurrentUserName = getCurrentUserName;
+    service.isConnected = isConnected;
     service.SetCredentials = SetCredentials;
     service.ClearCredentials = ClearCredentials;
 
@@ -41,11 +46,55 @@
               });
 
     }
+    
+    function Logout(callback) {
+
+      /* Dummy authentication for testing, uses $timeout to simulate api call
+       ----------------------------------------------*/
+//            $timeout(function () {
+//                var response;
+//                UserService.GetByUsername(username)
+//                    .then(function (user) {
+//                        if (user !== null && user.password === password) {
+//                            response = { success: true };
+//                        } else {
+//                            response = { success: false, message: 'Username or password is incorrect' };
+//                        }
+//                        callback(response);
+//                    });
+//            }, 1000);
+
+      /* Use this for real authentication
+       ----------------------------------------------*/
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      $http.get('php/scripts/logout.php')
+              .success(function (response) {
+                callback(response);
+              });
+
+    }
+    
+    function CheckSession(username, callbackSuccess, callbackError) {
+      $http.defaults.headers.post["Content-Type"] = "application/json";
+      return $http.post('php/scripts/check-session.php', 'username=' + username).then(callbackSuccess,callbackError);
+    }
+    
+    function hasCurrentUser() {
+      return (typeof $rootScope.globals.currentUser != 'undefined');
+    }
+    
+    function getCurrentUserName() {
+      return $rootScope.globals.currentUser.username;
+    }
+    function isConnected() {
+      return $rootScope.globals.isConnected;
+    }
 
     function SetCredentials(username, password) {
       var authdata = Base64.encode(username + ':' + password);
 
       $rootScope.globals = {
+        isConnected: true,
         currentUser: {
           username: username,
           authdata: authdata
@@ -57,7 +106,11 @@
     }
 
     function ClearCredentials() {
-      $rootScope.globals = {};
+      $rootScope.globals = {
+        isConnected: false,
+        currentUser: {}
+      };
+      console.log("ClearCredentials");
       $cookieStore.remove('globals');
       $http.defaults.headers.common.Authorization = 'Basic ';
     }

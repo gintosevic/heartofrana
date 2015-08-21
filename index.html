@@ -16,7 +16,7 @@
       async defer
     ></script>
     
-    <script src="js/login/app.js"></script>
+    <script src="js/app.js"></script>
     <script src="js/login/authentication.service.js"></script>
     <script src="js/login/flash.service.js"></script>
 
@@ -26,28 +26,19 @@
     <!-- Fake user service for demo that uses local storage -->
     <!--<script src="js/login/user.service.local-storage.js"></script>-->
 
-    <script src="js/login/home.controller.js"></script>
+    <script src="js/index.controller.js"></script>
+    <script src="js/home/home.controller.js"></script>
     <script src="js/login/login.controller.js"></script>
     <script src="js/login/register.controller.js"></script>
     
   </head>
-  <body>
-
-    <div class="jumbotron">
-      <div class="container">
-        <div class="">
-          <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
-          <div class="row row-height">
-            <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4 col-height img-rounded" style='background-image: url("img/logos/Veil_nebula_modified.png"); padding-left: 20px; margin-top: 5px; min-height: 100%; height: 100%;'>
-              <h1 style='letter-spacing: 0.1em; font-size: 4em; font-weight: bold'>Heart of Rana</h1><br>
-              <span style='letter-spacing: 0.1em; font-size: 1em; font-weight: bold;'>Version 0.2</span>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4 col-height">
-              <div ng-view></div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <body ng-controller="IndexController as indexCtrl">
+    <div ng-show="indexCtrl.isConnected()"
+         ng-include="'html/connected-index.html'">
+    </div>
+    <div class="jumbotron"
+         ng-show="!indexCtrl.isConnected()"
+         ng-include="'html/unconnected-index.html'">
     </div>
     <div class="credits text-center">
       <p>
