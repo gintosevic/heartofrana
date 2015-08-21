@@ -1,3 +1,4 @@
+Bla {{indexCtrl.isConnected}}
 <h1>Hi {{vm.user.username}}!</h1>
 <p>You're logged in!!</p>
 <h3>All registered users:</h3>
@@ -8,4 +9,4 @@
     </li>
 </ul>
 <p>&nbsp;</p>
-<p><a href="#/login" class="btn btn-primary">Logout</a></p>
+<div ng-controller="LoginController as vm"><a href="#/login" class="btn btn-primary" ng-click='vm.logout()'>Logout</a></div>

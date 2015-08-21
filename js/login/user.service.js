@@ -9,17 +9,11 @@
   function UserService($http) {
     var service = {};
 
-    service.GetByUsername = GetByUsername;
     service.Create = Create;
     service.Update = Update;
     service.Delete = Delete;
 
     return service;
-
-    function GetByUsername(username) {
-      $http.defaults.headers.post["Content-Type"] = "application/json";
-      return $http.post('php/scripts/check-session.php', 'username=' + username).then(handleSuccess, handleError('Error getting user by username'));
-    }
 
     function Create(user) {
 //      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
