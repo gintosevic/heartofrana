@@ -1,0 +1,16 @@
+<h1>News</h1>
+<div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+<div class="container" ng-controller="NewsController as newsCtrl">
+  <ul class="jumbotron list-group">
+    <li class="list-group-item" ng-repeat-start="news in newsCtrl.allNews" style="background-color: blue;">
+
+      <h4><span class="label label-default pull-right">{{news.time| date}}</span>{{news.title}}</h4>
+      
+    </li>
+    <li class="list-group-item" ng-repeat-end>
+      <p>
+        {{news.text}}
+      </p>
+    </li>
+  </ul>
+</div>

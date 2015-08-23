@@ -15,4 +15,32 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div ng-include="'html/home.view.html'"></div>
+<div class="container">
+  <ul class="nav nav-tabs nav-justified">
+    <div class="navbar-header img-rounded" style='background-image: url("img/logos/title_small.png"); margin: 10px; min-height: 100%; height: 100%;'>
+      <a class="navbar-brand" href="#" style="letter-spacing: 0.1em;">Heart of Rana</a>
+    </div>
+    <li role="presentation" class="active"><a href="#">Home</a></li>
+    <li role="presentation" class="disabled"><a href="#">Profile</a></li>
+    <li role="presentation" class="disabled"><a href="#">Messages</a></li>
+    <li role="presentation" ng-controller="LoginController as vm"><a id="logout" href="#/login" ng-click='vm.logout()'>Logout</a></li>
+  </ul>
+  <div class="navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+      <li><a href="#" ng-click="indexCtrl.displayNews()">News</a></li>
+      <li><a href="#" ng-click="indexCtrl.displayMap()">Map</a></li>
+      <li><a href="#" ng-click="indexCtrl.displayPlanets()">Planets</a></li>
+      <li><a href="#" ng-click="indexCtrl.displayScience()">Science</a></li>
+      <li><a href="#" ng-click="indexCtrl.displayTrade()">Trade</a></li>
+      <li><a href="#" ng-click="indexCtrl.displayAlliance()">Alliance</a></li>
+      <li><a href="#" ng-click="indexCtrl.displayFleets()">Fleets</a></li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
+  <div ng-include="'html/news.view.html'" ng-show="indexCtrl.tab == 'news'"></div>
+  <div ng-include="'html/map.view.html'" ng-show="indexCtrl.tab == 'map'"></div>
+  <div ng-include="'html/planets.view.html'" ng-show="indexCtrl.tab == 'planets'"></div>
+  <div ng-include="'html/science.view.html'" ng-show="indexCtrl.tab == 'science'"></div>
+  <div ng-include="'html/trade.view.html'" ng-show="indexCtrl.tab == 'trade'"></div>
+  <div ng-include="'html/alliance.view.html'" ng-show="indexCtrl.tab == 'alliance'"></div>
+  <div ng-include="'html/fleets.view.html'" ng-show="indexCtrl.tab == 'fleets'"></div>
+</div>
