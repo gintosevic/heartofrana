@@ -15,14 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function () {
-var app = angular.module("login", []);
+﻿(function () {
+    'use strict';
 
-app.controller("loginController", function () {
-  
-})
+    angular
+        .module('app')
+        .controller('MapController', HomeController);
 
-function loginController() {
-  dialog("Pouette");
-}
+    HomeController.$inject = ['UserService', '$rootScope'];
+    function HomeController(UserService, $rootScope) {
+        var vm = this;
+
+        vm.user = null;
+        vm.deleteUser = deleteUser;
+        
+        initController();
+
+        function initController() {
+        }
+
+        function deleteUser(id) {
+            UserService.Delete(id);
+        }
+    }
+
 })();
