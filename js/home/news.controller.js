@@ -22,8 +22,8 @@
           .module('app')
           .controller('NewsController', NewsController);
 
-  NewsController.$inject = ['$http', 'FlashService'];
-  function NewsController($http, FlashService) {
+  NewsController.$inject = ['$http', 'AuthenticationService', 'FlashService'];
+  function NewsController($http, AuthenticationService, FlashService) {
     this.allNews = [];
 
     initController(this);
@@ -35,7 +35,9 @@
                 ctrl.allNews = response.data;
               },
               function (error) {
-                FlashService.Error("Error while retrieving the news");
+                if (AuthenticationService.isConnected()) {
+                  FlashService.Error("Error while retrieving the news");
+                }
               });
     }
 

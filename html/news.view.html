@@ -2,14 +2,13 @@
 <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
 <div class="container" ng-controller="NewsController as newsCtrl">
   <ul class="jumbotron list-group">
-    <li class="list-group-item" ng-repeat-start="news in newsCtrl.allNews" style="background-color: blue;">
+    <li ng-repeat-start="news in newsCtrl.allNews" class="list-group-item news_{{news.type}}" ng-click="news.show = !news.show">
 
       <h4><span class="label label-default pull-right">{{news.time| date}}</span>{{news.title}}</h4>
       
     </li>
-    <li class="list-group-item" ng-repeat-end>
-      <p>
-        {{news.text}}
+    <li class="list-group-item" ng-show="news.show" ng-repeat-end>
+      <p ng-bind-html="news.text | sanitize">
       </p>
     </li>
   </ul>
