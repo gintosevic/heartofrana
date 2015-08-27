@@ -1,42 +1,98 @@
 ﻿(function () {
   'use strict';
-
-  var app = angular
-          .module('app', ['vcRecaptcha', 'ngRoute', 'ngCookies']);
-
+  var app = angular.module('app', ['ui.router', 'vcRecaptcha', 'ngRoute', 'ngCookies']);
+//    app.config(config);
   app.config(config)
           .run(run);
-
   app.filter("sanitize", ['$sce', function ($sce) {
       return function (htmlCode) {
         return $sce.trustAsHtml(htmlCode);
       }
     }]);
-
-  config.$inject = ['$routeProvider', '$locationProvider'];
-  function config($routeProvider, $locationProvider) {
-    $routeProvider
-            .when('/home', {
-              controller: 'HomeController',
-              templateUrl: 'html/home.view.html',
-              controllerAs: 'vm'
+  config.$inject = ['$stateProvider', '$routeProvider', '$locationProvider'];
+//  config.$inject = ['$stateProvider'];
+  function config($stateProvider, $routeProvider, $locationProvider) {
+    $stateProvider
+            .state('unconnected', {
+              abstract: true,
+              views: {
+                'mainFrame': {
+                  templateUrl: 'html/unconnected-index.html'
+                }
+              }
             })
-
-            .when('/login', {
-              controller: 'LoginController',
+            .state('unconnected.login', {
+              url: "/login",
+//              views: {
+//                'tabFrame': {
               templateUrl: 'html/login.view.html',
+              controller: 'LoginController',
               controllerAs: 'vm'
+//                }
+//              }
             })
-
-            .when('/register', {
+            .state('unconnected.register', {
+              url: "/register",
+//              views: {
+//                "tabFrame": {
+              templateUrl: "html/register.view.html",
               controller: 'RegisterController',
-              templateUrl: 'html/register.view.html',
               controllerAs: 'vm'
+//                }
+//              }
             })
 
-            .otherwise({redirectTo: 'login'});
-  }
+            .state('connected', {
+              abstract: true,
+              views: {
+                'mainFrame': {
+                  templateUrl: 'html/connected-index.html'
+                }
+              }
+            })
+            .state('connected.news', {
+              url: "/news",
+              templateUrl: "html/news.view.html",
+              controller: 'NewsController',
+              controllerAs: 'newsCtrl'
+            })
+            .state('connected.map', {
+              url: "/map",
+              templateUrl: "html/map.view.html",
+              controller: 'MapController',
+              controllerAs: 'mapCtrl'
+            })
 
+            .state('unconnected.otherwise', {
+              url: '*path',
+              templateUrl: "html/login.view.html",
+              controller: 'LoginController',
+              controllerAs: 'vm'
+            });
+//  }
+    $routeProvider.otherwise('/otherwise')
+//    $routeProvider
+//            .when('/home', {
+//              controller: 'HomeController',
+//              templateUrl: 'html/home.view.html',
+//              controllerAs: 'vm'
+//            })
+//
+//            .when('/login', {
+//              controller: 'LoginController',
+//              templateUrl: 'html/login.view.html',
+//              controllerAs: 'vm'
+//            })
+//
+//            .when('/register', {
+//              controller: 'RegisterController',
+//              templateUrl: 'html/register.view.html',
+//              controllerAs: 'vm'
+//            })
+//
+//            .otherwise({redirectTo: 'login'});
+  }
+//
   run.$inject = ['$rootScope', '$location', '$cookieStore', '$http', '$route'];
   function run($rootScope, $location, $cookieStore, $http, $route) {
     // keep user logged in after page refresh
@@ -50,12 +106,10 @@
       var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
       var loggedIn = $rootScope.globals.currentUser;
       if (restrictedPage && !loggedIn) {
-        $location.path('/login');
+        $state.go('unconnected.login');
       }
     });
-
-    $route.reload();
-
+//    $route.reload();
   }
 
 })();

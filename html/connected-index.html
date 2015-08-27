@@ -27,20 +27,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   </ul>
   <div class="navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-      <li><a href="#" ng-click="indexCtrl.displayNews()">News</a></li>
-      <li><a href="#" ng-click="indexCtrl.displayMap()">Map</a></li>
-      <li><a href="#" ng-click="indexCtrl.displayPlanets()">Planets</a></li>
-      <li><a href="#" ng-click="indexCtrl.displayScience()">Science</a></li>
-      <li><a href="#" ng-click="indexCtrl.displayTrade()">Trade</a></li>
-      <li><a href="#" ng-click="indexCtrl.displayAlliance()">Alliance</a></li>
-      <li><a href="#" ng-click="indexCtrl.displayFleets()">Fleets</a></li>
+      <li><a href="#/news">News</a></li>
+      <li><a href="#/map">Map</a></li>
+      <!--<li><a href="#" ng-click="indexCtrl.displayNews()">News</a></li>-->
+      <!--<li><a href="#" ng-click="indexCtrl.displayMap()">Map</a></li>-->
+      <!--<li><a href="#" ng-click="indexCtrl.displayPlanets()">Planets</a></li>-->
+      <!--<li><a href="#" ng-click="indexCtrl.displayScience()">Science</a></li>-->
+      <!--<li><a href="#" ng-click="indexCtrl.displayTrade()">Trade</a></li>-->
+      <!--<li><a href="#" ng-click="indexCtrl.displayAlliance()">Alliance</a></li>-->
+      <!--<li><a href="#" ng-click="indexCtrl.displayFleets()">Fleets</a></li>-->
     </ul>
   </div><!-- /.navbar-collapse -->
-  <div ng-include="'html/news.view.html'" ng-show="indexCtrl.tab == 'news'"></div>
-  <div ng-include="'html/map.view.html'" ng-show="indexCtrl.tab == 'map'"></div>
-  <div ng-include="'html/planets.view.html'" ng-show="indexCtrl.tab == 'planets'"></div>
-  <div ng-include="'html/science.view.html'" ng-show="indexCtrl.tab == 'science'"></div>
-  <div ng-include="'html/trade.view.html'" ng-show="indexCtrl.tab == 'trade'"></div>
-  <div ng-include="'html/alliance.view.html'" ng-show="indexCtrl.tab == 'alliance'"></div>
-  <div ng-include="'html/fleets.view.html'" ng-show="indexCtrl.tab == 'fleets'"></div>
+  <div ui-view></div>
+    <!--<div ng-include="'html/news.view.html'" ng-show="indexCtrl.tab == 'news'"></div>-->
+    <!--<div ng-include="'html/map.view.html'" ng-show="indexCtrl.tab == 'map'"></div>-->
+    <!--<div ng-include="'html/planets.view.html'" ng-show="indexCtrl.tab == 'planets'"></div>-->
+    <!--<div ng-include="'html/science.view.html'" ng-show="indexCtrl.tab == 'science'"></div>-->
+    <!--<div ng-include="'html/trade.view.html'" ng-show="indexCtrl.tab == 'trade'"></div>-->
+    <!--<div ng-include="'html/alliance.view.html'" ng-show="indexCtrl.tab == 'alliance'"></div>-->
+    <!--<div ng-include="'html/fleets.view.html'" ng-show="indexCtrl.tab == 'fleets'"></div>-->
 </div>

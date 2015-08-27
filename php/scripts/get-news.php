@@ -28,6 +28,9 @@ function get_all_news() {
   $n = db_num_rows($results);
   for ($i = 0; $i < $n; $i++) {
     $row = db_fetch_assoc($results);
+//    $timestamp = DateTime::createFromFormat('Y-m-j H:i:s', $row['time']);
+//    $row['time'] = $timestamp->getTimestamp();
+    $row['time'] = strtotime($row['time'])*1000;
     array_push($all_news, $row);
   }
   echo json_encode($all_news);
