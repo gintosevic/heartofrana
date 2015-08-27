@@ -40,7 +40,7 @@
       AuthenticationService.Login(vm.username, vm.password, function (response) {
         if (response.success) {
           AuthenticationService.SetCredentials(vm.username, vm.password);
-          $location.path("/home");
+          $location.path("/news");
         } else {
           FlashService.Error(response.message);
           vm.dataLoading = false;

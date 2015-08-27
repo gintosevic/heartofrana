@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="css/hor.css" />
     <link rel="stylesheet" href="css/login.css"/>
     <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="js/bootstrap/bootstrap.js"></script>
     <script src="//code.angularjs.org/1.2.20/angular.js"></script>
     <script src="//code.angularjs.org/1.2.20/angular-route.js"></script>
     <script src="//code.angularjs.org/1.2.13/angular-cookies.js"></script>
 
     <script type="text/javascript" src="js/angular-1.4.3/angular-recaptcha.js"></script>
+    <script type="text/javascript" src="js/angular-1.4.3/angular-ui-router.js"></script>
     <script
       src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit"
       async defer
@@ -37,13 +39,15 @@
 
   </head>
   <body ng-controller="IndexController as indexCtrl">
-    <div ng-show="indexCtrl.isConnected()"
+    <div ui-view="mainFrame"></div>
+
+<!--    <div ng-show="indexCtrl.isConnected()"
          ng-include="'html/connected-index.html'">
     </div>
     <div class="jumbotron"
          ng-show="!indexCtrl.isConnected()"
          ng-include="'html/unconnected-index.html'">
-    </div>
+    </div>-->
     <div class="credits text-center">
       <p>
         Heart of Rana 2014-2015<br>

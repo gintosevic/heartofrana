@@ -1,4 +1,4 @@
-<div class="container">
+<div class="jumbotron container">
   <div class="">
     <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
     <div class="row row-height">
@@ -7,7 +7,7 @@
         <span style='letter-spacing: 0.1em; font-size: 1em; font-weight: bold;'>Version 0.2</span>
       </div>
       <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4 col-height">
-        <div ng-view></div>
+        <div ui-view></div>
       </div>
     </div>
   </div>
