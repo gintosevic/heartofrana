@@ -1,1 +1,46 @@
-<h1>Science</h1>
+<div class="col-sm-12 col-md-6">
+  <div class="thumbnail tile tile-medium tile-teal">
+    <h1>Science</h1>
+    <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+
+    <div id="science_tab" ng-controller="ScienceController as scienceCtrl">
+      <div class="panel-group">
+
+        <!--Selectable sciences-->
+        <div class="panel science_{{ stats.isActive ? 'active' : 'inactive' }}" ng-repeat="(science, stats) in scienceCtrl.allSciences.sciences" >
+          <div class="panel-heading" data-toggle="collapse" data-target="#science_{{science}}">
+            <h4 class="panel-title"><span ng-if="stats.isActive" class="label label-default pull-right">active</span>{{science}}</h4>
+
+          </div>
+
+          <div id="science_{{science}}" class="panel-collapse collapse">
+            <div class="panel-body">
+              {{stats}}
+              <div class="progress">
+                <div class="progress-bar progress-bar-success {{stats.isActive ? 'progress-bar-striped active' : ''}}" role="progressbar" aria-valuenow="{{stats.progress}}"
+                     aria-valuemin="0" aria-valuemax="100" style="width:{{stats.progress}}%">
+                  {{stats.progress}}% complete
+                </div>
+              </div>
+            </div>}}
+          </div>
+        </div>
+
+        <!--Culture-->
+        <div class="panel science_active" >
+          <div class="panel-heading science_culture" data-toggle="collapse" data-target="#science_culture">
+
+            <h4 class="panel-title">culture</h4>
+
+          </div>
+
+          <div id="science_culture" class="panel-collapse collapse">
+            <div class="panel-body">
+              {{scienceCtrl.allSciences.culture}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

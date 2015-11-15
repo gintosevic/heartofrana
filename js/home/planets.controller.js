@@ -19,34 +19,25 @@
   'use strict';
 
   angular.module('app')
-         .controller('MapController', MapController);
+         .controller('PlanetsController', PlanetsController);
 
-  MapController.$inject = ['$http', '$scope', 'AuthenticationService', 'FlashService'];
-  function MapController($http, $scope, AuthenticationService, FlashService) {
-    this.visibleSystems = [];
+  PlanetsController.$inject = ['$http', 'AuthenticationService', 'FlashService'];
+  function PlanetsController($http, AuthenticationService, FlashService) {
+    this.allPlanets = [];
 
     initController(this);
-    
+
     function initController(ctrl) {
-//      document.mapPanZoom.updateViewPort();
       /* Get the news */
-      return $http.get('php/scripts/get-map.php').then(
+      return $http.get('php/scripts/get-planets.php').then(
               function (response) {
-                ctrl.visibleSystems = response.data;
+                ctrl.allPlanets = response.data;
               },
               function (error) {
                 if (AuthenticationService.isConnected()) {
-                  FlashService.Error("Error while screening the map");
+                  FlashService.Error("Error while retrieving information about your planets");
                 }
               });
-    }
-    
-    this.drawMap = function() {
-//      var map = SVG('map');
-      for (var index = 0; index < this.visibleSystems.length; index++) {
-        alert(index);
-        console.log(this.visibleSystems[index]);
-      }
     }
 
   }

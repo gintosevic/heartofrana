@@ -1,1 +1,42 @@
-<h1>Map</h1>
+<div class="col-sm-12 col-md-6">
+  <div class="thumbnail tile tile-medium tile-teal">
+
+    <h1>Map</h1>
+
+    <div id="map_tab" ng-controller="MapController as mapCtrl">
+      <div id="map-container" style="border: 1px solid #222;">
+        <!--<svg id="map-view"></svg>-->
+        <!--    <svg id="map-view">
+          <g>
+          <rect cx="{{system.x*20}}" cy="{{system.y*20}}" r="20" ng-repeat="system in mapCtrl.visibleSystems"/>
+          <text x="{{system.x*20+7}}" y="{{system.y*20+5}}" fill="white" ng-repeat-start="system in mapCtrl.visibleSystems">{{system.name}}</text>
+          <circle cx="{{system.x*20}}" cy="{{system.y*20}}" r="4" style="fill:steelblue;" ng-repeat-end/>
+          </g>
+          </svg>-->
+        <div class="panel" ng-repeat="system in mapCtrl.visibleSystems" >
+          <div class="panel-heading" data-toggle="collapse" data-target="#system_{{system.sid}}">
+            <h4 class="panel-title"><span class="label label-default pull-left">{{system.sid}}</span> {{system.name}}</h4>
+          </div>
+
+          <div id="system_{{system.sid}}" class="panel-collapse collapse">
+            <div class="panel-body">
+              {{ system }}
+            </div>
+          </div>
+        </div>
+        <!--        <script>
+                          // Don't use window.onLoad like this in production, because it can only listen to one function.
+                          document.updateViewPort = function() {
+                          document.mapPanZoom = svgPanZoom('#map-view', {
+                          zoomEnabled: true,
+                                  controlIconsEnabled: true
+                          });
+                                  document.getElementById("map-view").setAttribute("width", document.getElementById("map-container").clientWidth + "px");
+                                  document.getElementById("map-view").setAttribute("height", document.getElementById("map-container").clientWidth + "px");
+                                  document.mapPanZoom.updateViewPort();
+                          };
+                          window.onload = document.updateViewPort;    </script>
+              </div>-->
+      </div>
+    </div>
+  </div>

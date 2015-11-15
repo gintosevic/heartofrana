@@ -62,6 +62,18 @@
               controller: 'MapController',
               controllerAs: 'mapCtrl'
             })
+            .state('connected.planets', {
+              url: "/planets",
+              templateUrl: "html/planets.view.html",
+              controller: 'PlanetsController',
+              controllerAs: 'planetsCtrl'
+            })
+            .state('connected.science', {
+              url: "/science",
+              templateUrl: "html/science.view.html",
+              controller: 'ScienceController',
+              controllerAs: 'scienceCtrl'
+            })
 
             .state('unconnected.otherwise', {
               url: '*path',
