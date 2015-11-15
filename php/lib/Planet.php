@@ -3,7 +3,7 @@
 /**
  * Abstract class to model planets
  */
-abstract class Planet extends Fightable {
+abstract class Planet extends Fightable implements JsonSerializable {
 
   static $ALL_BUILDINGS = array("farm", "factory", "cybernet", "lab", "starbase");
 
@@ -119,6 +119,13 @@ abstract class Planet extends Fightable {
 
   public function to_html() {
     return "<a class='planet' href='view_planet.php?sid=" . $this->get_sid() . "&position=" . $this->get_position() . "'>" . $this->to_string() . "</a>";
+  }
+  
+  public function jsonSerialize() {
+    return array("sid" => $this->get_sid(),
+                 "position" => $this->get_position(),
+                 "isBonus" => $this->is_bonus(),
+                 "population" => $this->get_population_level());
   }
 
 }

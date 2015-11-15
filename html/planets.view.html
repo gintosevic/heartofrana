@@ -1,1 +1,24 @@
-<h1>Planets</h1>
+<div class="col-sm-12 col-md-6">
+  <div class="thumbnail tile tile-medium tile-teal">
+    <h1>Planets</h1>
+    <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+
+    <div ng-controller="PlanetsController as planetsCtrl">
+      <div class="panel-group">
+        <div class="panel" ng-repeat="planet in planetsCtrl.allPlanets" >
+          <div class="panel-heading planet_{{planet.sid}}" data-toggle="collapse" data-target="#planet_{{planet.sid}}_{{planet.position}}">
+
+            <h4 class="panel-title"><span ng-if="planet.isBonus" class="label label-default pull-right">bonus</span>{{planet.sid}}#{{planet.position}}</h4>
+
+          </div>
+
+          <div id="planet_{{planet.sid}}_{{planet.position}}" class="panel-collapse collapse">
+            <div class="panel-body">
+              Population: {{planet.population}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

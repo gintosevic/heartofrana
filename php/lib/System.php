@@ -3,7 +3,7 @@
 /**
  * Class for standard systems
  */
-class System {
+class System implements JsonSerializable {
 
   private static $cache;
   private $sid;
@@ -177,6 +177,13 @@ class System {
     $planet = $this->add_planet();
     $planet->set_bonus(true);
     return $planet;
+  }
+  
+  public function jsonSerialize() {
+    return array("sid" => $this->sid,
+                 "name" => $this->name,
+                 "x" => $this->x,
+                 "y" => $this->y);
   }
 
 }
