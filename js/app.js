@@ -74,6 +74,12 @@
               controller: 'ScienceController',
               controllerAs: 'scienceCtrl'
             })
+            .state('connected.fleet', {
+              url: "/fleet",
+              templateUrl: "html/fleet.view.html",
+              controller: 'FleetController',
+              controllerAs: 'fleetCtrl'
+            })
 
             .state('unconnected.otherwise', {
               url: '*path',

@@ -180,7 +180,7 @@ class System implements JsonSerializable {
   }
   
   public function jsonSerialize() {
-    return array("sid" => $this->sid,
+    return array("id" => $this->sid,
                  "name" => $this->name,
                  "x" => $this->x,
                  "y" => $this->y);

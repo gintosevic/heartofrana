@@ -122,7 +122,7 @@ abstract class Planet extends Fightable implements JsonSerializable {
   }
   
   public function jsonSerialize() {
-    return array("sid" => $this->get_sid(),
+    return array("id" => $this->get_sid(),
                  "position" => $this->get_position(),
                  "isBonus" => $this->is_bonus(),
                  "population" => $this->get_population_level());

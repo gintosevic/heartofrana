@@ -4,7 +4,7 @@
  * Generic fleet
  * ****************************************************************** */
 
-class Fleet extends Fightable {
+class Fleet extends Fightable implements JsonSerializable {
 
   static $ALL_SHIPS = array("colonyships", "transports", "destroyers", "cruisers", "battleships");
   static $SHIP_BASE_PRICES = array("colonyships" => 60, "transports" => 60, "destroyers" => 30, "cruisers" => 240, "battleships" => 600);
@@ -242,6 +242,13 @@ class Fleet extends Fightable {
     }
     $str .= "</ul>\n</span>\n";
     return $str;
+  }
+  
+  function jsonSerialize() {
+    return array(
+        "id" => $this->fleet_id,
+        "ships" => $this->ships
+    );
   }
 
 }
