@@ -1,0 +1,28 @@
+<div class="bg-info">
+  <center>
+    <p>
+  The website is under construction. Thank you for visiting.
+  </p>
+    <div class="progress" style="width: 33%;">
+      <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
+        25%
+      </div>
+    </div>
+    <br>
+</center>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+    <div class="row row-height">
+      <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4 col-height img-rounded" style='background-image: url("img/logos/Veil_nebula_modified.png"); padding-left: 20px; margin-top: 5px; min-height: 100%; height: 100%;'>
+        <h1 style='letter-spacing: 0.1em; font-size: 4em; font-weight: bold'>Heart of Rana</h1><br>
+        <span style='letter-spacing: 0.1em; font-size: 1em; font-weight: bold;'>Version 0.2</span>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4 col-height">
+        <div ui-view></div>
+      </div>
+    </div>
+  </div>
+</div>
