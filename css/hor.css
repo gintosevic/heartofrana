@@ -51,6 +51,12 @@ a.disabled_button {
   text-decoration: underline;
 }
 
+.square {
+  width: 90%;
+  height: 0;
+  padding-bottom: 90%;
+}
+
 .box {
   border: 1px solid gray;
   padding: 10px;
@@ -65,17 +71,17 @@ a.disabled_button {
 *****************************************/
 
 div.main_menu {
-    border: 1px solid white;
-    width: 70%;
-    padding: 10px;
-    color: red;
-    background-color: #404040;
+  border: 1px solid white;
+  width: 70%;
+  padding: 10px;
+  color: red;
+  background-color: #404040;
 }
 
 .main_menu ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 .main_menu li {
@@ -133,26 +139,26 @@ div#news_tab {
 }
 
 ul.news_list {
-    border: 1px solid white;
-    background-color: rgba(64, 64, 64, 0.9);
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    width: 100%;
+  border: 1px solid white;
+  background-color: rgba(64, 64, 64, 0.9);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  width: 100%;
 }
 
 .news_list li {
-/*   padding: 20px; */
+  /*   padding: 20px; */
   border-bottom: 1px solid white;
 }
 
 div.news {
-    display: table;
-    width: 100%;
+  display: table;
+  width: 100%;
 }
 
 div.news_time {
-/*   float: left; */
+  /*   float: left; */
   width: 100px;
   font-size: 0.9em;
   border-right: 1px dotted white;
@@ -182,38 +188,27 @@ div.news_text {
   padding: 10px;
 }
 
-li.news_new_planet div.news_title {
-  color: rgb(100,100,255);
+div.news_normal {
+  background-color: rgba(105,105,105,0.7);
 }
-li.news_new_planet div.news_time {
+
+div.news_new_planet {
   background-color: rgba(0,0,105,0.7);
 }
 
-li.news_won_fight div.news_title {
-  color: rgb(100,255,100);
-}
-li.news_won_fight div.news_time {
+div.news_won_fight {
   background-color: rgba(0,105,0,0.7);
 }
 
-li.news_enemy_attack div.news_title {
-  color: rgb(255,150,60);
-}
-li.news_enemy_attack div.news_time {
+div.news_enemy_attack {
   background-color: rgba(105,40,0,0.7);
 }
 
-li.news_lost_fight div.news_title {
-  color: rgb(255,40,40);
-}
-li.news_lost_fight div.news_time {
+div.news_lost_fight {
   background-color: rgba(105,0,0,0.7);
 }
 
-li.news_lost_planet div.news_title {
-  color: rgb(255,40,40);
-}
-li.news_lost_planet div.news_time {
+div.news_lost_planet {
   background-color: rgba(105,0,0,0.7);
 }
 
@@ -222,7 +217,7 @@ li.news_lost_planet div.news_time {
 *****************************************/
 
 div#map_tab {
-  background: black url("./img/backgrounds/map2.jpg") no-repeat center top;
+  background: black url("../img/backgrounds/map2.jpg") no-repeat center top;
 }
 
 #map {
@@ -261,7 +256,7 @@ div#system_view_tab {
 }
 
 #position.system_view {
-text-align: right;
+  text-align: right;
 }
 
 .bonus_planet {
@@ -315,18 +310,18 @@ div#planet_view_tab {
 *****************************************/
 
 div#science_tab {
-  background: black url("./img/backgrounds/sciences.jpg") no-repeat center center;
+  background: black url("../img/backgrounds/sciences.jpg") no-repeat center center;
 }
 
-.science {
+.science_inactive {
   background-color: rgba(32,32,32,0.7);
-  border: 1px solid white;
-  text-align: center;
+  /*border: 1px solid white;*/
+  /*text-align: center;*/
 }
 
-#current_science.science {
-font-weight: bold;
-color: green;
+.science_active {
+  font-weight: bold;
+  color: green;
 }
 
 /*****************************************
