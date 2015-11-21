@@ -34,9 +34,18 @@ class FlyingFleet extends Fleet {
     $resulting_fleet = null;
     // Prepare for fight against a sieging fleet
     if ($planet->has_sieging_fleet()) {
-      echo "Battle with sieging fleet.\n";
       $sieging_fleet = $planet->get_sieging_fleet();
-      $battle = new Battle($sieging_fleet, $this);
+      // The sieging fleet and the attacking fleets have the same owner
+      echo "Sieging fleet: ".$planet->get_sieging_fleet_id()." ==? ".$this->get_fleet_id()."<br>\n";
+      if ($sieging_fleet->get_owner_id() === $this->get_owner_id()) {
+        // Merge and attack the planet
+        $this->merge($sieging_fleet);
+        $sieging_fleet->destroy();
+        $battle = new Battle($planet, $this);
+      } else {
+        // Attack the sieging fleet
+        $battle = new Battle($sieging_fleet, $this);
+      }
     }
     // Prepare for fight against a planet
     elseif (!$planet->has_sieging_fleet() && $planet->has_owner() && $owner_id != $arrival_id) {
@@ -85,7 +94,7 @@ class FlyingFleet extends Fleet {
       $n_initial_pop = $planet->get_population_level();
       $n_pop = $planet->decrease_population_level($n_transports);
       $this->decrease_ships('transports', $n_initial_pop);
-      
+
       // All population killed
       if ($n_transports >= $n_initial_pop) {
         // Free culture slot

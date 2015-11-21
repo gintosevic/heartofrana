@@ -213,6 +213,13 @@ li.news_lost_fight div.news_time {
   background-color: rgba(105,0,0,0.7);
 }
 
+li.news_lost_planet div.news_title {
+  color: rgb(255,40,40);
+}
+li.news_lost_planet div.news_time {
+  background-color: rgba(105,0,0,0.7);
+}
+
 /*****************************************
 * Map
 *****************************************/
