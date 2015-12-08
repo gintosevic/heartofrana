@@ -19,7 +19,7 @@
   'use strict';
 
   angular.module('app')
-         .controller('PlanetsController', PlanetsController);
+          .controller('PlanetsController', PlanetsController);
 
   PlanetsController.$inject = ['$http', 'AuthenticationService', 'FlashService'];
   function PlanetsController($http, AuthenticationService, FlashService) {
@@ -41,5 +41,14 @@
     }
 
   }
+
+  angular.module('app')
+         .directive('planet', function () {
+            return {
+              restrict: 'E',
+              scope: {'planet': '=data'},
+              templateUrl: "html/partials/planet.html"
+            };
+          });
 
 })();

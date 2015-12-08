@@ -67,13 +67,13 @@ abstract class Planet extends Fightable implements JsonSerializable {
   public abstract function get_population_points();
 
   public abstract function get_population_level();
-  
+
   public abstract function decrease_population_level($n_levels);
 
   public abstract function set_production_points($n);
 
   public abstract function decrease_production_points($n);
-  
+
   public abstract function increase_production_points($n);
 
   public abstract function get_production_points();
@@ -120,12 +120,42 @@ abstract class Planet extends Fightable implements JsonSerializable {
   public function to_html() {
     return "<a class='planet' href='view_planet.php?sid=" . $this->get_sid() . "&position=" . $this->get_position() . "'>" . $this->to_string() . "</a>";
   }
-  
+
   public function jsonSerialize() {
-    return array("id" => $this->get_sid(),
-                 "position" => $this->get_position(),
-                 "isBonus" => $this->is_bonus(),
-                 "population" => $this->get_population_level());
+    $jsonObject = array("systemId" => $this->get_sid(),
+        "position" => intval($this->get_position()),
+        "isBonus" => $this->is_bonus(),
+        "productionPoints" => $this->get_production_points()
+    );
+
+    $current_points = $this->get_population_points();
+    $current_level = $this->get_population_level();
+    $next_level_points = population_level_to_points($current_level + 1);
+    $next_level_step = $next_level_points - population_level_to_points($current_level);
+    $remaining_points = $next_level_points - $current_points;
+    $progress = round((1 - ($remaining_points / $next_level_step)) * 100);
+    $jsonObject["population"]["level"] = $current_level;
+    $jsonObject["population"]["currentPoints"] = $current_points;
+    $jsonObject["population"]["nextLevelPoints"] = $next_level_points;
+    $jsonObject["population"]["nextLevelStep"] = $next_level_step;
+    $jsonObject["population"]["remainingPoints"] = $remaining_points;
+    $jsonObject["population"]["progress"] = $progress;
+
+    foreach (Planet::$ALL_BUILDINGS as $building_type) {
+      $current_points = $this->get_building_points($building_type);
+      $current_level = $this->get_building_level($building_type);
+      $next_level_points = building_level_to_points($current_level + 1);
+      $next_level_step = $next_level_points - building_level_to_points($current_level);
+      $remaining_points = $next_level_points - $current_points;
+      $progress = round((1 - ($remaining_points / $next_level_step)) * 100);
+      $jsonObject["buildings"][$building_type]["level"] = $current_level;
+      $jsonObject["buildings"][$building_type]["currentPoints"] = $current_points;
+      $jsonObject["buildings"][$building_type]["nextLevelPoints"] = $next_level_points;
+      $jsonObject["buildings"][$building_type]["nextLevelStep"] = $next_level_step;
+      $jsonObject["buildings"][$building_type]["remainingPoints"] = $remaining_points;
+      $jsonObject["buildings"][$building_type]["progress"] = $progress;
+    }
+    return $jsonObject;
   }
 
 }

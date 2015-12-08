@@ -66,6 +66,37 @@ a.disabled_button {
   color: yellow;
 }
 
+/* -------------------------------------
+ * Bar container
+ * ------------------------------------- */
+.circle {
+  position: relative;
+  border-radius: 50%;
+  border: 2px solid #2f3439;
+  background-color: orangered;
+  min-width: 100px;
+  min-height: 100px;
+  max-width: 100px;
+  max-height: 100px;
+}
+
+/* -------------------------------------
+ * Optional centered circle w/text
+ * ------------------------------------- */
+.circle .inner-circle {
+  /*position: absolute;*/
+  background-color: #fffde8;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 16px;
+  color: black;
+  min-width: 60px;
+  min-height: 60px;
+  max-width: 60px;
+  max-height: 60px;
+  vertical-align: middle;
+}
+
 /*****************************************
 * Menu
 *****************************************/

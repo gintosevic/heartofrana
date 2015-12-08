@@ -1,0 +1,82 @@
+<div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-3 col-sm-4 col-md-4 col-lg-4">
+        <center>
+          <svg width="400"
+               height="400"
+               version="1.1"
+               xmlns="http://www.w3.org/2000/svg"
+               xmlns:xlink="http://www.w3.org/1999/xlink">
+            <image x="0" y="0"
+                   width="100%" height="100%"
+                   ng-href="img/planets/grounds/ground_{{planet.systemId*planet.position%16+1}}.svg"
+                   xlink:href="" />
+            <image x="0" y="0"
+                   width="100%" height="100%"
+                   ng-href="img/planets/clouds/cloud_{{planet.systemId*planet.position%12+1}}.svg"
+                   xlink:href="" />
+            <image x="0" y="0"
+                   width="100%" height="100%"
+                   ng-href="img/planets/shadows/shadow_1.svg"
+                   xlink:href="" />
+            <image x="0" y="0"
+                   width="100%" height="100%"
+                   ng-href="img/planets/orbits/orbit_{{planet.systemId*planet.position%9+1}}.svg"
+                   xlink:href="" />
+          </svg>
+        </center>
+      </div>
+      <div class="col-xs-5 col-sm-4 col-md-4 col-lg-4">
+        <center>
+          Population
+          <div>
+            <div class="progress-radial progress-{{planet.population.progress}}">
+              <div class="overlay">
+                <b>{{planet.population.level}}</b> <small>({{planet.population.progress}}%)</small>
+              </div>
+            </div>
+          </div>
+        </center>
+      </div>
+      <!--      <div class="col-xs-5 col-sm-4 col-md-4 col-lg-4">
+              <center>
+                Production points
+                <div>
+                  <div class="circle">
+                    <div class="inner-circle">
+                      <b>{{planet.productionPoints}}</b>
+                    </div>
+                  </div>
+                </div>
+                <div id="myStat" data-dimension="250" data-text="{{planet.population.level}}" data-info="({{planet.population.progress}}%)" data-width="30" data-fontsize="38" data-percent="{{planet.population.progress}}" data-fgcolor="#61a9dc" data-bgcolor="#eee" data-fill="#ddd" data-total="200" data-part="35" data-icon="long-arrow-up" data-icon-size="28" data-icon-color="#fff"></div>
+                <script>
+                  $('#myStat').circliful();
+                </script>
+              </center>
+            </div>-->
+    </div>
+  </div>
+
+  <div class="container-fluid" ng-repeat="(type, building) in planet.buildings">
+    <div class="row">
+      <div class="text-capitalize progress col-xs-3 col-sm-2 col-md-1 col-lg-2">
+        <b>{{type}}</b>
+      </div>
+      <div class="col-xs-9 col-sm-4 col-md-7 col-lg-5">
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{building.progress}}"
+               aria-valuemin="0" aria-valuemax="100" style="width:{{building.progress}}%">
+            {{building.progress}}%
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2">
+        <button type="button" class="btn btn-block btn-default btn-xs">Upgrade ({{building.remainingPoints}} PPs)</button>
+      </div>
+      <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2">
+        <button type="button" class="btn btn-block btn-default btn-xs">Spend all</button>
+      </div>
+    </div>
+  </div>
+</div>
