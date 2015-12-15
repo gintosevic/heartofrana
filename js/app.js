@@ -1,15 +1,19 @@
 ﻿(function () {
   'use strict';
   var app = angular.module('app', ['ui.router', 'vcRecaptcha', 'ngRoute', 'ngCookies']);
+
 //    app.config(config);
   app.config(config)
           .run(run);
+
   app.filter("sanitize", ['$sce', function ($sce) {
       return function (htmlCode) {
         return $sce.trustAsHtml(htmlCode);
       }
     }]);
+
   config.$inject = ['$stateProvider', '$routeProvider', '$locationProvider'];
+
 //  config.$inject = ['$stateProvider'];
   function config($stateProvider, $routeProvider, $locationProvider) {
     $stateProvider
@@ -111,7 +115,9 @@
 //            .otherwise({redirectTo: 'login'});
   }
 //
+
   run.$inject = ['$rootScope', '$location', '$cookieStore', '$http', '$route'];
+
   function run($rootScope, $location, $cookieStore, $http, $route) {
     // keep user logged in after page refresh
     $rootScope.globals = $cookieStore.get('globals') || {};

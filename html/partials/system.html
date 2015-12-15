@@ -1,21 +1,20 @@
 <div>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+      <div class="col-xs-3 col-sm-4 col-md-4 col-lg-4">
         <center>
-          <svg width="200px"
-               height="200px"
-               viewBox="0 0 400 400"
+          <svg width="400"
+               height="400"
                version="1.1"
                xmlns="http://www.w3.org/2000/svg"
                xmlns:xlink="http://www.w3.org/1999/xlink">
             <image x="0" y="0"
                    width="100%" height="100%"
-                   ng-href="img/planets/grounds/ground_{{planet.systemId * planet.position % 16 + 1}}.svg"
+                   ng-href="img/planets/grounds/ground_{{planet.systemId*planet.position%16+1}}.svg"
                    xlink:href="" />
             <image x="0" y="0"
                    width="100%" height="100%"
-                   ng-href="img/planets/clouds/cloud_{{planet.systemId * planet.position % 12 + 1}}.svg"
+                   ng-href="img/planets/clouds/cloud_{{planet.systemId*planet.position%12+1}}.svg"
                    xlink:href="" />
             <image x="0" y="0"
                    width="100%" height="100%"
@@ -23,36 +22,12 @@
                    xlink:href="" />
             <image x="0" y="0"
                    width="100%" height="100%"
-                   ng-href="img/planets/orbits/orbit_{{planet.systemId * planet.position % 9 + 1}}.svg"
+                   ng-href="img/planets/orbits/orbit_{{planet.systemId*planet.position%9+1}}.svg"
                    xlink:href="" />
           </svg>
         </center>
       </div>
-      
-      <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
-        <center>
-          <b>Population level</b><br><br>
-          <dial id="population_{{planet.systemId}}_{{planet.position}}"
-                color="orangered"
-                progress="{{planet.population.progress}}"
-                radius="100"
-                border="20"><b>{{planet.population.level}}</b><br><small>({{planet.population.progress}}%)</small></dial>
-          <br>
-        </center>
-      </div>
-      
-      <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
-        <center>
-          <b>Production points</b><br><br>
-          <dial id="productions_points_{{planet.systemId}}_{{planet.position}}"
-                color="orangered"
-                progress="100"
-                radius="100"
-                border="20"><b>{{planet.productionPoints}}</b></dial>
-          <br>
-        </center>
-      </div>
-<!--      <div class="col-xs-5 col-sm-4 col-md-4 col-lg-4">
+      <div class="col-xs-5 col-sm-4 col-md-4 col-lg-4">
         <center>
           Population
           <div>
@@ -63,7 +38,7 @@
             </div>
           </div>
         </center>
-      </div>-->
+      </div>
       <!--      <div class="col-xs-5 col-sm-4 col-md-4 col-lg-4">
               <center>
                 Production points

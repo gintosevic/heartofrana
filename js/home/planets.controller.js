@@ -51,4 +51,31 @@
             };
           });
 
+
+
+  angular.module('app')
+         .directive('dial', function () {
+    return {
+//      template: 'salut'
+      restrict: 'E',
+      transclude: true,
+      scope: {'id' : '@id',
+              'color' : '@color',
+              'progress' : '@progress',
+              'radius' : '@radius',
+              'border' : '@border'
+            },
+      templateUrl: 'html/partials/dial.html'
+    };
+  });
+
+//  angular.module('app')
+// .directive('dial', function () {
+//   return {
+//     restrict: 'E',
+//     scope: {'dial': '=data'},
+//     templateUrl: "html/partials/dial.html"
+//   };
+// });
+
 })();
