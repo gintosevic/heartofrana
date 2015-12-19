@@ -1,45 +1,46 @@
-<div class="col-sm-12 col-md-6">
+<div>
   <div class="thumbnail tile tile-medium tile-teal">
     <h1>Science</h1>
     <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
 
     <div id="science_tab" ng-controller="ScienceController as scienceCtrl">
-      <div class="panel-group">
+      <center>
+        
+      <div class="row row-centered">
 
-        <!--Selectable sciences-->
-        <div class="panel science_{{ stats.isActive ? 'active' : 'inactive' }}" ng-repeat="(science, stats) in scienceCtrl.allSciences.sciences" >
-          <div class="panel-heading" data-toggle="collapse" data-target="#science_{{science}}">
-            <h4 class="panel-title"><span ng-if="stats.isActive" class="label label-default pull-right">active</span>{{science}}</h4>
-
+          <!--Selectable sciences-->
+        <div ng-repeat="(science, stats) in scienceCtrl.allSciences.sciences" class="col-xs-4 col-sm-3 col-md-3 col-lg-3 col-centered" style="margin-bottom: 5px;">
+          <center>
+          <h5 class="text-capitalize text-center" style="{{stats.isActive?'font-weight: bold; text-decoration: underline;':''}}">{{science}}</h5>
+          <div style="margin-bottom: 5px;">
+          <dial id="sience_{{science}}"
+                color="{{scienceCtrl.getColor(science)}}"
+                progress="{{stats.progress}}"
+                radius="100"
+                border="20"><div class="science-{{ stats.isActive ? 'active' : 'inactive' }}"><b>{{stats.currentLevel}}</b><br><small>({{stats.progress}}%)</small></div>
+          </dial>
           </div>
-
-          <div id="science_{{science}}" class="panel-collapse collapse">
-            <div class="panel-body">
-              {{stats}}
-              <div class="progress">
-                <div class="progress-bar progress-bar-success {{stats.isActive ? 'progress-bar-striped active' : ''}}" role="progressbar" aria-valuenow="{{stats.progress}}"
-                     aria-valuemin="0" aria-valuemax="100" style="width:{{stats.progress}}%">
-                  {{stats.progress}}% complete
-                </div>
-              </div>
-            </div>}}
+          <div class="col-centered">
+          <button type="button" class="btn btn-default btn-sm" ng-hide="stats.isActive">Select</button>
           </div>
+        </center>
         </div>
 
         <!--Culture-->
-        <div class="panel science_active" >
-          <div class="panel-heading science_culture" data-toggle="collapse" data-target="#science_culture">
-
-            <h4 class="panel-title">culture</h4>
-
-          </div>
-
-          <div id="science_culture" class="panel-collapse collapse">
-            <div class="panel-body">
-              {{scienceCtrl.allSciences.culture}}
-            </div>
-          </div>
+        <div class="col-xs-5 col-sm-3 col-md-3 col-lg-3 col-centered" style="margin-bottom: 5px;">
+          <center>
+          <h5 class="text-center">Culture</h5>
+          <dial id="culture"
+                color="{{scienceCtrl.getColor('culture')}}"
+                progress="{{scienceCtrl.allSciences.culture.progress}}"
+                radius="100"
+                border="20"><b>{{scienceCtrl.allSciences.culture.currentLevel}}</b><br><small>({{scienceCtrl.allSciences.culture.progress}}%)</small>
+          </dial>
+           <div class="col-centered"/>
+          </center>
         </div>
+        
+      <center>  
       </div>
     </div>
   </div>

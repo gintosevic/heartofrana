@@ -147,7 +147,7 @@ abstract class Planet extends Fightable implements JsonSerializable {
       $next_level_points = building_level_to_points($current_level + 1);
       $next_level_step = $next_level_points - building_level_to_points($current_level);
       $remaining_points = $next_level_points - $current_points;
-      $progress = round((1 - ($remaining_points / $next_level_step)) * 100);
+      $progress = floor((1 - ($remaining_points / $next_level_step)) * 100);
       $jsonObject["buildings"][$building_type]["level"] = $current_level;
       $jsonObject["buildings"][$building_type]["currentPoints"] = $current_points;
       $jsonObject["buildings"][$building_type]["nextLevelPoints"] = $next_level_points;
@@ -155,6 +155,22 @@ abstract class Planet extends Fightable implements JsonSerializable {
       $jsonObject["buildings"][$building_type]["remainingPoints"] = $remaining_points;
       $jsonObject["buildings"][$building_type]["progress"] = $progress;
     }
+
+    $player = $_SESSION['player'];
+    $this->load_owner_fleet();
+    foreach (Fleet::$ALL_SHIPS as $ship_type) {
+      if ($player->has_enabled($ship_type)) {
+        $quantity = $this->get_ship_points($ship_type);
+        $price = Fleet::get_ship_price($ship_type, $player->get_science_level("economy"));
+        $remaining_points = $price - $quantity;
+        $progress = floor(($quantity / $price) * 100);
+        $jsonObject["ships"][$ship_type]["quantity"] = $quantity;
+        $jsonObject["ships"][$ship_type]["price"] = $price;
+        $jsonObject["ships"][$ship_type]["remainingPoints"] = $remaining_points;
+        $jsonObject["ships"][$ship_type]["progress"] = $progress;
+      }
+    }
+
     return $jsonObject;
   }
 

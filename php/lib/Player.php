@@ -376,7 +376,7 @@ class Player {
     return (count($inter) > 0);
   }
 
-  function is_enabled($type) {
+  function has_enabled($type) {
     switch ($type) {
       case "cruisers":
         return ($this->get_science_level(CRUISER_TRIGGER_SCIENCE) >= CRUISER_TRIGGER_LEVEL);

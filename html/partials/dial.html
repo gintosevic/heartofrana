@@ -10,7 +10,7 @@
   </div>-->
 </div>
 <div id="{{id}}" style="border: 2px solid #2f3439; width: {{radius}}px; height: {{radius}}px; background-color: {{color}}; vertical-align: middle; border-radius: 50%; padding: {{border}}px; background-image: linear-gradient({{progress>=50?-90+180*(progress-50)/50:90}}deg, {{progress>=50?color:'#2f3439'}} 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient({{progress>=50?270:90+180*progress/50}}deg, {{color}} 50%, #2f3439 50%, #2f3439);">
-  <div  style="width: {{radius-2*border-4}}px; height: {{radius-2*border-4}}px; background-color: white; color: black; line-height: 14px; display: table-cell; vertical-align: middle; border-radius: 50%;" ng-transclude>
+  <div  style="width: {{radius-2*border-4}}px; text-align: center; height: {{radius-2*border-4}}px; background-color: white; color: black; line-height: 14px; display: table-cell; vertical-align: middle; border-radius: 50%;" ng-transclude>
   </div>
 </div>
 

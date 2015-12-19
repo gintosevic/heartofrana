@@ -1,7 +1,7 @@
-<div>
+<div class="text-center">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 col-lg-offset-1">
         <center>
           <svg width="200px"
                height="200px"
@@ -29,66 +29,52 @@
         </center>
       </div>
       
-      <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+      <div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
         <center>
-          <b>Population level</b><br><br>
+          <br><p><b>Population level</b></p>
           <dial id="population_{{planet.systemId}}_{{planet.position}}"
                 color="orangered"
                 progress="{{planet.population.progress}}"
                 radius="100"
-                border="20"><b>{{planet.population.level}}</b><br><small>({{planet.population.progress}}%)</small></dial>
-          <br>
+                border="20"><b>{{planet.population.level}}</b><br><small>({{planet.population.progress}}%)</small>
+          </dial>
         </center>
       </div>
       
-      <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+      <div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
         <center>
-          <b>Production points</b><br><br>
+          <br><p>Production points</b></p>
           <dial id="productions_points_{{planet.systemId}}_{{planet.position}}"
                 color="orangered"
                 progress="100"
                 radius="100"
-                border="20"><b>{{planet.productionPoints}}</b></dial>
-          <br>
+                border="20"><b>{{planet.productionPoints}}</b>
+          </dial>
         </center>
       </div>
-<!--      <div class="col-xs-5 col-sm-4 col-md-4 col-lg-4">
-        <center>
-          Population
-          <div>
-            <div class="progress-radial progress-{{planet.population.progress}}">
-              <div class="overlay">
-                <b>{{planet.population.level}}</b> <small>({{planet.population.progress}}%)</small>
-              </div>
-            </div>
-          </div>
-        </center>
-      </div>-->
-      <!--      <div class="col-xs-5 col-sm-4 col-md-4 col-lg-4">
-              <center>
-                Production points
-                <div>
-                  <div class="circle">
-                    <div class="inner-circle">
-                      <b>{{planet.productionPoints}}</b>
-                    </div>
-                  </div>
-                </div>
-                <div id="myStat" data-dimension="250" data-text="{{planet.population.level}}" data-info="({{planet.population.progress}}%)" data-width="30" data-fontsize="38" data-percent="{{planet.population.progress}}" data-fgcolor="#61a9dc" data-bgcolor="#eee" data-fill="#ddd" data-total="200" data-part="35" data-icon="long-arrow-up" data-icon-size="28" data-icon-color="#fff"></div>
-                <script>
-                  $('#myStat').circliful();
-                </script>
-              </center>
-            </div>-->
     </div>
   </div>
 
-  <div class="container-fluid" ng-repeat="(type, building) in planet.buildings">
+  <div class="container-fluid">
+    <h4>Buildings</h4>
     <div class="row">
-      <div class="text-capitalize progress col-xs-3 col-sm-2 col-md-1 col-lg-2">
+      <div class="text-capitalize col-xs-3 col-sm-2 col-md-1 col-lg-1 col-lg-offset-1">
+      </div>
+      <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
+        <small><i>Level</i></small>
+      </div>
+      <div class="col-xs-7 col-sm-3 col-md-5 col-lg-4">
+        <small><i>Progress</i></small>
+      </div>
+    </div>
+    <div class="row" ng-repeat="(type, building) in planet.buildings" style="margin-bottom: 10px;">
+      <div class="text-capitalize col-xs-3 col-sm-2 col-md-1 col-lg-1 col-lg-offset-1 text-left">
         <b>{{type}}</b>
       </div>
-      <div class="col-xs-9 col-sm-4 col-md-7 col-lg-5">
+      <div class="text-capitalize col-xs-2 col-sm-1 col-md-1 col-lg-1">
+        {{building.level}}
+      </div>
+      <div class="col-xs-7 col-sm-3 col-md-4 col-lg-3">
         <div class="progress">
           <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{building.progress}}"
                aria-valuemin="0" aria-valuemax="100" style="width:{{building.progress}}%">
@@ -96,12 +82,73 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2">
+
+      <!--Potential new line-->
+      <div class="text-capitalize col-xs-0 col-sm-0 col-md-0 col-lg-0"/>
+
+      <div class="col-xs-7 col-sm-3 col-md-3 col-lg-2">
         <button type="button" class="btn btn-block btn-default btn-xs">Upgrade ({{building.remainingPoints}} PPs)</button>
       </div>
-      <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2">
+      <div class="col-xs-5 col-sm-3 col-md-2 col-lg-2">
         <button type="button" class="btn btn-block btn-default btn-xs">Spend all</button>
       </div>
     </div>
   </div>
+  
+  
+  <div class="container-fluid">
+    <h4>Ships</h4>
+
+    <div class="row">
+      <div class="text-capitalize col-xs-3 col-sm-2 col-md-1 col-lg-1 col-lg-offset-1">
+      </div>
+      <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1">
+        <small><i>Quantity</i></small>
+      </div>
+      <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1">
+        <small><i>Price</i></small>
+      </div>
+      <div class="col-xs-5 col-sm-2 col-md-3 col-lg-2">
+        <small><i>Progress</i></small>
+      </div>
+    </div>
+    
+    <div class="row" ng-repeat="(type, ship) in planet.ships" style="margin-bottom: 10px;">
+      <div class="text-capitalize col-xs-3 col-sm-2 col-md-1 col-lg-1 col-lg-offset-1 text-left">
+        <b>{{type}}</b>
+      </div>
+      <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1">
+        {{ship.quantity}}
+      </div>
+      <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1">
+        {{ship.price}}<small>&nbsp;PPs</small>
+      </div>
+      <div class="col-xs-5 col-sm-2 col-md-3 col-lg-2">
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ship.progress}}"
+               aria-valuemin="0" aria-valuemax="100" style="width:{{ship.progress}}%">
+            {{ship.progress}}%
+          </div>
+        </div>
+      </div>
+      
+      <!--Potential new line-->
+      <div class="col-xs-0 col-sm-0 col-md-0  col-lg-0"/>
+
+      <div class="col-xs-7 col-sm-3 col-md-3  col-lg-2">
+        <center>
+        <div class="btn-group btn-block col-xs-6" role="group" style="padding: 0px;">
+          <button type="button" class="btn btn-default btn-xs col-xs-2 {{(planet.productionPoints >= ship.remainingPoints?'':'disabled')}}">+1</button>
+          <button type="button" class="btn btn-default btn-xs col-xs-3 {{(planet.productionPoints >= ship.remainingPoints + 9*ship.price?'':'disabled')}}">+10</button>
+          <button type="button" class="btn btn-default btn-xs col-xs-3 {{(planet.productionPoints >= ship.remainingPoints + 99*ship.price?'':'disabled')}}">+100</button>
+          <button type="button" class="btn btn-default btn-xs col-xs-4 {{(planet.productionPoints >= ship.remainingPoints + 999*ship.price?'':'disabled')}}">+1000</button>
+        </div>
+        </center>
+      </div>
+      <div class="col-xs-5 col-sm-3 col-md-2 col-lg-2">
+        <button type="button" class="btn btn-block btn-default btn-xs">Spend all</button>
+      </div>
+    </div>
+
+    </div>
 </div>

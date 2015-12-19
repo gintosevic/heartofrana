@@ -66,6 +66,19 @@ a.disabled_button {
   color: yellow;
 }
 
+.row-centered {
+    text-align:center;
+}
+
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
 /* -------------------------------------
  * Bar container
  * ------------------------------------- */
@@ -344,15 +357,15 @@ div#science_tab {
   background: black url("../img/backgrounds/sciences.jpg") no-repeat center center;
 }
 
-.science_inactive {
-  background-color: rgba(32,32,32,0.7);
+.science-inactive {
+  /*background-color: rgba(32,32,32,0.7);*/
   /*border: 1px solid white;*/
   /*text-align: center;*/
+  color: gray;
 }
 
-.science_active {
-  font-weight: bold;
-  color: green;
+.science-active {
+  color: red;
 }
 
 /*****************************************

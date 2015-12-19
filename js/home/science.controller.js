@@ -23,7 +23,20 @@
 
   ScienceController.$inject = ['$http', 'AuthenticationService', 'FlashService'];
   function ScienceController($http, AuthenticationService, FlashService) {
-    this.allPlanets = [];
+    this.allSciences = [];
+    this.colors = {
+      "biology": 'lightgreen',
+      "economy": 'gold',
+      "energy": 'darkgray',
+      "social": 'cornflowerblue',
+      "mathematics": 'tomato',
+      "physics": 'crimson',
+      "culture": 'violet'
+    };
+    
+    this.getColor = function(science) {
+      return this.colors[science];
+    }
 
     initController(this);
 
