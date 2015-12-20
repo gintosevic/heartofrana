@@ -1,7 +1,8 @@
-<div class="text-center">
+<div class="text-center" style="background-image: url(img/backgrounds/planet_dark.png);">
+  <h3>SID{{planet.systemId}} #{{planet.position}}</h3>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 col-lg-offset-1">
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 col-lg-offset-1" style="background-image: url(img/backgrounds/startile.gif); border-radius: 10px;">
         <center>
           <svg width="200px"
                height="200px"
@@ -45,7 +46,7 @@
         <center>
           <br><p><b>Production points</b></p>
           <dial id="productions_points_{{planet.systemId}}_{{planet.position}}"
-                color="orangered"
+                color="orange"
                 progress="100"
                 radius="100"
                 border="20"><b>{{planet.productionPoints}}</b>
