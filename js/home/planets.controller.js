@@ -28,6 +28,7 @@
     initController(this);
 
     function initController(ctrl) {
+
       /* Get the news */
       return $http.get('php/scripts/get-planets.php').then(
               function (response) {
@@ -43,7 +44,7 @@
   }
 
   angular.module('app')
-         .directive('planet', function () {
+          .directive('planet', function () {
             return {
               restrict: 'E',
               scope: {'planet': '=data'},
@@ -51,23 +52,34 @@
             };
           });
 
+  angular.module('app')
+          .directive('planetImage', function () {
+            return {
+              restrict: 'E',
+              scope: {'systemId': '@systemId',
+                'position': '@position',
+                'maxSize': '@maxSize'},
+              templateUrl: "html/partials/planet-image.html"
+            };
+          });
+
 
 
   angular.module('app')
-         .directive('dial', function () {
-    return {
+          .directive('dial', function () {
+            return {
 //      template: 'salut'
-      restrict: 'E',
-      transclude: true,
-      scope: {'id' : '@id',
-              'color' : '@color',
-              'progress' : '@progress',
-              'radius' : '@radius',
-              'border' : '@border'
-            },
-      templateUrl: 'html/partials/dial.html'
-    };
-  });
+              restrict: 'E',
+              transclude: true,
+              scope: {'id': '@id',
+                'color': '@color',
+                'progress': '@progress',
+                'radius': '@radius',
+                'border': '@border'
+              },
+              templateUrl: 'html/partials/dial.html'
+            };
+          });
 
 //  angular.module('app')
 // .directive('dial', function () {

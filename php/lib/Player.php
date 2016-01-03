@@ -3,13 +3,14 @@
 /**
  * Class to model in-game players
  */
-class Player {
+class Player implements JsonSerializable {
 
   static $ALL_SCIENCES = array("biology", "economy", "energy", "mathematics", "physics", "social");
   static $ALL_RACES = array("growth", "science", "culture", "production", "speed", "attack", "defense");
   private $player_id;
   private $name;
   private $race_id;
+  private $race;
   private $points;
   private $rank;
   private $experience_points;
@@ -24,7 +25,7 @@ class Player {
   /**
    * Constructor to load a given player based on his name
    */
-  function __construct($player_id = null) {
+  public function __construct($player_id = null) {
     $this->name = null;
     $this->player_id = $player_id;
     $this->race_id = 0;
@@ -73,7 +74,7 @@ class Player {
     $result = db_query("REPLACE INTO Science (player_id, " . join(", ", Player::$ALL_SCIENCES) . ") VALUES (" . $this->player_id . ", " . join(", ", array_values($this->science_points)) . ")");
   }
 
-  function save() {
+  public function save() {
     $this->save_race();
 
     // New player
@@ -89,7 +90,7 @@ class Player {
     $this->save_science();
   }
 
-  function load() {
+  public function load() {
     $filter = "";
     if ($this->player_id !== null) {
       $filter = "player_id = " . $this->player_id;
@@ -121,11 +122,11 @@ class Player {
     }
   }
 
-  function get_player_id() {
+  public function get_player_id() {
     return $this->player_id;
   }
 
-  function get_name() {
+  public function get_name() {
     return $this->name;
   }
 
@@ -133,12 +134,24 @@ class Player {
     $this->name = $name;
   }
 
-  function get_points() {
+  public function get_points() {
     return $this->points;
   }
 
-  function get_rank() {
+  public function get_rank() {
     return $this->rank;
+  }
+  
+  public function get_race($field="") {
+    if ($field === "") {
+      return $this->race;
+    }
+    else {
+      if (array_search($field, Player::$ALL_RACES) === false) {
+        die(__FILE__ . ": line " . __LINE__ . ": No race trait called $field.");
+      }
+      return $this->race[$field];
+    }
   }
 
   function set_race($field, $n) {
@@ -260,7 +273,7 @@ class Player {
     $this->alliance = new Alliance($this->tag);
     return $alliance;
   }
-  
+
   public function set_alliance_tag($tag) {
     if ($this->tag !== null) {
       die("Impossible to leave an alliance to move to another.\n");
@@ -268,7 +281,7 @@ class Player {
       $this->tag = $tag;
     }
   }
-  
+
   public function set_alliance(Alliance $alliance) {
     if ($this->alliance !== null) {
       die("Impossible to leave an alliance to move to another.\n");
@@ -277,12 +290,12 @@ class Player {
       $this->tag = $alliance->get_tag();
     }
   }
-  
+
   public function unset_alliance() {
     $this->tag = null;
     $this->alliance = null;
   }
-  
+
   public function has_alliance() {
     return ($this->tag !== null);
   }
@@ -487,6 +500,21 @@ class Player {
     return "<a href='profile.php?player_id=" . $this->get_player_id() . "'>" . $this->get_name() . "</a>";
   }
 
+  public function jsonSerialize() {
+    $race = $this->get_race();
+    unset($race['race_id']);
+    $jsonObject = array(
+        "id" => $this->get_player_id(),
+        "name" => $this->get_name(),
+        "race" => $race,
+        "experiencePoints" => $this->get_experience_points(),
+        "playerLevel" => $this->get_player_level(),
+        "points" => $this->get_points(),
+        "rank" => $this->get_rank()
+    );
+    return $jsonObject;
+  }
+  
 }
 
 ?>

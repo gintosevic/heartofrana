@@ -1,56 +1,60 @@
-<div class="text-center" style="background-image: url(img/backgrounds/planet_dark.png);">
-  <h3>SID{{planet.systemId}} #{{planet.position}}</h3>
+<div class="text-center" style="padding: 5px 20px; background-image: url(img/backgrounds/planet_dark.png);">
+  <h3>SID{{planet.systemId}} #{{planet.position}}
+    <span ng-if="planet.isBonus" class="label label-info pull-right">Bonus planet</span></h3>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 col-lg-offset-1" style="background-image: url(img/backgrounds/startile.gif); border-radius: 10px;">
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 col-lg-offset-1">
         <center>
-          <svg width="200px"
-               height="200px"
-               viewBox="0 0 400 400"
-               version="1.1"
-               xmlns="http://www.w3.org/2000/svg"
-               xmlns:xlink="http://www.w3.org/1999/xlink">
-            <image x="0" y="0"
-                   width="100%" height="100%"
-                   ng-href="img/planets/grounds/ground_{{planet.systemId * planet.position % 16 + 1}}.svg"
-                   xlink:href="" />
-            <image x="0" y="0"
-                   width="100%" height="100%"
-                   ng-href="img/planets/clouds/cloud_{{planet.systemId * planet.position % 12 + 1}}.svg"
-                   xlink:href="" />
-            <image x="0" y="0"
-                   width="100%" height="100%"
-                   ng-href="img/planets/shadows/shadow_1.svg"
-                   xlink:href="" />
-            <image x="0" y="0"
-                   width="100%" height="100%"
-                   ng-href="img/planets/orbits/orbit_{{planet.systemId * planet.position % 9 + 1}}.svg"
-                   xlink:href="" />
-          </svg>
+          <div style="background-image: url(img/backgrounds/startile.gif); border-radius: 10px; width: 240px; height: 200px; line-height: 200px;">
+            <planet-image system-id="{{planet.systemId}}" position="{{planet.position}}" max-size="200"/>
+<!--            <svg width="{{200 * (0.5 + 0.5*(1999 * planet.systemId * planet.position % 97)/97)}}px"
+                 height="200px"
+                 viewBox="0 0 400 400"
+                 version="1.1"
+                 xmlns="http://www.w3.org/2000/svg"
+                 xmlns:xlink="http://www.w3.org/1999/xlink">
+              <image x="0" y="0"
+                     width="100%" height="100%"
+                     ng-href="img/planets/grounds/ground_{{planet.systemId * planet.position % 16 + 1}}.svg"
+                     xlink:href="" />
+              <image x="0" y="0"
+                     width="100%" height="100%"
+                     ng-href="img/planets/clouds/cloud_{{planet.systemId * planet.position % 12 + 1}}.svg"
+                     xlink:href="" />
+              <image x="0" y="0"
+                     width="100%" height="100%"
+                     ng-href="img/planets/shadows/shadow_1.svg"
+                     xlink:href="" />
+              <image x="0" y="0"
+                     width="100%" height="100%"
+                     ng-href="img/planets/orbits/orbit_{{planet.systemId * planet.position % 9 + 1}}.svg"
+                     xlink:href="" />
+            </svg>-->
+          </div>
         </center>
       </div>
-      
+
       <div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
         <center>
           <br><p><b>Population level</b></p>
-          <dial id="population_{{planet.systemId}}_{{planet.position}}"
-                color="orangered"
-                progress="{{planet.population.progress}}"
-                radius="100"
-                border="20"><b>{{planet.population.level}}</b><br><small>({{planet.population.progress}}%)</small>
-          </dial>
+            <dial id="population_{{planet.systemId}}_{{planet.position}}"
+                  color="orangered"
+                  progress="{{planet.population.progress}}"
+                  radius="100"
+                  border="20"><b>{{planet.population.level}}</b><br><small>({{planet.population.progress}}%)</small>
+            </dial>
         </center>
       </div>
-      
+
       <div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
         <center>
           <br><p><b>Production points</b></p>
-          <dial id="productions_points_{{planet.systemId}}_{{planet.position}}"
-                color="orange"
-                progress="100"
-                radius="100"
-                border="20"><b>{{planet.productionPoints}}</b>
-          </dial>
+            <dial id="productions_points_{{planet.systemId}}_{{planet.position}}"
+                  color="orange"
+                  progress="100"
+                  radius="100"
+                  border="20"><b>{{planet.productionPoints}}</b>
+            </dial>
         </center>
       </div>
     </div>
@@ -95,8 +99,8 @@
       </div>
     </div>
   </div>
-  
-  
+
+
   <div class="container-fluid">
     <h4>Ships</h4>
 
@@ -113,7 +117,7 @@
         <small><i>Progress</i></small>
       </div>
     </div>
-    
+
     <div class="row" ng-repeat="(type, ship) in planet.ships" style="margin-bottom: 10px;">
       <div class="text-capitalize col-xs-3 col-sm-2 col-md-1 col-lg-1 col-lg-offset-1 text-left">
         <b>{{type}}</b>
@@ -132,18 +136,18 @@
           </div>
         </div>
       </div>
-      
+
       <!--Potential new line-->
       <div class="col-xs-0 col-sm-0 col-md-0  col-lg-0"/>
 
       <div class="col-xs-7 col-sm-3 col-md-3  col-lg-2">
         <center>
-        <div class="btn-group btn-block col-xs-6" role="group" style="padding: 0px;">
-          <button type="button" class="btn btn-default btn-xs col-xs-2 {{(planet.productionPoints >= ship.remainingPoints?'':'disabled')}}">+1</button>
-          <button type="button" class="btn btn-default btn-xs col-xs-3 {{(planet.productionPoints >= ship.remainingPoints + 9*ship.price?'':'disabled')}}">+10</button>
-          <button type="button" class="btn btn-default btn-xs col-xs-3 {{(planet.productionPoints >= ship.remainingPoints + 99*ship.price?'':'disabled')}}">+100</button>
-          <button type="button" class="btn btn-default btn-xs col-xs-4 {{(planet.productionPoints >= ship.remainingPoints + 999*ship.price?'':'disabled')}}">+1000</button>
-        </div>
+          <div class="btn-group btn-block col-xs-6" role="group" style="padding: 0px;">
+            <button type="button" class="btn btn-default btn-xs col-xs-2 {{(planet.productionPoints >= ship.remainingPoints?'':'disabled')}}">+1</button>
+            <button type="button" class="btn btn-default btn-xs col-xs-3 {{(planet.productionPoints >= ship.remainingPoints + 9*ship.price?'':'disabled')}}">+10</button>
+            <button type="button" class="btn btn-default btn-xs col-xs-3 {{(planet.productionPoints >= ship.remainingPoints + 99*ship.price?'':'disabled')}}">+100</button>
+            <button type="button" class="btn btn-default btn-xs col-xs-4 {{(planet.productionPoints >= ship.remainingPoints + 999*ship.price?'':'disabled')}}">+1000</button>
+          </div>
         </center>
       </div>
       <div class="col-xs-5 col-sm-3 col-md-2 col-lg-2">
@@ -151,5 +155,6 @@
       </div>
     </div>
 
-    </div>
+  </div>
+    <button class="btn btn-warning">Launch fleet</button>
 </div>

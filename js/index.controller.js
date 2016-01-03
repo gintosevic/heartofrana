@@ -28,34 +28,35 @@
             
             this.isConnected = function () {
               return $rootScope.globals.isConnected;
-            }
+            };
             
             this.displayNews = function() {
               this.tab = 'news';
-            }
+            };
             
             this.displayMap = function() {
               this.tab = 'map';
-            }
+            };
             
             this.displayPlanets = function() {
               this.tab = 'planets';
-            }
+            };
             
             this.displayScience = function() {
               this.tab = 'science';
-            }
+            };
             
             this.displayTrade = function() {
               this.tab = 'trade';
-            }
+            };
             
             this.displayAlliance = function() {
               this.tab = 'alliance';
-            }
+            };
             
             this.displayFleets = function() {
               this.tab = 'fleets';
-            }
+            };
+
           };
 })();

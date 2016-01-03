@@ -13,86 +13,106 @@
     }]);
 
   config.$inject = ['$stateProvider', '$routeProvider', '$locationProvider'];
-
 //  config.$inject = ['$stateProvider'];
-  function config($stateProvider, $routeProvider, $locationProvider) {
-    $stateProvider
-            .state('unconnected', {
-              abstract: true,
-              views: {
-                'mainFrame': {
-                  templateUrl: 'html/unconnected-index.html'
-                }
-              }
-            })
-            .state('unconnected.login', {
-              url: "/login",
+          function config($stateProvider, $routeProvider, $locationProvider) {
+            $stateProvider
+                    .state('unconnected', {
+                      abstract: true,
+                      views: {
+                        'mainFrame': {
+                          templateUrl: 'html/unconnected-index.html'
+                        }
+                      }
+                    })
+
+                    .state('unconnected.login', {
+                      url: "/login",
 //              views: {
 //                'tabFrame': {
-              templateUrl: 'html/login.view.html',
-              controller: 'LoginController',
-              controllerAs: 'vm'
+                      templateUrl: 'html/login.view.html',
+                      controller: 'LoginController',
+                      controllerAs: 'vm'
 //                }
 //              }
-            })
-            .state('unconnected.register', {
-              url: "/register",
+                    })
+
+                    .state('unconnected.register', {
+                      url: "/register",
 //              views: {
 //                "tabFrame": {
-              templateUrl: "html/register.view.html",
-              controller: 'RegisterController',
-              controllerAs: 'vm'
+                      templateUrl: "html/register.view.html",
+                      controller: 'RegisterController',
+                      controllerAs: 'vm'
 //                }
 //              }
-            })
+                    })
 
-            .state('connected', {
-              abstract: true,
-              views: {
-                'mainFrame': {
-                  templateUrl: 'html/connected-index.html'
-                }
-              }
-            })
-            .state('connected.news', {
-              url: "/news",
-              templateUrl: "html/news.view.html",
-              controller: 'NewsController',
-              controllerAs: 'newsCtrl'
-            })
-            .state('connected.map', {
-              url: "/map",
-              templateUrl: "html/map.view.html",
-              controller: 'MapController',
-              controllerAs: 'mapCtrl'
-            })
-            .state('connected.planets', {
-              url: "/planets",
-              templateUrl: "html/planets.view.html",
-              controller: 'PlanetsController',
-              controllerAs: 'planetsCtrl'
-            })
-            .state('connected.science', {
-              url: "/science",
-              templateUrl: "html/science.view.html",
-              controller: 'ScienceController',
-              controllerAs: 'scienceCtrl'
-            })
-            .state('connected.fleet', {
-              url: "/fleet",
-              templateUrl: "html/fleet.view.html",
-              controller: 'FleetController',
-              controllerAs: 'fleetCtrl'
-            })
+                    .state('connected', {
+                      abstract: true,
+                      views: {
+                        'mainFrame': {
+                          templateUrl: 'html/connected-index.html'
+                        }
+                      }
+                    })
 
-            .state('unconnected.otherwise', {
-              url: '*path',
-              templateUrl: "html/login.view.html",
-              controller: 'LoginController',
-              controllerAs: 'vm'
-            });
+                    .state('connected.news', {
+                      url: "/news",
+                      templateUrl: "html/news.view.html",
+                      controller: 'NewsController',
+                      controllerAs: 'newsCtrl'
+                    })
+
+                    .state('connected.map', {
+                      url: "/map",
+                      templateUrl: "html/map.view.html",
+                      controller: 'MapController',
+                      controllerAs: 'mapCtrl'
+                    })
+
+                    .state('connected.planets', {
+                      url: "/planets",
+                      templateUrl: "html/planets.view.html",
+                      controller: 'PlanetsController',
+                      controllerAs: 'planetsCtrl'
+                    })
+
+                    .state('connected.trade', {
+                      url: "/trade",
+                      templateUrl: "html/trade.view.html",
+                      controller: 'TradeController',
+                      controllerAs: 'tradeCtrl'
+                    })
+
+                    .state('connected.science', {
+                      url: "/science",
+                      templateUrl: "html/science.view.html",
+                      controller: 'ScienceController',
+                      controllerAs: 'scienceCtrl'
+                    })
+
+                    .state('connected.alliance', {
+                      url: "/alliance",
+                      templateUrl: "html/alliance.view.html",
+                      controller: 'AllianceController',
+                      controllerAs: 'allianceCtrl'
+                    })
+
+                    .state('connected.fleet', {
+                      url: "/fleet",
+                      templateUrl: "html/fleet.view.html",
+                      controller: 'FleetController',
+                      controllerAs: 'fleetCtrl'
+                    })
+
+                    .state('unconnected.otherwise', {
+                      url: '*path',
+                      templateUrl: "html/login.view.html",
+                      controller: 'LoginController',
+                      controllerAs: 'vm'
+                    });
 //  }
-    $routeProvider.otherwise('/otherwise')
+            $routeProvider.otherwise('/otherwise')
 //    $routeProvider
 //            .when('/home', {
 //              controller: 'HomeController',
@@ -113,7 +133,7 @@
 //            })
 //
 //            .otherwise({redirectTo: 'login'});
-  }
+          }
 //
 
   run.$inject = ['$rootScope', '$location', '$cookieStore', '$http', '$route'];

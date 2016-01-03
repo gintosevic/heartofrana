@@ -1,1 +1,28 @@
-<h1>Alliance</h1>
+<div>
+  <div class="thumbnail tile tile-medium tile-teal">
+    <h1>Alliance</h1>
+    <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+
+    <div id="alliance_tab" ng-controller="AllianceController as allianceCtrl">
+      <center>
+
+        <div>
+          <h3>[{{allianceCtrl.alliance.tag}}] {{allianceCtrl.alliance.name}}</h2>
+          <h4>Rank: #{{allianceCtrl.alliance.rank}}</h4>
+          <h4>Score: {{allianceCtrl.alliance.score}}</h4>
+          <h4>Forum: <a href="{{allianceCtrl.alliance.url}}" target="_blank">{{allianceCtrl.alliance.url}}</a></h4>
+          <h4>Members</h4>
+          <table class="table">
+            <tr ng-repeat="member in allianceCtrl.alliance.members">
+              <td>#{{member.rank}}</td>
+              <td>{{member.name}}</td>
+              <td>{{member.points}}</td>
+              <td>{{member.playerLevel}}</td>
+            </tr>
+          </table>
+
+          <center>  
+        </div>
+    </div>
+  </div>
+</div>

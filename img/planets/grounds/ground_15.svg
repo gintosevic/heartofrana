@@ -496,20 +496,6 @@
        id="linearGradient3878"
        xlink:href="#linearGradient3809-8"
        inkscape:collect="always" />
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath3913">
-      <g
-         id="g3915"
-         style="fill:url(#linearGradient3921);fill-opacity:1">
-        <path
-           d="m 384.86812,225.04724 a 105.05587,105.05587 0 1 1 -210.11173,0 105.05587,105.05587 0 1 1 210.11173,0 z"
-           transform="translate(690.73443,622.48253)"
-           id="path3917"
-           style="fill:url(#linearGradient3919);fill-opacity:1;fill-rule:evenodd;stroke:none"
-           inkscape:connector-curvature="0" />
-      </g>
-    </clipPath>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3809-8"
@@ -530,6 +516,36 @@
        y1="742.47394"
        x2="972.32727"
        y2="952.58563" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3809-8"
+       id="linearGradient3069"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="reflect"
+       x1="974.10791"
+       y1="742.47394"
+       x2="972.32727"
+       y2="952.58563" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3809-8"
+       id="linearGradient3071"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="reflect"
+       x1="974.10791"
+       y1="742.47394"
+       x2="972.32727"
+       y2="952.58563" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3809"
+       id="linearGradient3073"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="reflect"
+       x1="974.10791"
+       y1="742.47394"
+       x2="972.32727"
+       y2="952.58563" />
   </defs>
   <metadata
      id="metadata3040">
@@ -544,15 +560,16 @@
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(-770.54668,-647.52977)"
+     transform="matrix(-1,0,0,1,1170.5467,-647.52977)"
      id="layer1"
-     style="fill-opacity:1;fill:url(#linearGradient3815);filter:url(#filter3819)"
-     clip-path="url(#clipPath3913)">
+     style="fill:url(#linearGradient3815);fill-opacity:1;filter:url(#filter3819)"
+     clip-path="none"
+     mask="none">
     <path
        d="m 384.86812,225.04724 a 105.05587,105.05587 0 1 1 -210.11173,0 105.05587,105.05587 0 1 1 210.11173,0 z"
        transform="translate(690.73443,622.48253)"
        id="path2985"
-       style="fill:url(#linearGradient3815);fill-rule:evenodd;stroke:none;fill-opacity:1.0"
+       style="fill:url(#linearGradient3073);fill-opacity:1;fill-rule:evenodd;stroke:none"
        inkscape:connector-curvature="0" />
   </g>
 </svg>
